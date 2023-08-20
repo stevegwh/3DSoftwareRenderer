@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include "Triangle.h"
+#include "sMesh.hpp"
 
 constexpr int screenWidth = 800;
 constexpr int screenHeight = 600;
@@ -82,10 +83,14 @@ int main()
         
         Triangle tri(p1, p2, p3);
         Triangle tri2(pb1, pb2, pb3);
-        tri.Rotate(angle);
-        tri2.Rotate(angle);
-        tri.Draw();
-        tri2.Draw();
+        std::vector<Triangle*> tris = { &tri, &tri2 };
+        sMesh mesh(tris);
+        mesh.Rotate(angle);
+        mesh.Draw();
+//        tri.Rotate(angle);
+//        tri2.Rotate(angle);
+//        tri.Draw();
+//        tri2.Draw();
  
         EndDrawing();
         //----------------------------------------------------------------------------------
