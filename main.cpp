@@ -1,40 +1,39 @@
 #include <iostream>
 #include <raylib.h>
 #include <raymath.h>
-#define PI 3.14159265
+#include "Triangle.h"
 
-struct PolarVec
-{
-    float r;
-    float a;
-};
+constexpr int screenWidth = 800;
+constexpr int screenHeight = 600;
 
-PolarVec CartToPolar(double x, double y)
+Vector2  s_Rotate(Vector2 p, float angle, float cx, float cy)
 {
-    float r = sqrt(x*x + y*y);
-    float a = (atan(y/x) * 180/PI);
-    return (PolarVec) { r, a };
-}
+    p.x -= cx;
+    p.y -= cy;
 
-Vector2  PolarToCart(float r, float a)
-{
-    float x = r * cos(a) * PI/180;
-    float y = r * sin(a) * PI/180;
-    return  (Vector2) { x, y };
+    double const a = angle * PI/180;
+    double const c = cos(a);
+    double const s = sin(a);
+    Vector2 rV = (Vector2) { static_cast<float>(p.x * c - p.y * s),
+                             static_cast<float>(p.x * s + p.y * c) };
+
+    p.x = rV.x + cx;
+    p.y = -rV.y + cy;
+
+    return p;
 }
 
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
-int main(void)
+int main()
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 600;
+
     
     Rectangle player = { .x = screenWidth/2, .y = screenHeight/2, .width = 50, .height = 50 };
-    float angle = 0;
+    float angle = 1;
     int vel = 0;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
@@ -49,8 +48,8 @@ int main(void)
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
-        if (IsKeyDown(KEY_RIGHT)) angle += 150 * GetFrameTime();
-        if (IsKeyDown(KEY_LEFT)) angle -= 150 * GetFrameTime();
+        if (IsKeyDown(KEY_RIGHT)) angle -= 150 * GetFrameTime();
+        if (IsKeyDown(KEY_LEFT)) angle += 150 * GetFrameTime();
         if (IsKeyDown(KEY_A))
         {
             vel = -150;
@@ -70,56 +69,23 @@ int main(void)
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
+        float width = 150;
+        float height = 150;
 
-
+        Vector2 p1 = (Vector2) { screenWidth/2 + width/2, screenHeight/2 };
+        Vector2 p2 = (Vector2) { screenWidth/2 + width/2, screenHeight/2 + height};
+        Vector2 p3 = (Vector2) { p2.x - width, p2.y };
         
+        Vector2 pb1 = (Vector2) { p3.x, p3.y };
+        Vector2 pb2 = (Vector2) { p3.x, p1.y};
+        Vector2 pb3 = (Vector2) { p1.x, p1.y };
         
-    
-        const double x = player.x;
-        const double y = player.y;
-        //float r = sqrt(x*x + y*y);
-        //float a = (atan(y/x) * 180/PI);
-        
-        //float newPosX = r * cos((a + angle) * PI/180);
-        //float newPosY = r * sin((a + angle) * PI/180);
-        //float normalisedDirX = newPosX/r;
-        //float normalisedDirY = newPosY/r;
-
-        
-        //player.x += normalisedDirX;
-        //player.y += normalisedDirY;
-        Vector2 rV = (Vector2) { (cos(angle * PI/180) - sin(angle * PI/180)),
-                                 (cos(angle * PI/180) + sin(angle * PI/180)) };
-
-
-        float r = sqrt(rV.x*rV.x + rV.y*rV.y);
-        float dirX = rV.x/r;
-        float dirY = rV.y/r;
-        player.x = rV.x + x;
-        player.y = rV.y + y;
-        
-        player.x += (-dirY * vel) * GetFrameTime();
-        player.y += (dirX * vel) * GetFrameTime();
-        
-
-        DrawRectanglePro(player, (Vector2) { 25, 25 }, angle, RED);
-        //DrawRectangle(player.x-25, player.y-25, player.width, player.height, RED);
-        //player.x += vel * GetFrameTime();
-        DrawLine(player.x, player.y, (dirX * 100) + x,(dirY * 100) + y, GREEN);
-        DrawLine(player.x, player.y, (-dirY * 100) + x, (dirX * 100) + y, PURPLE);
-        //DrawLine(player.x, player.y, (-dirX * 100) + x, (-dirY * 100) + y, BLACK);
-        DrawLine(player.x, player.y, (dirY * 100) + x, (-dirX * 100) + y, BLACK);
-        
-
-//        float x = player.x + 25;
-//        float y = player.y + 25;
-//        PolarVec pol = CartToPolar(x, y);
-//        Vector2 cart = PolarToCart(pol.r, pol.a + angle);
-//
-//        DrawLine(x, y, x - ((cart.x/pol.r) * 100),
-//                 y - ((cart.y/pol.r) * 100), GREEN);
-
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        Triangle tri(p1, p2, p3);
+        Triangle tri2(pb1, pb2, pb3);
+        tri.Rotate(angle);
+        tri2.Rotate(angle);
+        tri.Draw();
+        tri2.Draw();
  
         EndDrawing();
         //----------------------------------------------------------------------------------
