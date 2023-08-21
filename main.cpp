@@ -5,6 +5,19 @@
 #include "constants.h"
 #include <cmath>
 
+struct Clock
+{
+    uint32_t last_tick_time = 0;
+    uint32_t delta = 0;
+
+    void tick()
+    {
+        uint32_t tick_time = SDL_GetTicks();
+        delta = tick_time - last_tick_time;
+        last_tick_time = tick_time;
+    }
+};
+
 
 Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3& v3)
 {
@@ -134,6 +147,7 @@ void DrawLine(SDL_Renderer& renderer, float x1, float y1, float x2, float y2)
 
 int main(int argc, char *argv[])
 {
+    Clock clock;
     float camDistance = 2;
     float angle = 0;
     SDL_Window* window = NULL;
@@ -197,6 +211,7 @@ int main(int argc, char *argv[])
 
     while (loop)
     {
+        clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -218,7 +233,7 @@ int main(int argc, char *argv[])
             }
         }
         // Update
-        angle += 0.001;
+        angle += 0.001 * clock.delta;
 
         // Draw
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
