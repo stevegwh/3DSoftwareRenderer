@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <array>
 #include <SDL2/SDL.h>
 #include "stevelib.h"
 #include "constants.h"
@@ -35,12 +36,13 @@ Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3&
 
 void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 c)
 {
-    v.x -= c.x;
-    v.y -= c.y;
-    v.z -= c.z;
-
-    float co = cos(angle);
-    float si = sin(angle);
+    // Uncomment these and implement rotation around a point.  
+//    v.x -= c.x;
+//    v.y -= c.y;
+//    v.z -= c.z;
+    
+    float co = cos(angle * PI/180);
+    float si = sin(angle * PI/180);
 
     std::vector<Vector3> rotationMatrix;
 
@@ -75,10 +77,12 @@ void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 c)
     float x = rotationMatrix[0].x * v.x + rotationMatrix[0].y * v.y + rotationMatrix[0].z * v.z;
     float y = rotationMatrix[1].x * v.x + rotationMatrix[1].y * v.y + rotationMatrix[1].z * v.z;
     float z = rotationMatrix[2].x * v.x + rotationMatrix[2].y * v.y + rotationMatrix[2].z * v.z;
-
-    v.x = x + c.x;
-    v.y = -y + c.y;
-    v.z = z + c.z;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+//    v.x = x + c.x;
+//    v.y = y + c.y;
+//    v.z = z + c.z;
 }
 
 Vector3 GetCentroid(const std::vector<Vector3>& points)
@@ -107,11 +111,22 @@ void DrawLine(SDL_Renderer& renderer, float x1, float y1, float x2, float y2)
     
 }
 
+
+void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points)
+{
+    Vector3 centroid = GetCentroid(points);
+
+    for (auto& p : points)
+    {
+        rotate(axis, p, angle, centroid);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     Clock clock;
     float camDistance = 2;
-    float angle = 0;
+    float angle = 0.1;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -121,55 +136,46 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    //        std::vector<Vector3> points = {
-//            (Vector3) {-50, 50, -50},
-//            (Vector3) { 50, 50, -50 },
-//            (Vector3) { -50, -50, -50 },
-//            (Vector3) { 50, -50, -50 },
-//            (Vector3) { -50, 50, 50 },
-//            (Vector3) { 50, 50, 50 },
-//            (Vector3) { -50, -50, 50 },
-//            (Vector3) { 50, -50, 50 }
-//        };
-
-    // "+ SCREEN_WIDTH/2" is essentially a translation to a desired world space.
-    // These coordinates would also need to be calculated based on a scale factor.
+    // The local coordinations of our cube.
     std::vector<Vector3> points = {
-        {-50 + SCREEN_WIDTH/2, 50 + SCREEN_HEIGHT/2, -50},
-        { 50 + SCREEN_WIDTH/2, 50 + SCREEN_HEIGHT/2, -50 },
-        { 50 + SCREEN_WIDTH/2, -50 + SCREEN_HEIGHT/2, -50 },
-        { -50 + SCREEN_WIDTH/2, -50 + SCREEN_HEIGHT/2, -50 },
-
-
-        { -50 + SCREEN_WIDTH/2, 50 + SCREEN_HEIGHT/2, 50 },
-        { 50 + SCREEN_WIDTH/2, 50 + SCREEN_HEIGHT/2, 50 },
-        { 50 + SCREEN_WIDTH/2, -50 + SCREEN_HEIGHT/2, 50 },
-        { -50 + SCREEN_WIDTH/2, -50 + SCREEN_HEIGHT/2, 50 }
+        (Vector3) {-50, 50, -50},
+        (Vector3) { 50, 50, -50 },
+        (Vector3) { 50, -50, -50 },
+        (Vector3) { -50, -50, -50 },
+        
+        (Vector3) { -50, 50, 50 },
+        (Vector3) { 50, 50, 50 },
+        (Vector3) { 50, -50, 50 },
+        (Vector3) { -50, -50, 50 }
     };
+    // The cube's edges
+    std::vector<std::array<int, 2>> edges = {
+        { 0, 1 },
+        { 1, 2 },
+        { 2, 3 },
+        { 3, 0 },
 
-    std::vector<Edge> edges = {
-        { points.at(0), points.at(1) },
-        { points.at(1), points.at(2) },
-        { points.at(2), points.at(3) },
-        { points.at(3), points.at(0) },
+        { 0, 4 },
+        { 1, 5 },
+        { 2, 6 },
+        { 3, 7 },
 
-        { points.at(0), points.at(4) },
-        { points.at(1), points.at(5) },
-        { points.at(2), points.at(6) },
-        { points.at(3), points.at(7) },
-
-        { points.at(4), points.at(5) },
-        { points.at(5), points.at(6) },
-        { points.at(6), points.at(7) },
-        { points.at(7), points.at(4) },
+        { 4, 5 },
+        { 5, 6 },
+        { 6, 7 },
+        { 7, 4 },
     };
+    
+    // This and scale/angle will form a "transform" class later.
+    Vector3 pos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -30 };
+        
+
+
 
     std::vector<Vector3> orthoProjectionMatrix = {
         { 1, 0, 0 },
         { 0, 1, 0 }
     };
-
-    Vector3 centroid = GetCentroid(points);
 
     while (loop)
     {
@@ -183,11 +189,17 @@ int main(int argc, char *argv[])
                     case SDLK_ESCAPE:
                         loop = SDL_FALSE;
                         break;
-                    case SDLK_LEFT:
-                        angle -= 5;
-                        break;
                     case SDLK_RIGHT:
-                        angle += 5;
+                        pos.x += 5;
+                        break;
+                    case SDLK_LEFT:
+                        pos.x -= 5;
+                        break;
+                    case SDLK_UP:
+                        pos.y -= 5;
+                        break;
+                    case SDLK_DOWN:
+                        pos.y += 5;
                         break;
                     default:
                         loop = SDL_TRUE;
@@ -195,22 +207,32 @@ int main(int argc, char *argv[])
             }
         }
         // Update
-        angle += 0.001 * clock.delta;
+        //angle += 0.001 * clock.delta;
+        RotateCube(Y, angle, points);
+        RotateCube(Z, angle, points);
+        
+        
+        // Must after all transformations.
+        std::vector<Vector2> projectedPoints;
+        projectedPoints.reserve(points.size());
+
+        for (const auto& v : points)
+        {
+            Vector3 worldv1 = { v.x + pos.x, v.y + pos.y, v.z + pos.z };
+            auto p = getProjectedPoint(orthoProjectionMatrix, worldv1);
+            projectedPoints.push_back(p);
+        }
 
         // Draw
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+        
         for (auto e : edges)
         {
-            rotate(Z, e.v1, angle, centroid);
-            rotate(Z, e.v2, angle, centroid);
-            rotate(Y, e.v1, angle, centroid);
-            rotate(Y, e.v2, angle, centroid);
-            
-            
-            Vector2 p1 = getProjectedPoint(orthoProjectionMatrix, e.v1);
-            Vector2 p2 = getProjectedPoint(orthoProjectionMatrix, e.v2);
+            const Vector2& p1 = projectedPoints.at(e[0]);
+            const Vector2& p2 = projectedPoints.at(e[1]);
             SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
         }
         //Vector2 centerProj = getProjectedPoint(orthoProjectionMatrix, centroid);

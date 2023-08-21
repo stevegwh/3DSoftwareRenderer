@@ -12,8 +12,8 @@ struct Vector3
 
 struct Edge
 {
-    Vector3 v1;
-    Vector3 v2;
+    Vector3& v1;
+    Vector3& v2;
 };
 
 struct Color
