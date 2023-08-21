@@ -18,6 +18,11 @@ struct Clock
     }
 };
 
+enum RotationAxis
+{
+    X, Y, Z
+};
+
 
 Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3& v3)
 {
@@ -28,20 +33,45 @@ Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3&
     return { x, y };
 }
 
-Vector3 rotateZ(Vector3 v, float angle, Vector3 c)
+void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 c)
 {
     v.x -= c.x;
     v.y -= c.y;
     v.z -= c.z;
-    
+
     float co = cos(angle);
     float si = sin(angle);
-    const std::vector<Vector3> rotationMatrix =
-        {
-            { co, -si, 0 },
-            { si, co, 0 },
-            { 0, 0, 1 }
-        };
+
+    std::vector<Vector3> rotationMatrix;
+
+    if (axis == RotationAxis::X)
+    {
+        rotationMatrix =
+            {
+                { 1, 0, 0 },
+                { 0, co, -si },
+                { 0, si, co }
+            };
+    }
+    else if (axis == RotationAxis::Y)
+    {
+        rotationMatrix =
+            {
+                { co, 0, si },
+                { 0, 1, 0 },
+                { -si, 0, co }
+            };
+    }
+    else if (axis == RotationAxis::Z)
+    {
+        rotationMatrix =
+            {
+                { co, -si, 0 },
+                { si, co, 0 },
+                { 0, 0, 1 }
+            };
+    }
+    
     float x = rotationMatrix[0].x * v.x + rotationMatrix[0].y * v.y + rotationMatrix[0].z * v.z;
     float y = rotationMatrix[1].x * v.x + rotationMatrix[1].y * v.y + rotationMatrix[1].z * v.z;
     float z = rotationMatrix[2].x * v.x + rotationMatrix[2].y * v.y + rotationMatrix[2].z * v.z;
@@ -49,75 +79,7 @@ Vector3 rotateZ(Vector3 v, float angle, Vector3 c)
     v.x = x + c.x;
     v.y = -y + c.y;
     v.z = z + c.z;
-    
-    return v;
 }
-
-Vector3 rotateY(Vector3 v, float angle, Vector3 c)
-{
-    v.x -= c.x;
-    v.y -= c.y;
-    v.z -= c.z;
-    
-    float co = cos(angle);
-    float si = sin(angle);
-    
-    const std::vector<Vector3> rotationMatrix =
-        {
-            { co, 0, si },
-            { 0, 1, 0 },
-            { -si, 0, co }
-        };
-    float x = rotationMatrix[0].x * v.x + rotationMatrix[0].y * v.y + rotationMatrix[0].z * v.z;
-    float y = rotationMatrix[1].x * v.x + rotationMatrix[1].y * v.y + rotationMatrix[1].z * v.z;
-    float z = rotationMatrix[2].x * v.x + rotationMatrix[2].y * v.y + rotationMatrix[2].z * v.z;
-
-    v.x = x + c.x;
-    v.y = -y + c.y;
-    v.z = z + c.z;
-
-    return v;
-}
-
-Vector3 rotateX(Vector3 v, float angle, Vector3 c)
-{
-    v.x -= c.x;
-    v.y -= c.y;
-    v.z -= c.z;
-    
-    float co = cos(angle);
-    float si = sin(angle);
-    
-    const std::vector<Vector3> rotationMatrix =
-        {
-            { 1, 0, 0 },
-            { 0, co, -si },
-            { 0, si, co }
-        };
-    float x = rotationMatrix[0].x * v.x + rotationMatrix[0].y * v.y + rotationMatrix[0].z * v.z;
-    float y = rotationMatrix[1].x * v.x + rotationMatrix[1].y * v.y + rotationMatrix[1].z * v.z;
-    float z = rotationMatrix[2].x * v.x + rotationMatrix[2].y * v.y + rotationMatrix[2].z * v.z;
-
-    v.x = x + c.x;
-    v.y = -y + c.y;
-    v.z = z + c.z;
-
-    return v;
-}
-
-//Vector3 rotateX(Vector3 p, float angle, Vector3 c)
-//{
-//    p.x -= c.x;
-//    p.y -= c.y;
-//
-//    Vector2 rV = (Vector2) { static_cast<float>(p.x * cos(angle) - p.y * sin(angle)),
-//                             static_cast<float>(p.x * sin(angle) + p.y * cos(angle)) };
-//
-//    p.x = rV.x + c.x;
-//    p.y = -rV.y + c.y;
-//
-//    return p;
-//}
 
 Vector3 GetCentroid(const std::vector<Vector3>& points)
 {
@@ -241,14 +203,14 @@ int main(int argc, char *argv[])
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         for (auto e : edges)
         {
-            Vector3 v1 = rotateZ(e.v1, angle, centroid);
-            Vector3 v2 = rotateZ(e.v2, angle, centroid);
-            v1 = rotateY(v1, angle, centroid);
-            v2 = rotateY(v2, angle, centroid);
+            rotate(Z, e.v1, angle, centroid);
+            rotate(Z, e.v2, angle, centroid);
+            rotate(Y, e.v1, angle, centroid);
+            rotate(Y, e.v2, angle, centroid);
             
             
-            Vector2 p1 = getProjectedPoint(orthoProjectionMatrix, v1);
-            Vector2 p2 = getProjectedPoint(orthoProjectionMatrix, v2);
+            Vector2 p1 = getProjectedPoint(orthoProjectionMatrix, e.v1);
+            Vector2 p2 = getProjectedPoint(orthoProjectionMatrix, e.v2);
             SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
         }
         //Vector2 centerProj = getProjectedPoint(orthoProjectionMatrix, centroid);
