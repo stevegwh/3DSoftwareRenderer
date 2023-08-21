@@ -6,17 +6,17 @@
 
 #include <utility>
 #include <vector>
-#include <raylib.h>
-#include "Triangle.h"
+#include "stevelib.h"
 
 class sMesh 
 {
-    std::vector<Triangle*> tris;
-    static Vector2 rotatePoint(Vector2 p, double c, double s, float cx, float cy);
+    std::vector<Vector3> vertices;
+    std::vector<Vector2> edges;
+    //static Vector2 rotatePoint2D(Vector2 p, double c, double s, float cx, float cy);
 public:
-    explicit sMesh(std::vector<Triangle*> triangles) : tris(std::move(triangles)) {};
+    sMesh(std::vector<Vector3> vertices, std::vector<Vector2> edges) : vertices(std::move(vertices)), edges(std::move(edges)) {};
     void Draw() const;
-    void Rotate(float angle);
+    void Rotate(float angle, float x, float y, float z);
     void GetBoundingBox();
-    [[nodiscard]] Vector2 GetCentre() const;
+    [[nodiscard]] Vector3 GetCentre() const;
 };
