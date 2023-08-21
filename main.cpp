@@ -34,15 +34,15 @@ Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3&
     return { x, y };
 }
 
-void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 c)
+void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 origin)
 {
-    // Uncomment these and implement rotation around a point.  
-//    v.x -= c.x;
-//    v.y -= c.y;
-//    v.z -= c.z;
+
+    v.x -= origin.x;
+    v.y -= origin.y;
+    v.z -= origin.z;
     
-    float co = cos(angle * PI/180);
-    float si = sin(angle * PI/180);
+    float c = cos(angle * PI/180);
+    float s = sin(angle * PI/180);
 
     std::vector<Vector3> rotationMatrix;
 
@@ -51,25 +51,25 @@ void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 c)
         rotationMatrix =
             {
                 { 1, 0, 0 },
-                { 0, co, -si },
-                { 0, si, co }
+                {0, c, -s },
+                {0, s, c }
             };
     }
     else if (axis == RotationAxis::Y)
     {
         rotationMatrix =
             {
-                { co, 0, si },
+                {c, 0, s },
                 { 0, 1, 0 },
-                { -si, 0, co }
+                {-s, 0, c }
             };
     }
     else if (axis == RotationAxis::Z)
     {
         rotationMatrix =
             {
-                { co, -si, 0 },
-                { si, co, 0 },
+                {c, -s, 0 },
+                {s, c, 0 },
                 { 0, 0, 1 }
             };
     }
@@ -77,12 +77,12 @@ void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 c)
     float x = rotationMatrix[0].x * v.x + rotationMatrix[0].y * v.y + rotationMatrix[0].z * v.z;
     float y = rotationMatrix[1].x * v.x + rotationMatrix[1].y * v.y + rotationMatrix[1].z * v.z;
     float z = rotationMatrix[2].x * v.x + rotationMatrix[2].y * v.y + rotationMatrix[2].z * v.z;
-    v.x = x;
-    v.y = y;
-    v.z = z;
-//    v.x = x + c.x;
-//    v.y = y + c.y;
-//    v.z = z + c.z;
+//    v.x = x;
+//    v.y = y;
+//    v.z = z;
+    v.x = x + origin.x;
+    v.y = y + origin.y;
+    v.z = z + origin.z;
 }
 
 Vector3 GetCentroid(const std::vector<Vector3>& points)
@@ -111,14 +111,13 @@ void DrawLine(SDL_Renderer& renderer, float x1, float y1, float x2, float y2)
     
 }
 
-
-void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points)
+void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin = {0})
 {
     Vector3 centroid = GetCentroid(points);
 
     for (auto& p : points)
     {
-        rotate(axis, p, angle, centroid);
+        rotate(axis, p, angle, rotationOrigin);
     }
 }
 
@@ -165,12 +164,9 @@ int main(int argc, char *argv[])
         { 6, 7 },
         { 7, 4 },
     };
-    
+
     // This and scale/angle will form a "transform" class later.
     Vector3 pos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -30 };
-        
-
-
 
     std::vector<Vector3> orthoProjectionMatrix = {
         { 1, 0, 0 },
