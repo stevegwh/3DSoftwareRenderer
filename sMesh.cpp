@@ -25,7 +25,7 @@ void sMesh::GetBoundingBox()
 
 void sMesh::Draw() const
 {
-    for (const Triangle* tri: tris)
+    for (const Triangle* const tri: tris)
     {
         tri->Draw();
     }
@@ -36,7 +36,7 @@ Vector2 sMesh::GetCentre() const
     float x;
     float y;
     
-    for (const Triangle* tri: tris) 
+    for (const Triangle* const tri: tris) 
     {
         x += tri->p1.x + tri->p2.x + tri->p3.x;
         y += tri->p1.y + tri->p2.y + tri->p3.y;
@@ -50,10 +50,10 @@ Vector2 sMesh::GetCentre() const
 
 void sMesh::Rotate(float angle)
 {
-    Vector2 centre = GetCentre();
-    double const a = angle * PI/180;
-    double const c = cos(a);
-    double const s = sin(a);
+    const Vector2 centre = GetCentre();
+    const double a = angle * PI/180;
+    const double c = cos(a);
+    const double s = sin(a);    
     for (Triangle* tri : tris) 
     {
         tri->p1 = rotatePoint(tri->p1, c, s, centre.x, centre.y);

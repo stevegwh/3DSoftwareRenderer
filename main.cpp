@@ -7,23 +7,6 @@
 constexpr int screenWidth = 800;
 constexpr int screenHeight = 600;
 
-Vector2  s_Rotate(Vector2 p, float angle, float cx, float cy)
-{
-    p.x -= cx;
-    p.y -= cy;
-
-    double const a = angle * PI/180;
-    double const c = cos(a);
-    double const s = sin(a);
-    Vector2 rV = (Vector2) { static_cast<float>(p.x * c - p.y * s),
-                             static_cast<float>(p.x * s + p.y * c) };
-
-    p.x = rV.x + cx;
-    p.y = -rV.y + cy;
-
-    return p;
-}
-
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -87,10 +70,6 @@ int main()
         sMesh mesh(tris);
         mesh.Rotate(angle);
         mesh.Draw();
-//        tri.Rotate(angle);
-//        tri2.Rotate(angle);
-//        tri.Draw();
-//        tri2.Draw();
  
         EndDrawing();
         //----------------------------------------------------------------------------------
