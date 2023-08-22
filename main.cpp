@@ -121,6 +121,29 @@ void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Ve
     }
 }
 
+// GameObject base class?
+// Transform - Attached to every game object
+// World Position
+// Rotation
+// Scale
+// Rotation/Position/Scale.OnChange event?
+
+// Component (can be attached to GameObject).
+// Renderable
+// const OriginalPoints
+// PointsMut mut
+// Edges
+// Faces?
+// OnRotate -> Transform.RotateEvent. Takes new rotate number, applies rotation to original points
+// and stores it into PointsMut.
+// OnTranslate -> Transform.TranslateEvent
+// OnScale -> Transform.ScaleEvent\
+
+// Renderer
+// Projection
+// Draw (Render) - Draws all renderables passed in.
+// Needs Transform for world position + scale
+
 int main(int argc, char *argv[])
 {
     Clock clock;
@@ -136,17 +159,31 @@ int main(int argc, char *argv[])
     SDL_Event event;
 
     // The local coordinations of our cube.
+//    std::vector<Vector3> points = {
+//        (Vector3) {-50, 50, -50},
+//        (Vector3) { 50, 50, -50 },
+//        (Vector3) { 50, -50, -50 },
+//        (Vector3) { -50, -50, -50 },
+//        
+//        (Vector3) { -50, 50, 50 },
+//        (Vector3) { 50, 50, 50 },
+//        (Vector3) { 50, -50, 50 },
+//        (Vector3) { -50, -50, 50 }
+//    };
+
+    // Pre-normalised
     std::vector<Vector3> points = {
-        (Vector3) {-50, 50, -50},
-        (Vector3) { 50, 50, -50 },
-        (Vector3) { 50, -50, -50 },
-        (Vector3) { -50, -50, -50 },
-        
-        (Vector3) { -50, 50, 50 },
-        (Vector3) { 50, 50, 50 },
-        (Vector3) { 50, -50, 50 },
-        (Vector3) { -50, -50, 50 }
+        { -0.5,  0.5, -0.5 },
+        {  0.5,  0.5, -0.5 },
+        {  0.5, -0.5, -0.5 },
+        { -0.5, -0.5, -0.5 },
+
+        { -0.5,  0.5,  0.5 },
+        {  0.5,  0.5,  0.5 },
+        {  0.5, -0.5,  0.5 },
+        { -0.5, -0.5,  0.5 }
     };
+
     // The cube's edges
     std::vector<std::array<int, 2>> edges = {
         { 0, 1 },
@@ -166,7 +203,7 @@ int main(int argc, char *argv[])
     };
 
     // This and scale/angle will form a "transform" class later.
-    Vector3 pos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -30 };
+    Vector3 pos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 5 };
 
     std::vector<Vector3> orthoProjectionMatrix = {
         { 1, 0, 0 },
@@ -192,10 +229,10 @@ int main(int argc, char *argv[])
                         pos.x -= 5;
                         break;
                     case SDLK_UP:
-                        pos.y -= 5;
+                        camDistance += 0.5;
                         break;
                     case SDLK_DOWN:
-                        pos.y += 5;
+                        camDistance -= 0.5;
                         break;
                     default:
                         loop = SDL_TRUE;
@@ -214,8 +251,25 @@ int main(int argc, char *argv[])
 
         for (const auto& v : points)
         {
-            Vector3 worldv1 = { v.x + pos.x, v.y + pos.y, v.z + pos.z };
-            auto p = getProjectedPoint(orthoProjectionMatrix, worldv1);
+            //Vector3 worldv1 = { v.x + pos.x, v.y + pos.y, v.z + pos.z };
+            
+            // Perspective projection matrix
+            // Aspect ratio (w/h)
+            // FOV (angle)
+            // Normalisation
+            float z = 1/(camDistance - v.z);
+            
+            std::vector<Vector3> mat = {
+                { z, 0, 0 },
+                { 0, z, 0 }
+            };
+
+            auto p = getProjectedPoint(mat, v);
+            p.x *= 150;
+            p.y *= 150;
+            p.x += pos.x;
+            p.y += pos.y;
+
             projectedPoints.push_back(p);
         }
 
