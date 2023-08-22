@@ -22,22 +22,27 @@ struct Clock
 #include <vector>
 #include <numeric>
 
-std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat, std::array<float, 4> vec)
+std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat, const std::array<float, 4>& vec)
 {
+    std::array<float, 4> result = {0};
+    
     for (int i = 0; i < 4; ++i)
     {
-        vec[i] = vec[i] * mat[i][0] + vec[i] * mat[i][1] + vec[i] * mat[i][2] + vec[i] * mat[i][3];
+        for (int j = 0; j < 4; ++j)
+        {
+            result[i] += mat[i][j] * vec[j];
+        }
     }
-
+    
     // Perspective divide
-    if (vec[3] != 0)
+    if (result[3] != 0)
     {
-        vec[0] /= vec[3]; //x
-        vec[1] /= vec[3]; //y
-        vec[2] /= vec[3]; //z
+        result[0] /= result[3]; //x
+        result[1] /= result[3]; //y
+        result[2] /= result[3]; //z
     }
     //-----------------------------
-    return vec;
+    return result;
 }
 
 enum RotationAxis
@@ -46,14 +51,14 @@ enum RotationAxis
 };
 
 
-Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3& v3)
-{
-    
-    float x = projMatrix.at(0).x * v3.x + projMatrix.at(0).y * v3.y + projMatrix.at(0).z * v3.z;
-    float y =  projMatrix.at(1).x * v3.x + projMatrix.at(1).y * v3.y + projMatrix.at(1).z * v3.z;
-    
-    return { x, y };
-}
+//Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3& v3)
+//{
+//    
+//    float x = projMatrix.at(0).x * v3.x + projMatrix.at(0).y * v3.y + projMatrix.at(0).z * v3.z;
+//    float y =  projMatrix.at(1).x * v3.x + projMatrix.at(1).y * v3.y + projMatrix.at(1).z * v3.z;
+//    
+//    return { x, y };
+//}
 
 void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 origin)
 {
@@ -205,7 +210,7 @@ int main(int argc, char *argv[])
     };
     
     // World position of the above cube
-    Vector3 pos = {3, 3, 3};
+    Vector3 pos = {1, 0, 3};
 
     MoveCube(points, pos);
 
@@ -288,7 +293,7 @@ int main(int argc, char *argv[])
         {
             //Vector3 worldv1 = { v.x + pos.x, v.y + pos.y, v.z + pos.z };
             
-            // Weak perspective.
+            // Weak ndc.
            // float z = 1/(camDistance - v.z);
             
             // Orthographical
@@ -316,13 +321,12 @@ int main(int argc, char *argv[])
                 v.x, v.y, v.z, v.z
             };
             
-            // Normalised
-            auto perspective = matrix4v4Mult(perspectiveMat, vec4);
             
-            // Not sure about this
+            auto ndc = matrix4v4Mult(perspectiveMat, vec4);
+            
             Vector2 screenP = { 
-                static_cast<float>(perspective[0] / perspective[2] * SCREEN_WIDTH),
-                static_cast<float>(perspective[1] / perspective[2] * SCREEN_HEIGHT)
+                static_cast<float>(SCREEN_WIDTH/2 + ndc[0] * SCREEN_WIDTH/2),
+                static_cast<float>(SCREEN_HEIGHT/2 - ndc[1] * SCREEN_HEIGHT/2)
             };
 
             projectedPoints.push_back({screenP.x, screenP.y});
