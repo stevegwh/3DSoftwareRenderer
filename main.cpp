@@ -22,26 +22,13 @@ struct Clock
 #include <vector>
 #include <numeric>
 
-// Fruity loops 
-std::vector<std::vector<int>> matrix_multiplication(std::vector<std::vector<int>> &a, std::vector<std::vector<int>> &b, size_t n){
-
-    std::vector<std::vector<int>> c(n, std::vector<int> (n, 0));
-    for (int row = 0; row < n; ++row)
+std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat, std::array<float, 4> vec)
+{
+    for (int i = 0; i < 4; ++i)
     {
-        for (int i = 0; i < n; ++i)
-        {
-            std::vector<int> cell = {};
-            for (int j = 0; j < n; ++j)
-            {
-                cell.push_back(a[row][j] * b[j][i]);
-            }
-            int cellsum = 0;
-            for (auto& x : cell) cellsum += x;
-            c[row][i] = cellsum;
-        }
+        vec[i] = vec[i] * mat[0][0] + vec[i] * mat[0][1] + vec[i] * mat[0][2] + vec[i] * mat[0][3];
     }
-
-    return c;
+    return vec;
 }
 
 enum RotationAxis
@@ -292,30 +279,38 @@ int main(int argc, char *argv[])
             // Orthographical
             // float z = 1;
             
-            // TODO: Move out of for loop
-            float aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
-            float fov = 85 * PI/180;
-            float f = 1/tan(fov);
-            float lam = (zFar / (zFar-zNear)) - ((zFar / (zFar-zNear)) * zNear);
-            
-            // [ a*f*x ]
-            // [ f*y ]
-            // [ lam*z - lam*znear ]
-            // Then:
-            // Perspective divide
-            // x/z, y/z, z/z
+//            // TODO: Move out of for loop
+//            float aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
+//            float fov = 85 * PI/180;
+//            float f = 1/tan(fov);
+//            float lam = (zFar / (zFar-zNear)) - ((zFar / (zFar-zNear)) * zNear);
+//            
+//            // [ a*f*x ]
+//            // [ f*y ]
+//            // [ lam*z - lam*znear ]
+//            // Then:
+//            // Perspective divide
+//            // x/z, y/z, z/z
+//
+//            const std::vector<std::array<float, 4>> mat4x4 = {
+//                { aspect * f, 0, 0 , 0},
+//                { 0, f, 0 , 0},
+//                { 0, 0, lam , 0},
+//                { 0, 0, 1 , 0}
+//            };
+//
+//            std::array<float, 4> vec4 = {
+//                v.x, v.y, v.z, 1
+//            };
+//            
+//            auto proV = matrix4v4Mult(mat4x4, vec4);
             
             std::vector<Vector3> mat = {
                 { z, 0, 0 },
                 { 0, z, 0 }
             };
 
-            std::vector<std::array<float, 4>> mat4x4 = {
-                { aspect * f, 0, 0 , 0},
-                { 0, f, 0 , 0},
-                { 0, 0, lam , 0},
-                { 0, 0, 1 , 0}
-            };
+
 
             auto p = getProjectedPoint(mat, v);
             
