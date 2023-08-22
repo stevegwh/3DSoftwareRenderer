@@ -26,8 +26,17 @@ std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat,
 {
     for (int i = 0; i < 4; ++i)
     {
-        vec[i] = vec[i] * mat[0][0] + vec[i] * mat[0][1] + vec[i] * mat[0][2] + vec[i] * mat[0][3];
+        vec[i] = vec[i] * mat[i][0] + vec[i] * mat[i][1] + vec[i] * mat[i][2] + vec[i] * mat[i][3];
     }
+
+    // Perspective divide
+    if (vec[3] != 0)
+    {
+        vec[0] /= vec[3]; //x
+        vec[1] /= vec[3]; //y
+        vec[2] /= vec[3]; //z
+    }
+    //-----------------------------
     return vec;
 }
 
@@ -129,7 +138,17 @@ void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Ve
 
     for (auto& p : points)
     {
-        rotate(axis, p, angle, rotationOrigin);
+        rotate(axis, p, angle, centroid);
+    }
+}
+
+void MoveCube(std::vector<Vector3>& points, Vector3 pos)
+{
+    for (Vector3& p : points)
+    {
+        p.x += pos.x;
+        p.y += pos.y;
+        p.z += pos.z;
     }
 }
 
@@ -159,9 +178,9 @@ void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Ve
 int main(int argc, char *argv[])
 {
     Clock clock;
-    float camDistance = 2;
+    //float camDistance = 2;
     float zFar = 1000;
-    float zNear = 0.1;
+    float zNear = 0.01;
     float angle = 0.1;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -172,21 +191,7 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    // The local coordinations of our cube.
-//    std::vector<Vector3> points = {
-//        (Vector3) {-50, 50, -50},
-//        (Vector3) { 50, 50, -50 },
-//        (Vector3) { 50, -50, -50 },
-//        (Vector3) { -50, -50, -50 },
-//        
-//        (Vector3) { -50, 50, 50 },
-//        (Vector3) { 50, 50, 50 },
-//        (Vector3) { 50, -50, 50 },
-//        (Vector3) { -50, -50, 50 }
-//    };
-
-    // Pre-normalised Cube (Bad. This should be normalised from local-space coordinates prior to projection to 
-    // viewport/screen space.)
+    // Local co-ordinates of a cube
     std::vector<Vector3> points = {
         { -0.5,  0.5, -0.5 },
         {  0.5,  0.5, -0.5 },
@@ -198,6 +203,11 @@ int main(int argc, char *argv[])
         {  0.5, -0.5,  0.5 },
         { -0.5, -0.5,  0.5 }
     };
+    
+    // World position of the above cube
+    Vector3 pos = {3, 3, 3};
+
+    MoveCube(points, pos);
 
     // The cube's edges
     std::vector<std::array<int, 2>> edges = {
@@ -217,12 +227,21 @@ int main(int argc, char *argv[])
         { 7, 4 },
     };
 
-    // This and scale/angle will form a "transform" class later.
-    Vector3 pos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 5 };
-
     std::vector<Vector3> orthoProjectionMatrix = {
         { 1, 0, 0 },
         { 0, 1, 0 }
+    };
+
+
+    const double aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
+    const double fov = 90 * PI/180;
+    const double f = 1/tan(fov/2);
+
+    const std::vector<std::array<float, 4>> perspectiveMat = {
+        { static_cast<float>(aspect * f), 0, 0 , 0},
+        { 0, static_cast<float>(f), 0 , 0},
+        { 0, 0, zFar/(zFar-zNear), (-zFar * zNear)/(zFar - zNear)},
+        { 0, 0, 1 , 0}
     };
 
     while (loop)
@@ -238,16 +257,16 @@ int main(int argc, char *argv[])
                         loop = SDL_FALSE;
                         break;
                     case SDLK_RIGHT:
-                        pos.x += 5;
+                        MoveCube(points, {0.5, 0, 0});
                         break;
                     case SDLK_LEFT:
-                        pos.x -= 5;
+                        MoveCube(points, {-0.5, 0, 0});
                         break;
                     case SDLK_UP:
-                        camDistance += 0.5;
+                        MoveCube(points, {0, 0, 0.5});
                         break;
                     case SDLK_DOWN:
-                        camDistance -= 0.5;
+                        MoveCube(points, {0, 0, -0.5});
                         break;
                     default:
                         loop = SDL_TRUE;
@@ -256,6 +275,8 @@ int main(int argc, char *argv[])
         }
         // Update
         //angle += 0.001 * clock.delta;
+        
+        // Cube transformations
         RotateCube(Y, angle, points);
         RotateCube(Z, angle, points);
         
@@ -263,65 +284,48 @@ int main(int argc, char *argv[])
         // Must after all transformations.
         std::vector<Vector2> projectedPoints;
         projectedPoints.reserve(points.size());
-
         for (const auto& v : points)
         {
             //Vector3 worldv1 = { v.x + pos.x, v.y + pos.y, v.z + pos.z };
             
-            // Perspective projection matrix
-            // Aspect ratio (w/h)
-            // FOV (angle)
-            // Normalisation
-            
             // Weak perspective.
-            float z = 1/(camDistance - v.z);
+           // float z = 1/(camDistance - v.z);
             
             // Orthographical
             // float z = 1;
-            
-//            // TODO: Move out of for loop
-//            float aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
-//            float fov = 85 * PI/180;
-//            float f = 1/tan(fov);
-//            float lam = (zFar / (zFar-zNear)) - ((zFar / (zFar-zNear)) * zNear);
-//            
-//            // [ a*f*x ]
-//            // [ f*y ]
-//            // [ lam*z - lam*znear ]
-//            // Then:
-//            // Perspective divide
-//            // x/z, y/z, z/z
-//
-//            const std::vector<std::array<float, 4>> mat4x4 = {
-//                { aspect * f, 0, 0 , 0},
-//                { 0, f, 0 , 0},
-//                { 0, 0, lam , 0},
-//                { 0, 0, 1 , 0}
+
+            // OLD (use mat or ortho mat)
+//            std::vector<Vector3> mat = {
+//                { z, 0, 0 },
+//                { 0, z, 0 }
 //            };
+//            auto p = getProjectedPoint(mat, v);
+            //-------------------
+
+//            // Scaling.
+//            p.x *= 150;
+//            p.y *= 150;
+//            // Translating to world space. TODO: sus logic.
+//            p.x += pos.x;
+//            p.y += pos.y;
 //
-//            std::array<float, 4> vec4 = {
-//                v.x, v.y, v.z, 1
-//            };
-//            
-//            auto proV = matrix4v4Mult(mat4x4, vec4);
+//            projectedPoints.push_back(p);
+
+
+            std::array<float, 4> vec4 = {
+                v.x, v.y, v.z, v.z
+            };
             
-            std::vector<Vector3> mat = {
-                { z, 0, 0 },
-                { 0, z, 0 }
+            // Normalised
+            auto perspective = matrix4v4Mult(perspectiveMat, vec4);
+            
+            // Not sure about this
+            Vector2 screenP = { 
+                static_cast<float>(perspective[0] / perspective[2] * SCREEN_WIDTH),
+                static_cast<float>(perspective[1] / perspective[2] * SCREEN_HEIGHT)
             };
 
-
-
-            auto p = getProjectedPoint(mat, v);
-            
-            // Scaling.
-            p.x *= 150;
-            p.y *= 150;
-            // Translating to world space. TODO: sus logic.
-            p.x += pos.x;
-            p.y += pos.y;
-
-            projectedPoints.push_back(p);
+            projectedPoints.push_back({screenP.x, screenP.y});
         }
 
         // Draw
