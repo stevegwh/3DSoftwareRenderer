@@ -19,9 +19,6 @@ struct Clock
     }
 };
 
-#include <vector>
-#include <numeric>
-
 std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat, const std::array<float, 4>& vec)
 {
     std::array<float, 4> result = {0};
@@ -30,7 +27,7 @@ std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat,
     {
         for (int j = 0; j < 4; ++j)
         {
-            result[i] += mat[i][j] * vec[j];
+            result[i] += mat[i][j] * vec[i];
         }
     }
     
@@ -49,16 +46,6 @@ enum RotationAxis
 {
     X, Y, Z
 };
-
-
-//Vector2 getProjectedPoint(const std::vector<Vector3>& projMatrix, const Vector3& v3)
-//{
-//    
-//    float x = projMatrix.at(0).x * v3.x + projMatrix.at(0).y * v3.y + projMatrix.at(0).z * v3.z;
-//    float y =  projMatrix.at(1).x * v3.x + projMatrix.at(1).y * v3.y + projMatrix.at(1).z * v3.z;
-//    
-//    return { x, y };
-//}
 
 void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 origin)
 {
@@ -139,11 +126,11 @@ void DrawLine(SDL_Renderer& renderer, float x1, float y1, float x2, float y2)
 
 void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin = {0})
 {
-    Vector3 centroid = GetCentroid(points);
+//    Vector3 centroid = GetCentroid(points);
 
     for (auto& p : points)
     {
-        rotate(axis, p, angle, centroid);
+        rotate(axis, p, angle, rotationOrigin);
     }
 }
 
@@ -156,29 +143,6 @@ void MoveCube(std::vector<Vector3>& points, Vector3 pos)
         p.z += pos.z;
     }
 }
-
-// GameObject base class?
-// Transform - Attached to every game object
-// World Position
-// Rotation
-// Scale
-// Rotation/Position/Scale.OnChange event?
-
-// Component (can be attached to GameObject).
-// Renderable
-// const OriginalPoints
-// PointsMut mut
-// Edges
-// Faces?
-// OnRotate -> Transform.RotateEvent. Takes new rotate number, applies rotation to original points
-// and stores it into PointsMut.
-// OnTranslate -> Transform.TranslateEvent
-// OnScale -> Transform.ScaleEvent\
-
-// Renderer
-// Projection
-// Draw (Render) - Draws all renderables passed in.
-// Needs Transform for world position + scale
 
 int main(int argc, char *argv[])
 {
@@ -232,12 +196,13 @@ int main(int argc, char *argv[])
         { 7, 4 },
     };
 
+    Vector3 centroid = GetCentroid(points);
+
     std::vector<Vector3> orthoProjectionMatrix = {
         { 1, 0, 0 },
         { 0, 1, 0 }
     };
-
-
+    
     const double aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
     const double fov = 90 * PI/180;
     const double f = 1/tan(fov/2);
@@ -249,8 +214,14 @@ int main(int argc, char *argv[])
         { 0, 0, 1 , 0}
     };
 
+    std::vector<Vector2> projectedPoints;
+    size_t cap = points.capacity();
     while (loop)
     {
+        // Reserving outside of the loop and then calling clear should be faster than declaring a new vector each loop.
+        projectedPoints.clear();
+        projectedPoints.reserve(cap);
+        
         clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {
@@ -263,15 +234,19 @@ int main(int argc, char *argv[])
                         break;
                     case SDLK_RIGHT:
                         MoveCube(points, {0.5, 0, 0});
+                        centroid = GetCentroid(points);
                         break;
                     case SDLK_LEFT:
                         MoveCube(points, {-0.5, 0, 0});
+                        centroid = GetCentroid(points);
                         break;
                     case SDLK_UP:
                         MoveCube(points, {0, 0, 0.5});
+                        centroid = GetCentroid(points);
                         break;
                     case SDLK_DOWN:
                         MoveCube(points, {0, 0, -0.5});
+                        centroid = GetCentroid(points);
                         break;
                     default:
                         loop = SDL_TRUE;
@@ -282,45 +257,17 @@ int main(int argc, char *argv[])
         //angle += 0.001 * clock.delta;
         
         // Cube transformations
-        RotateCube(Y, angle, points);
-        RotateCube(Z, angle, points);
+        RotateCube(Y, angle, points, centroid);
+        RotateCube(Z, angle, points, centroid);
         
         
-        // Must after all transformations.
-        std::vector<Vector2> projectedPoints;
-        projectedPoints.reserve(points.size());
-        for (const auto& v : points)
+        // Must be after all transformations.
+        // Convert all points to projected, then NDC
+        for (auto & v : points)
         {
-            //Vector3 worldv1 = { v.x + pos.x, v.y + pos.y, v.z + pos.z };
-            
-            // Weak ndc.
-           // float z = 1/(camDistance - v.z);
-            
-            // Orthographical
-            // float z = 1;
-
-            // OLD (use mat or ortho mat)
-//            std::vector<Vector3> mat = {
-//                { z, 0, 0 },
-//                { 0, z, 0 }
-//            };
-//            auto p = getProjectedPoint(mat, v);
-            //-------------------
-
-//            // Scaling.
-//            p.x *= 150;
-//            p.y *= 150;
-//            // Translating to world space. TODO: sus logic.
-//            p.x += pos.x;
-//            p.y += pos.y;
-//
-//            projectedPoints.push_back(p);
-
-
             std::array<float, 4> vec4 = {
                 v.x, v.y, v.z, v.z
             };
-            
             
             auto ndc = matrix4v4Mult(perspectiveMat, vec4);
             
@@ -337,15 +284,14 @@ int main(int argc, char *argv[])
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-        
+        // Render projected points
         for (auto e : edges)
         {
             const Vector2& p1 = projectedPoints.at(e[0]);
             const Vector2& p2 = projectedPoints.at(e[1]);
             SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
         }
-        //Vector2 centerProj = getProjectedPoint(orthoProjectionMatrix, centroid);
-        //SDL_RenderDrawPointF(renderer, centerProj.x, centerProj.y);
+
         SDL_RenderPresent(renderer);
     }
 
