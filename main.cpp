@@ -171,7 +171,8 @@ int main(int argc, char *argv[])
 //        (Vector3) { -50, -50, 50 }
 //    };
 
-    // Pre-normalised
+    // Pre-normalised Cube (Bad. This should be normalised from local-space coordinates prior to projection to 
+    // viewport/screen space.)
     std::vector<Vector3> points = {
         { -0.5,  0.5, -0.5 },
         {  0.5,  0.5, -0.5 },
@@ -257,7 +258,12 @@ int main(int argc, char *argv[])
             // Aspect ratio (w/h)
             // FOV (angle)
             // Normalisation
+            
+            // Weak perspective.
             float z = 1/(camDistance - v.z);
+            
+            // Orthographical
+            // float z = 1;
             
             std::vector<Vector3> mat = {
                 { z, 0, 0 },
@@ -265,8 +271,11 @@ int main(int argc, char *argv[])
             };
 
             auto p = getProjectedPoint(mat, v);
+            
+            // Scaling.
             p.x *= 150;
             p.y *= 150;
+            // Translating to world space. TODO: sus logic.
             p.x += pos.x;
             p.y += pos.y;
 
