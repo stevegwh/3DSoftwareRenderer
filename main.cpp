@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "stevelib.h"
 #include "constants.h"
+#include "ObjParser.hpp"
 #include <cmath>
 
 struct Clock
@@ -146,6 +147,8 @@ void MoveCube(std::vector<Vector3>& points, Vector3 pos)
 
 int main(int argc, char *argv[])
 {
+    
+    
     Clock clock;
     //float camDistance = 2;
     float zFar = 1000;
@@ -160,41 +163,61 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
+    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
+    std::vector<Vector3> points = bunnyMesh->verticies;
     // Local co-ordinates of a cube
-    std::vector<Vector3> points = {
-        { -0.5,  0.5, -0.5 },
-        {  0.5,  0.5, -0.5 },
-        {  0.5, -0.5, -0.5 },
-        { -0.5, -0.5, -0.5 },
-
-        { -0.5,  0.5,  0.5 },
-        {  0.5,  0.5,  0.5 },
-        {  0.5, -0.5,  0.5 },
-        { -0.5, -0.5,  0.5 }
-    };
+//    std::vector<Vector3> points = {
+//        {  0.5,  0.5, -0.5 },
+//        { -0.5,  0.5, -0.5 },
+//        {  0.5, -0.5, -0.5 },
+//        { -0.5, -0.5, -0.5 },
+//
+//
+//        {  0.5,  0.5, 0.5 },
+//        { -0.5,  0.5, 0.5 },
+//        {  0.5, -0.5, 0.5 },
+//        { -0.5, -0.5, 0.5 }
+//    };
     
     // World position of the above cube
-    Vector3 pos = {1, 0, 3};
+    Vector3 pos = {0, -0.1, 0.2};
 
     MoveCube(points, pos);
 
-    // The cube's edges
-    std::vector<std::array<int, 2>> edges = {
-        { 0, 1 },
-        { 1, 2 },
-        { 2, 3 },
-        { 3, 0 },
+//    // The cube's edges
+//    std::vector<std::array<int, 2>> edges = {
+//        { 0, 1 },
+//        { 1, 2 },
+//        { 2, 3 },
+//        { 3, 0 },
+//
+//        { 0, 4 },
+//        { 1, 5 },
+//        { 2, 6 },
+//        { 3, 7 },
+//
+//        { 4, 5 },
+//        { 5, 6 },
+//        { 6, 7 },
+//        { 7, 4 },
+//    };
 
-        { 0, 4 },
-        { 1, 5 },
-        { 2, 6 },
-        { 3, 7 },
+//    std::vector<std::array<int, 3>> triangles = {
+//        { 0, 2, 1 }, // front1
+//        { 3, 1, 2 }, // front2
+//        { 6, 2, 7 }, // bot1
+//        { 3, 2, 7 }, // bot2
+//        { 6, 5, 4 }, // rear1
+//        { 7, 6, 5 }, // rear2
+//        { 4, 0, 5 }, // top1
+//        { 1, 5, 0 }, // top2
+//        { 0, 4, 2 }, //sideleft1
+//        { 6, 4, 2 }, //sideleft2
+//        { 1, 3, 5 }, //sideright1
+//        { 7, 5, 3 } //sideright2
+//    };
 
-        { 4, 5 },
-        { 5, 6 },
-        { 6, 7 },
-        { 7, 4 },
-    };
+    std::vector<Triangle> triangles = bunnyMesh->faces;
 
     Vector3 centroid = GetCentroid(points);
 
@@ -233,19 +256,19 @@ int main(int argc, char *argv[])
                         loop = SDL_FALSE;
                         break;
                     case SDLK_RIGHT:
-                        MoveCube(points, {0.5, 0, 0});
+                        MoveCube(points, {0.1, 0, 0});
                         centroid = GetCentroid(points);
                         break;
                     case SDLK_LEFT:
-                        MoveCube(points, {-0.5, 0, 0});
+                        MoveCube(points, {-0.1, 0, 0});
                         centroid = GetCentroid(points);
                         break;
                     case SDLK_UP:
-                        MoveCube(points, {0, 0, 0.5});
+                        MoveCube(points, {0, 0, 0.1});
                         centroid = GetCentroid(points);
                         break;
                     case SDLK_DOWN:
-                        MoveCube(points, {0, 0, -0.5});
+                        MoveCube(points, {0, 0, -0.1});
                         centroid = GetCentroid(points);
                         break;
                     default:
@@ -258,7 +281,7 @@ int main(int argc, char *argv[])
         
         // Cube transformations
         RotateCube(Y, angle, points, centroid);
-        RotateCube(Z, angle, points, centroid);
+        //RotateCube(Z, angle, points, centroid);
         
         
         // Must be after all transformations.
@@ -284,17 +307,33 @@ int main(int argc, char *argv[])
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-        // Render projected points
-        for (auto e : edges)
+//        // Render projected lines
+//        for (auto e : edges)
+//        {
+//            const Vector2& p1 = projectedPoints.at(e[0]);
+//            const Vector2& p2 = projectedPoints.at(e[1]);
+//            SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
+//        }
+        // Render projected lines
+        for (auto t : triangles)
         {
-            const Vector2& p1 = projectedPoints.at(e[0]);
-            const Vector2& p2 = projectedPoints.at(e[1]);
+            const Vector2& p1 = projectedPoints.at(t.v1);
+            const Vector2& p2 = projectedPoints.at(t.v2);
+            const Vector2& p3 = projectedPoints.at(t.v3);
             SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
+            SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
+            SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
+            
+            
         }
 
         SDL_RenderPresent(renderer);
     }
 
+    delete bunnyMesh;
 
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
     return 0;
 }
