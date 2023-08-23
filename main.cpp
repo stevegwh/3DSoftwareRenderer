@@ -20,6 +20,11 @@ struct Clock
     }
 };
 
+bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c)
+{
+    return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
+}
+
 std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat, const std::array<float, 4>& vec)
 {
     std::array<float, 4> result = {0};
@@ -163,29 +168,29 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
-    std::vector<Vector3> points = bunnyMesh->verticies;
+//    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
+//    std::vector<Vector3> points = bunnyMesh->verticies;
     // Local co-ordinates of a cube
-//    std::vector<Vector3> points = {
-//        {  0.5,  0.5, -0.5 },
-//        { -0.5,  0.5, -0.5 },
-//        {  0.5, -0.5, -0.5 },
-//        { -0.5, -0.5, -0.5 },
-//
-//
-//        {  0.5,  0.5, 0.5 },
-//        { -0.5,  0.5, 0.5 },
-//        {  0.5, -0.5, 0.5 },
-//        { -0.5, -0.5, 0.5 }
-//    };
+    std::vector<Vector3> points = {
+        {  0.5,  0.5, -0.5 },
+        { -0.5,  0.5, -0.5 },
+        {  0.5, -0.5, -0.5 },
+        { -0.5, -0.5, -0.5 },
+
+
+        {  0.5,  0.5, 0.5 },
+        { -0.5,  0.5, 0.5 },
+        {  0.5, -0.5, 0.5 },
+        { -0.5, -0.5, 0.5 }
+    };
     
     // World position of the above cube
-    Vector3 pos = {0, -0.1, 0.2};
+    Vector3 pos = {0, -0.1, 3};
 
     MoveCube(points, pos);
 
 //    // The cube's edges
-//    std::vector<std::array<int, 2>> edges = {
+//    std::vector<Triangle> edges = {
 //        { 0, 1 },
 //        { 1, 2 },
 //        { 2, 3 },
@@ -202,22 +207,22 @@ int main(int argc, char *argv[])
 //        { 7, 4 },
 //    };
 
-//    std::vector<std::array<int, 3>> triangles = {
-//        { 0, 2, 1 }, // front1
-//        { 3, 1, 2 }, // front2
-//        { 6, 2, 7 }, // bot1
-//        { 3, 2, 7 }, // bot2
-//        { 6, 5, 4 }, // rear1
-//        { 7, 6, 5 }, // rear2
-//        { 4, 0, 5 }, // top1
-//        { 1, 5, 0 }, // top2
-//        { 0, 4, 2 }, //sideleft1
-//        { 6, 4, 2 }, //sideleft2
-//        { 1, 3, 5 }, //sideright1
-//        { 7, 5, 3 } //sideright2
-//    };
+    std::vector<Triangle> triangles = {
+        { 0, 2, 1 }, // front1
+        { 3, 1, 2 }, // front2
+        { 6, 2, 7 }, // bot1
+        { 3, 2, 7 }, // bot2
+        { 6, 5, 4 }, // rear1
+        { 7, 6, 5 }, // rear2
+        { 4, 0, 5 }, // top1
+        { 1, 5, 0 }, // top2
+        { 0, 4, 2 }, //sideleft1
+        { 6, 4, 2 }, //sideleft2
+        { 1, 3, 5 }, //sideright1
+        { 7, 5, 3 } //sideright2
+    };
 
-    std::vector<Triangle> triangles = bunnyMesh->faces;
+    //std::vector<Triangle> triangles = bunnyMesh->faces;
 
     Vector3 centroid = GetCentroid(points);
 
@@ -320,9 +325,35 @@ int main(int argc, char *argv[])
             const Vector2& p1 = projectedPoints.at(t.v1);
             const Vector2& p2 = projectedPoints.at(t.v2);
             const Vector2& p3 = projectedPoints.at(t.v3);
-            SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
-            SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
-            SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
+//            SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
+//            SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
+//            SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
+            
+            // Get bounding box.
+            // for loop/function that goes pixel by pixel through that box and paints it if it is within bounds or not.
+            float xmax = p1.x > p2.x ? (p1.x > p3.x ? p1.x : p3.x) : (p2.x > p3.x ? p2.x : p3.x);
+            float ymax = p1.y > p2.y ? (p1.y > p3.y ? p1.y : p3.y) : (p2.y > p3.y ? p2.y : p3.y);
+            float xmin = p1.x < p2.x ? (p1.x < p3.x ? p1.x : p3.x) : (p2.x < p3.x ? p2.x : p3.x);
+            float ymin = p1.y < p2.y ? (p1.y < p3.y ? p1.y : p3.y) : (p2.x <  p3.y ? p2.y : p3.y);
+
+
+            for (int x = xmin; x <= xmax; ++x) 
+            {
+                for (int y = ymin; y <= ymax; ++y) 
+                {
+                    Vector2 p = { static_cast<float>(x), static_cast<float>(y) };
+                    bool inside = true;
+                    inside &= edgeFunction(p1, p2, p);
+                    inside &= edgeFunction(p2, p3, p);
+                    inside &= edgeFunction(p3, p1, p);
+
+                    if (inside)
+                    {
+                        SDL_RenderDrawPointF(renderer, x, y);
+                    }
+
+                }
+            }
             
             
         }
@@ -330,7 +361,7 @@ int main(int argc, char *argv[])
         SDL_RenderPresent(renderer);
     }
 
-    delete bunnyMesh;
+    //delete bunnyMesh;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
