@@ -21,7 +21,7 @@ struct Edge
  */
 struct Triangle
 {
-    const int v1, v2, v3;
+    int v1, v2, v3;
 };
 
 struct Color

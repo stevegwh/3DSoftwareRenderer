@@ -5,6 +5,7 @@
 #include "stevelib.h"
 #include "constants.h"
 #include "ObjParser.hpp"
+#include "Utils.hpp"
 #include <cmath>
 
 struct Clock
@@ -168,24 +169,24 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-//    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
-//    std::vector<Vector3> points = bunnyMesh->verticies;
+    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
+    std::vector<Vector3> points = bunnyMesh->verticies;
     // Local co-ordinates of a cube
-    std::vector<Vector3> points = {
-        {  0.5,  0.5, -0.5 },
-        { -0.5,  0.5, -0.5 },
-        {  0.5, -0.5, -0.5 },
-        { -0.5, -0.5, -0.5 },
-
-
-        {  0.5,  0.5, 0.5 },
-        { -0.5,  0.5, 0.5 },
-        {  0.5, -0.5, 0.5 },
-        { -0.5, -0.5, 0.5 }
-    };
+//    std::vector<Vector3> points = {
+//        {  0.5,  0.5, -0.5 },
+//        { -0.5,  0.5, -0.5 },
+//        {  0.5, -0.5, -0.5 },
+//        { -0.5, -0.5, -0.5 },
+//
+//
+//        {  0.5,  0.5, 0.5 },
+//        { -0.5,  0.5, 0.5 },
+//        {  0.5, -0.5, 0.5 },
+//        { -0.5, -0.5, 0.5 }
+//    };
     
     // World position of the above cube
-    Vector3 pos = {0, -0.1, 3};
+    Vector3 pos = {0, -0.1, 0.3};
 
     MoveCube(points, pos);
 
@@ -207,22 +208,24 @@ int main(int argc, char *argv[])
 //        { 7, 4 },
 //    };
 
-    std::vector<Triangle> triangles = {
-        { 0, 2, 1 }, // front1
-        { 3, 1, 2 }, // front2
-        { 6, 2, 7 }, // bot1
-        { 3, 2, 7 }, // bot2
-        { 6, 5, 4 }, // rear1
-        { 7, 6, 5 }, // rear2
-        { 4, 0, 5 }, // top1
-        { 1, 5, 0 }, // top2
-        { 0, 4, 2 }, //sideleft1
-        { 6, 4, 2 }, //sideleft2
-        { 1, 3, 5 }, //sideright1
-        { 7, 5, 3 } //sideright2
-    };
+//    std::vector<Triangle> triangles = {
+//        { 0, 1, 2 }, // front1
+//        { 3, 2, 1 }, // front2
+//        { 6, 2, 7 }, // bot1
+//        { 3, 7, 2 }, // bot2
+//        { 4, 6, 5 }, // rear1
+//        { 7, 5, 6 }, // rear2
+//        { 4, 5, 0 }, // top1
+//        { 1, 0, 5 }, // top2
+//        { 0, 2, 4 }, //sideleft1
+//        { 6, 4, 2 }, //sideleft2
+//        { 1, 5, 3 }, //sideright1
+//        { 7, 3, 5 } //sideright2
+//    };
+    
 
-    //std::vector<Triangle> triangles = bunnyMesh->faces;
+    bool wireFrame = false;
+    std::vector<Triangle> triangles = bunnyMesh->faces;
 
     Vector3 centroid = GetCentroid(points);
 
@@ -276,6 +279,9 @@ int main(int argc, char *argv[])
                         MoveCube(points, {0, 0, -0.1});
                         centroid = GetCentroid(points);
                         break;
+                    case SDLK_SPACE:
+                        wireFrame = !wireFrame;
+                        break;
                     default:
                         loop = SDL_TRUE;
                 }
@@ -287,8 +293,8 @@ int main(int argc, char *argv[])
         // Cube transformations
         RotateCube(Y, angle, points, centroid);
         //RotateCube(Z, angle, points, centroid);
-        
-        
+
+        utils::sortVectorsByZ(triangles, points);
         // Must be after all transformations.
         // Convert all points to projected, then NDC
         for (auto & v : points)
@@ -308,9 +314,9 @@ int main(int argc, char *argv[])
         }
 
         // Draw
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
 //        // Render projected lines
 //        for (auto e : edges)
@@ -319,23 +325,21 @@ int main(int argc, char *argv[])
 //            const Vector2& p2 = projectedPoints.at(e[1]);
 //            SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
 //        }
+        
         // Render projected lines
         for (auto t : triangles)
         {
             const Vector2& p1 = projectedPoints.at(t.v1);
             const Vector2& p2 = projectedPoints.at(t.v2);
             const Vector2& p3 = projectedPoints.at(t.v3);
-//            SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
-//            SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
-//            SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
+
             
             // Get bounding box.
             // for loop/function that goes pixel by pixel through that box and paints it if it is within bounds or not.
-            float xmax = p1.x > p2.x ? (p1.x > p3.x ? p1.x : p3.x) : (p2.x > p3.x ? p2.x : p3.x);
-            float ymax = p1.y > p2.y ? (p1.y > p3.y ? p1.y : p3.y) : (p2.y > p3.y ? p2.y : p3.y);
-            float xmin = p1.x < p2.x ? (p1.x < p3.x ? p1.x : p3.x) : (p2.x < p3.x ? p2.x : p3.x);
-            float ymin = p1.y < p2.y ? (p1.y < p3.y ? p1.y : p3.y) : (p2.x <  p3.y ? p2.y : p3.y);
-
+            int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
+            int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
+            int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
+            int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
 
             for (int x = xmin; x <= xmax; ++x) 
             {
@@ -349,19 +353,32 @@ int main(int argc, char *argv[])
 
                     if (inside)
                     {
+
+                        Uint8 r = static_cast<Uint8>((x - xmin) * 255 / (xmax - xmin));
+                        Uint8 g = static_cast<Uint8>((y - ymin) * 255 / (ymax - ymin));
+                        Uint8 b = 255 - r;
+
+                        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
                         SDL_RenderDrawPointF(renderer, x, y);
                     }
 
                 }
             }
-            
+            if (wireFrame)
+            {
+                SDL_SetRenderDrawColor(renderer, 1, 1, 1, 1);
+                SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
+                SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
+                SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            }
             
         }
 
         SDL_RenderPresent(renderer);
     }
 
-    //delete bunnyMesh;
+    delete bunnyMesh;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

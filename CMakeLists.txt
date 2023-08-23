@@ -11,7 +11,9 @@ add_executable(${PROJECT_NAME} main.cpp
         ObjParser.hpp
         Mesh.cpp
         Mesh.hpp
-        ObjParser.cpp)
+        ObjParser.cpp
+        Utils.cpp
+        Utils.hpp)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 
 set (source "${CMAKE_SOURCE_DIR}/resources")
