@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
     //float camDistance = 2;
     float zFar = 1000;
     float zNear = 0.01;
-    float angle = 0.1;
+    float angle = 0.6;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
     };
     
     const double aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
-    const double fov = 90 * PI/180;
+    const double fov = 75 * PI/180;
     const double f = 1/tan(fov/2);
 
     const std::vector<std::array<float, 4>> perspectiveMat = {
@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
         //angle += 0.001 * clock.delta;
         
         // Cube transformations
-        RotateCube(Y, angle, points, centroid);
+        RotateCube(X, -angle, points, centroid);
         //RotateCube(Z, angle, points, centroid);
 
         utils::sortVectorsByZ(triangles, points);
