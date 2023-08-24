@@ -26,7 +26,7 @@ bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c)
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
 }
 
-std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat, const std::array<float, 4>& vec)
+std::array<float, 4> matrix4v4Mult(const std::vector<std::vector<float>>& mat, const std::array<float, 4>& vec)
 {
     std::array<float, 4> result = {0};
     
@@ -61,8 +61,8 @@ void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 origin)
     v.y -= origin.y;
     v.z -= origin.z;
     
-    float c = cos(angle * PI/180);
-    float s = sin(angle * PI/180);
+    float c = std::cos(angle * PI/180);
+    float s = std::sin(angle * PI/180);
 
     std::vector<Vector3> rotationMatrix;
 
@@ -105,26 +105,7 @@ void rotate(RotationAxis axis, Vector3& v, float angle, Vector3 origin)
     v.z = z + origin.z;
 }
 
-Vector3 GetCentroid(const std::vector<Vector3>& points)
-{
-    float x = 0;
-    float y = 0;
-    float z = 0;
 
-    for (const auto& v: points)
-    {
-        x += v.x;
-        y += v.y;
-        z += v.z;
-    }
-
-    int size = points.size();
-    x /= size;
-    y /= size;
-    z /= size;
-
-    return { x, y, z };
-}
 
 void DrawLine(SDL_Renderer& renderer, float x1, float y1, float x2, float y2)
 {
@@ -133,7 +114,7 @@ void DrawLine(SDL_Renderer& renderer, float x1, float y1, float x2, float y2)
 
 void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin = {0})
 {
-//    Vector3 centroid = GetCentroid(points);
+//    Vector3 centroid = getCentroid(points);
 
     for (auto& p : points)
     {
@@ -162,31 +143,33 @@ int main(int argc, char *argv[])
     SDL_Renderer* renderer = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
-    //std::vector<Vector3> points = bunnyMesh->verticies;
+    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
+    std::vector<Vector3> points = bunnyMesh->verticies;
     // Local co-ordinates of a cube
-    std::vector<Vector3> points = {
-        {  0.5,  0.5, -0.5 },
-        { -0.5,  0.5, -0.5 },
-        {  0.5, -0.5, -0.5 },
-        { -0.5, -0.5, -0.5 },
-
-
-        {  0.5,  0.5, 0.5 },
-        { -0.5,  0.5, 0.5 },
-        {  0.5, -0.5, 0.5 },
-        { -0.5, -0.5, 0.5 }
-    };
+//    std::vector<Vector3> points = {
+//        {  0.5,  0.5, -0.5 },
+//        { -0.5,  0.5, -0.5 },
+//        {  0.5, -0.5, -0.5 },
+//        { -0.5, -0.5, -0.5 },
+//
+//
+//        {  0.5,  0.5, 0.5 },
+//        { -0.5,  0.5, 0.5 },
+//        {  0.5, -0.5, 0.5 },
+//        { -0.5, -0.5, 0.5 }
+//    };
     
     // World position of the above cube
-    Vector3 pos = {0, 0, 3};
+    Vector3 pos = {0, -0.1, 5};
 
     MoveCube(points, pos);
+    //RotateCube(Y, 180, points, utils::getCentroid(points));
 
 //    // The cube's edges
 //    std::vector<Triangle> edges = {
@@ -206,46 +189,60 @@ int main(int argc, char *argv[])
 //        { 7, 4 },
 //    };
 
-    std::vector<Triangle> triangles = {
-        { 0, 1, 2 }, // front1
-        { 3, 2, 1 }, // front2
-        { 6, 2, 7 }, // bot1
-        { 3, 7, 2 }, // bot2
-        { 4, 6, 5 }, // rear1
-        { 7, 5, 6 }, // rear2
-        { 4, 5, 0 }, // top1
-        { 1, 0, 5 }, // top2
-        { 0, 2, 4 }, //sideleft1
-        { 6, 4, 2 }, //sideleft2
-        { 1, 5, 3 }, //sideright1
-        { 7, 3, 5 } //sideright2
-    };
+//    std::vector<Triangle> triangles = {
+//        { 0, 1, 2 }, // front1
+//        { 3, 2, 1 }, // front2
+//        { 6, 2, 7 }, // bot1
+//        { 3, 7, 2 }, // bot2
+//        { 4, 6, 5 }, // rear1
+//        { 7, 5, 6 }, // rear2
+//        { 4, 5, 0 }, // top1
+//        { 1, 0, 5 }, // top2
+//        { 0, 2, 4 }, //sideleft1
+//        { 6, 4, 2 }, //sideleft2
+//        { 1, 5, 3 }, //sideright1
+//        { 7, 3, 5 } //sideright2
+//    };
     
 
-    bool wireFrame = false;
-    //std::vector<Triangle> triangles = bunnyMesh->faces;
+    bool wireFrame = true;
+    std::vector<Triangle> triangles = bunnyMesh->faces;
 
-    Vector3 centroid = GetCentroid(points);
+    Vector3 centroid = utils::getCentroid(points);
 
     std::vector<Vector3> orthoProjectionMatrix = {
         { 1, 0, 0 },
         { 0, 1, 0 }
     };
-
-
-
+    
+    // Projection matrix
     const float zFar = 1000;
     const float zNear = 0.1;
-    const double aspect = SCREEN_HEIGHT / SCREEN_WIDTH;
-    const double fov = 90 * PI/180;
-    const double f = 1/tan(fov/2);
+    const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+    const float fov = 90  * PI/180;
+    const float yScale = 1/std::tanf(fov/2);
+    const float xScale = yScale / aspect;
+    const float nearmfar = zNear - zFar;
 
-    const std::vector<std::array<float, 4>> perspectiveMat = {
-        { static_cast<float>(aspect * f), 0, 0 , 0},
-        { 0, static_cast<float>(f), 0 , 0},
-        { 0, 0, zFar/(zFar-zNear), (-zFar * zNear)/(zFar - zNear)},
-        { 0, 0, 1 , 0}
+    const std::vector<std::vector<float>> perspectiveMatPreFlip = 
+    {
+        { xScale, 0, 0, 0 },
+        { 0, yScale, 0, 0 },
+        { 0, 0, (zFar + zNear) / nearmfar, 1 },
+        { 0, 0, 2*zFar*zNear / nearmfar, 0 }
     };
+    
+    const std::vector<std::vector<float>> reflectionMat =
+    {
+        { 1, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, -1 }
+    };
+    
+    auto perspectiveMat = utils::square_matrix_mul(reflectionMat, perspectiveMatPreFlip, 4);
+    
+    
 
     std::vector<Vector2> projectedPoints;
     size_t cap = points.capacity();
@@ -265,19 +262,33 @@ int main(int argc, char *argv[])
                     case SDLK_ESCAPE:
                         loop = SDL_FALSE;
                         break;
-                    case SDLK_RIGHT:
+                    case SDLK_u:
                         RotateCube(Y, -angle, points, centroid);
                         break;
-                    case SDLK_LEFT:
+                    case SDLK_j:
                         RotateCube(Y, angle, points, centroid);
                         break;
-                    case SDLK_UP:
+                    case SDLK_i:
+                        RotateCube(X, -angle, points, centroid);
+                        break;
+                    case SDLK_k:
+                        RotateCube(X, angle, points, centroid);
+                        break;
+                    case SDLK_w:
                         MoveCube(points, {0, 0, 0.1});
-                        centroid = GetCentroid(points);
+                        centroid = utils::getCentroid(points);
+                        break;
+                    case SDLK_s:
+                        MoveCube(points, {0, 0, -0.1});
+                        centroid = utils::getCentroid(points);
+                        break;
+                    case SDLK_UP:
+                        MoveCube(points, {0, -0.01, 0});
+                        centroid = utils::getCentroid(points);
                         break;
                     case SDLK_DOWN:
-                        MoveCube(points, {0, 0, -0.1});
-                        centroid = GetCentroid(points);
+                        MoveCube(points, {0, 0.01, 0});
+                        centroid = utils::getCentroid(points);
                         break;
                     case SDLK_SPACE:
                         wireFrame = !wireFrame;
@@ -316,13 +327,19 @@ int main(int argc, char *argv[])
         }
 
         // Draw
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        // get max distance of model
+        float maxDist = utils::getVectorDistance(utils::getCentroid(triangles[0], points));
+        // get min distance of model
+        float minDist = utils::getVectorDistance(utils::getCentroid(triangles[triangles.size()-1], points));
+        // map colour gradiant to percentage of max distance per triangle.
+
         // Rasterise to screen
         for (auto t : triangles)
-        {
+        {        
+
             const Vector2& p1 = projectedPoints.at(t.v1);
             const Vector2& p2 = projectedPoints.at(t.v2);
             const Vector2& p3 = projectedPoints.at(t.v3);
@@ -334,7 +351,11 @@ int main(int argc, char *argv[])
             int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
             int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
             int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
-
+            float d = utils::getVectorDistance(utils::getCentroid(t, points));
+            float normalized_dist = (d - minDist) / (maxDist - minDist);
+            float inverted_normalized_dist = 1.0f - normalized_dist;
+            auto color_value = static_cast<Uint8>(inverted_normalized_dist * 255);
+            
             for (int x = xmin; x <= xmax; ++x) 
             {
                 for (int y = ymin; y <= ymax; ++y) 
@@ -347,12 +368,7 @@ int main(int argc, char *argv[])
 
                     if (inside)
                     {
-
-                        auto r = static_cast<Uint8>((x - xmin) * 255 / (xmax - xmin));
-                        auto g = static_cast<Uint8>((y - ymin) * 255 / (ymax - ymin));
-                        Uint8 b = 255 - r;
-
-                        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+                        SDL_SetRenderDrawColor(renderer, color_value, color_value, color_value, 255);
                         SDL_RenderDrawPoint(renderer, x, y);
                     }
 
@@ -360,7 +376,7 @@ int main(int argc, char *argv[])
             }
             if (wireFrame)
             {
-                SDL_SetRenderDrawColor(renderer, 1, 1, 1, 1);
+                SDL_SetRenderDrawColor(renderer, 1, 1, 1, 255);
                 SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
                 SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
                 SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
@@ -368,11 +384,12 @@ int main(int argc, char *argv[])
             }
             
         }
-
         SDL_RenderPresent(renderer);
+
+
     }
 
-    //delete bunnyMesh;
+    delete bunnyMesh;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
