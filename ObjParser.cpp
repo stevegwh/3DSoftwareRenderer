@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstring>
 
 Vector3 getVector(std::string line)
 {
@@ -31,6 +32,11 @@ Triangle getFace(std::string line)
     std::string token;
     while(std::getline(ss, token, ' '))
     {
+        if (line.find('/') != std::string::npos)
+        {
+            token = strtok(token.data(), "/");
+            
+        }
         vec.push_back(std::stoi(token) - 1);
     }
     return { vec[0], vec[1], vec[2] };
@@ -52,27 +58,27 @@ Mesh* ObjParser::ParseObj(const char *path)
     std::string  line;
     while (getline(obj, line))
     {
-        if (line[0] == 'v')
+        if (line[0] == 'v' && line[1] == ' ')
         {
             verticies.push_back(getVector(line));
         }
-        else if (line[0] == 'f')
+        else if (line[0] == 'f' && line[1] == ' ')
         {
             faces.push_back(getFace(line));
         }
-        else if (line[0] == '#')
-        {
-            if (line.find("vertex count") != std::string::npos)
-            {
-                auto c = std::stoi(line.substr(line.find('=') + 1));
-                verticies.reserve(c);
-            }
-            else if (line.find("face count") != std::string::npos)
-            {
-                auto c = std::stoi(line.substr(line.find('=') + 1));
-                faces.reserve(c);
-            }
-        }
+//        else if (line[0] == '#')
+//        {
+//            if (line.find("vertex count") != std::string::npos)
+//            {
+//                auto c = std::stoi(line.substr(line.find('=') + 1));
+//                verticies.reserve(c);
+//            }
+//            else if (line.find("face count") != std::string::npos)
+//            {
+//                auto c = std::stoi(line.substr(line.find('=') + 1));
+//                faces.reserve(c);
+//            }
+//        }
         
     }
     Mesh* mesh = new Mesh(verticies, faces);

@@ -34,7 +34,7 @@ std::array<float, 4> matrix4v4Mult(const std::vector<std::array<float, 4>>& mat,
     {
         for (int j = 0; j < 4; ++j)
         {
-            result[i] += mat[i][j] * vec[i];
+            result[i] += mat[i][j] * vec[j];
         }
     }
     
@@ -157,9 +157,7 @@ int main(int argc, char *argv[])
     
     Clock clock;
     //float camDistance = 2;
-    float zFar = 1000;
-    float zNear = 0.01;
-    float angle = 0.6;
+    float angle = 3;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -169,24 +167,24 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
-    std::vector<Vector3> points = bunnyMesh->verticies;
+    //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
+    //std::vector<Vector3> points = bunnyMesh->verticies;
     // Local co-ordinates of a cube
-//    std::vector<Vector3> points = {
-//        {  0.5,  0.5, -0.5 },
-//        { -0.5,  0.5, -0.5 },
-//        {  0.5, -0.5, -0.5 },
-//        { -0.5, -0.5, -0.5 },
-//
-//
-//        {  0.5,  0.5, 0.5 },
-//        { -0.5,  0.5, 0.5 },
-//        {  0.5, -0.5, 0.5 },
-//        { -0.5, -0.5, 0.5 }
-//    };
+    std::vector<Vector3> points = {
+        {  0.5,  0.5, -0.5 },
+        { -0.5,  0.5, -0.5 },
+        {  0.5, -0.5, -0.5 },
+        { -0.5, -0.5, -0.5 },
+
+
+        {  0.5,  0.5, 0.5 },
+        { -0.5,  0.5, 0.5 },
+        {  0.5, -0.5, 0.5 },
+        { -0.5, -0.5, 0.5 }
+    };
     
     // World position of the above cube
-    Vector3 pos = {0, -0.1, 0.3};
+    Vector3 pos = {0, 0, 3};
 
     MoveCube(points, pos);
 
@@ -208,24 +206,24 @@ int main(int argc, char *argv[])
 //        { 7, 4 },
 //    };
 
-//    std::vector<Triangle> triangles = {
-//        { 0, 1, 2 }, // front1
-//        { 3, 2, 1 }, // front2
-//        { 6, 2, 7 }, // bot1
-//        { 3, 7, 2 }, // bot2
-//        { 4, 6, 5 }, // rear1
-//        { 7, 5, 6 }, // rear2
-//        { 4, 5, 0 }, // top1
-//        { 1, 0, 5 }, // top2
-//        { 0, 2, 4 }, //sideleft1
-//        { 6, 4, 2 }, //sideleft2
-//        { 1, 5, 3 }, //sideright1
-//        { 7, 3, 5 } //sideright2
-//    };
+    std::vector<Triangle> triangles = {
+        { 0, 1, 2 }, // front1
+        { 3, 2, 1 }, // front2
+        { 6, 2, 7 }, // bot1
+        { 3, 7, 2 }, // bot2
+        { 4, 6, 5 }, // rear1
+        { 7, 5, 6 }, // rear2
+        { 4, 5, 0 }, // top1
+        { 1, 0, 5 }, // top2
+        { 0, 2, 4 }, //sideleft1
+        { 6, 4, 2 }, //sideleft2
+        { 1, 5, 3 }, //sideright1
+        { 7, 3, 5 } //sideright2
+    };
     
 
     bool wireFrame = false;
-    std::vector<Triangle> triangles = bunnyMesh->faces;
+    //std::vector<Triangle> triangles = bunnyMesh->faces;
 
     Vector3 centroid = GetCentroid(points);
 
@@ -233,9 +231,13 @@ int main(int argc, char *argv[])
         { 1, 0, 0 },
         { 0, 1, 0 }
     };
-    
-    const double aspect = SCREEN_HEIGHT/SCREEN_WIDTH;
-    const double fov = 75 * PI/180;
+
+
+
+    const float zFar = 1000;
+    const float zNear = 0.1;
+    const double aspect = SCREEN_HEIGHT / SCREEN_WIDTH;
+    const double fov = 90 * PI/180;
     const double f = 1/tan(fov/2);
 
     const std::vector<std::array<float, 4>> perspectiveMat = {
@@ -264,12 +266,10 @@ int main(int argc, char *argv[])
                         loop = SDL_FALSE;
                         break;
                     case SDLK_RIGHT:
-                        MoveCube(points, {0.1, 0, 0});
-                        centroid = GetCentroid(points);
+                        RotateCube(Y, -angle, points, centroid);
                         break;
                     case SDLK_LEFT:
-                        MoveCube(points, {-0.1, 0, 0});
-                        centroid = GetCentroid(points);
+                        RotateCube(Y, angle, points, centroid);
                         break;
                     case SDLK_UP:
                         MoveCube(points, {0, 0, 0.1});
@@ -291,16 +291,18 @@ int main(int argc, char *argv[])
         //angle += 0.001 * clock.delta;
         
         // Cube transformations
-        RotateCube(X, -angle, points, centroid);
+        
         //RotateCube(Z, angle, points, centroid);
-
+        
+        // Painter's algorithm
         utils::sortVectorsByZ(triangles, points);
+        
         // Must be after all transformations.
         // Convert all points to projected, then NDC
         for (auto & v : points)
         {
             std::array<float, 4> vec4 = {
-                v.x, v.y, v.z, v.z
+                v.x, v.y, v.z, 1
             };
             
             auto ndc = matrix4v4Mult(perspectiveMat, vec4);
@@ -317,16 +319,8 @@ int main(int argc, char *argv[])
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-
-//        // Render projected lines
-//        for (auto e : edges)
-//        {
-//            const Vector2& p1 = projectedPoints.at(e[0]);
-//            const Vector2& p2 = projectedPoints.at(e[1]);
-//            SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
-//        }
         
-        // Render projected lines
+        // Rasterise to screen
         for (auto t : triangles)
         {
             const Vector2& p1 = projectedPoints.at(t.v1);
@@ -334,7 +328,7 @@ int main(int argc, char *argv[])
             const Vector2& p3 = projectedPoints.at(t.v3);
 
             
-            // Get bounding box.
+//            // Get bounding box.
             // for loop/function that goes pixel by pixel through that box and paints it if it is within bounds or not.
             int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
             int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
@@ -354,12 +348,12 @@ int main(int argc, char *argv[])
                     if (inside)
                     {
 
-                        Uint8 r = static_cast<Uint8>((x - xmin) * 255 / (xmax - xmin));
-                        Uint8 g = static_cast<Uint8>((y - ymin) * 255 / (ymax - ymin));
+                        auto r = static_cast<Uint8>((x - xmin) * 255 / (xmax - xmin));
+                        auto g = static_cast<Uint8>((y - ymin) * 255 / (ymax - ymin));
                         Uint8 b = 255 - r;
 
                         SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-                        SDL_RenderDrawPointF(renderer, x, y);
+                        SDL_RenderDrawPoint(renderer, x, y);
                     }
 
                 }
@@ -378,7 +372,7 @@ int main(int argc, char *argv[])
         SDL_RenderPresent(renderer);
     }
 
-    delete bunnyMesh;
+    //delete bunnyMesh;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
