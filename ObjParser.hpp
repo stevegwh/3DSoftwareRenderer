@@ -5,7 +5,7 @@
 #pragma once
 #include <vector>
 #include <array>
-#include "stevelib.h"
+#include "slib.h"
 #include "Mesh.hpp"
 
 class ObjParser

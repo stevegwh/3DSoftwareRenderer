@@ -77,29 +77,7 @@ namespace sgwMaths
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
-    std::vector<std::vector<float>> squareMatrixMul(const std::vector<std::vector<float>> &a, const std::vector<std::vector<float>> &b, size_t n)
-    {
-        std::vector<std::vector<float>> c(n, std::vector<float> (n, 0));
-        for (int row = 0; row < n; ++row)
-        {
-            for (int i = 0; i < n; ++i)
-            {
-                std::vector<float> cell = {};
-                cell.reserve(n);
-                for (int j = 0; j < n; ++j)
-                {
-                    cell.push_back(a[row][j] * b[j][i]);
-                }
-                float cellsum = 0;
-                for (auto& x : cell) cellsum += x;
-                c[row][i] = cellsum;
-            }
-        }
-    
-        return c;
-    }
-
-    std::vector<std::vector<float>> getPerspectiveMatrix(
+    Matrix getPerspectiveMatrix(
         const float  zFar, const float zNear, const float aspect, const float fov)
     {
     //    // Projection matrix
@@ -111,13 +89,13 @@ namespace sgwMaths
         const float xScale = yScale / aspect;
         const float nearmfar = zNear - zFar;
     
-        const std::vector<std::vector<float>> mat =
+        Matrix mat(
             {
                 {xScale, 0, 0, 0},
                 {0, yScale, 0, 0},
                 {0, 0, (zFar + zNear) / nearmfar, -1},
                 {0, 0, 2 * zFar * zNear / nearmfar, 0}
-            };
+            });
         return mat;
     }
 }

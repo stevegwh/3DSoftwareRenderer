@@ -2,7 +2,7 @@
 #include <vector>
 #include <array>
 #include <SDL2/SDL.h>
-#include "stevelib.h"
+#include "slib.h"
 #include "constants.h"
 #include "ObjParser.hpp"
 #include "sgwMaths.hpp"
@@ -34,24 +34,16 @@ bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c)
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
 }
 
-std::array<float, 4> makeNDC(const std::vector<std::vector<float>>& mat, const std::array<float, 4>& vec)
+Matrix makeNDC(const Matrix& mat, const Matrix& vec)
 {
-    std::array<float, 4> result = {0};
-    
-    for (int i = 0; i < 4; ++i)
-    {
-        for (int j = 0; j < 4; ++j)
-        {
-            result[i] += mat[i][j] * vec[j];
-        }
-    }
+    Matrix result(vec * mat);
     
     // Perspective divide
-    if (result[3] != 0)
+    if (result.data[0][3] != 0)
     {
-        result[0] /= result[3]; //x
-        result[1] /= result[3]; //y
-        result[2] /= result[3]; //z
+        result.data[0][0] /= result.data[0][3]; //x
+        result.data[0][1] /= result.data[0][3]; //y
+        result.data[0][2] /= result.data[0][3]; //z
     }
     //-----------------------------
     return result;
@@ -76,7 +68,7 @@ const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 const float fov = 90  * PI/180;
 
 int main(int argc, char *argv[])
-{   
+{
     const auto perspectiveMat = sgwMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov);
     Clock clock;
     
@@ -93,10 +85,10 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;    
 
-    Mesh* ourMesh = ObjParser::ParseObj("resources/bunny.obj");
+    Mesh* ourMesh = ObjParser::ParseObj("resources/Lara.obj");
     
     // World position of the above cube
-    Vector3 pos = {0, -0.1, -4};
+    Vector3 pos = {0, -0.1, -2};
 
     Transform::Translate(ourMesh->verticies, pos);
     //Rotate(Y, 180, points, sgwMaths::getCentroid(points));
@@ -162,7 +154,7 @@ int main(int argc, char *argv[])
          * BEGIN RASTERIZATION *
          * ------------------- */
         
-        std::vector<Triangle> culledFaces;
+        ourMesh->facesCulled.clear();
         for (auto& face : ourMesh->faces)
         {
             face.normal = sgwMaths::getFaceNormal(face, ourMesh->verticies);
@@ -175,85 +167,71 @@ int main(int argc, char *argv[])
 
             if (dotProduct < 0)
             {
-                culledFaces.push_back(face);
+                ourMesh->facesCulled.push_back(face);
             }
         }
         
         // Painter's algorithm
-        sgwMaths::sortVectorsByZ(culledFaces, ourMesh->verticies);
+        sgwMaths::sortVectorsByZ(ourMesh->facesCulled, ourMesh->verticies);
         
         // Must be after all transformations.
         // Convert all points to projected, then NDC
         for (auto & v : ourMesh->verticies)
         {
-            std::array<float, 4> vec4 = {
+            Matrix vec4({{
                 v.x, v.y, v.z, 1
-            };
+            }});
             
             auto ndc = makeNDC(perspectiveMat, vec4);
             
             Vector2 screenP = { 
-                static_cast<float>(SCREEN_WIDTH/2 + ndc[0] * SCREEN_WIDTH/2),
-                static_cast<float>(SCREEN_HEIGHT/2 - ndc[1] * SCREEN_HEIGHT/2)
+                static_cast<float>(SCREEN_WIDTH/2 + ndc.data[0][0] * SCREEN_WIDTH/2),
+                static_cast<float>(SCREEN_HEIGHT/2 - ndc.data[0][1] * SCREEN_HEIGHT/2)
             };
 
             projectedPoints.push_back({screenP.x, screenP.y});
         }
         
         // Calculations for drawing normals as lines pointing from the faces.
-        for (auto & v : culledFaces)
-        {
-            std::array<float, 4> vec4Start = {
-                v.center.x, v.center.y, v.center.z, 1
-            };
-
-            std::array<float, 4> vec4End = {
-                static_cast<float>(v.center.x + (v.normal.x*0.001)),
-                static_cast<float>(v.center.y + (v.normal.y*0.001)),
-                static_cast<float>(v.center.z + (v.normal.z*0.001)), 1
-            };
-
-            auto ndc1 = makeNDC(perspectiveMat, vec4Start);
-            auto ndc2 = makeNDC(perspectiveMat, vec4End);
-
-            Vector2 screenP1 = {
-                static_cast<float>(SCREEN_WIDTH/2 + ndc1[0] * SCREEN_WIDTH/2),
-                static_cast<float>(SCREEN_HEIGHT/2 - ndc1[1] * SCREEN_HEIGHT/2)
-            };
-
-            Vector2 screenP2 = {
-                static_cast<float>(SCREEN_WIDTH/2 + ndc2[0] * SCREEN_WIDTH/2),
-                static_cast<float>(SCREEN_HEIGHT/2 - ndc2[1] * SCREEN_HEIGHT/2)
-            };
-
-            projectedNormals.push_back({{screenP1.x, screenP1.y}, {screenP2.x, screenP2.y}});
-        }
+//        for (auto & v : ourMesh->facesCulled)
+//        {
+//            std::array<float, 4> vec4Start = {
+//                v.center.x, v.center.y, v.center.z, 1
+//            };
+//
+//            std::array<float, 4> vec4End = {
+//                static_cast<float>(v.center.x + (v.normal.x*0.001)),
+//                static_cast<float>(v.center.y + (v.normal.y*0.001)),
+//                static_cast<float>(v.center.z + (v.normal.z*0.001)), 1
+//            };
+//
+//            auto ndc1 = makeNDC(perspectiveMat, vec4Start);
+//            auto ndc2 = makeNDC(perspectiveMat, vec4End);
+//
+//            Vector2 screenP1 = {
+//                static_cast<float>(SCREEN_WIDTH/2 + ndc1[0] * SCREEN_WIDTH/2),
+//                static_cast<float>(SCREEN_HEIGHT/2 - ndc1[1] * SCREEN_HEIGHT/2)
+//            };
+//
+//            Vector2 screenP2 = {
+//                static_cast<float>(SCREEN_WIDTH/2 + ndc2[0] * SCREEN_WIDTH/2),
+//                static_cast<float>(SCREEN_HEIGHT/2 - ndc2[1] * SCREEN_HEIGHT/2)
+//            };
+//
+//            projectedNormals.push_back({{screenP1.x, screenP1.y}, {screenP2.x, screenP2.y}});
+//        }
         
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
         // get min/max depth of model, used for shading its colour.
-        float maxDist = sgwMaths::getVectorDistance(culledFaces[0].center);
-        float minDist = sgwMaths::getVectorDistance(culledFaces[culledFaces.size()-1].center);
+        float maxDist = sgwMaths::getVectorDistance(ourMesh->facesCulled[0].center);
+        float minDist = sgwMaths::getVectorDistance(ourMesh->facesCulled[ourMesh->facesCulled.size()-1].center);
 
         // Rasterize to screen
-        for (auto t : culledFaces)
+        for (auto t : ourMesh->facesCulled)
         {
-//            auto v = ourMesh->verticies[t.v1];
-//            Vector3 posAndCamera = {
-//                v.x - camera.pos.x,
-//                v.y - camera.pos.y,
-//                v.z - camera.pos.z
-//            };
-//            auto dotProduct = sgwMaths::getDotProduct(
-//                t.normal,
-//                sgwMaths::normaliseVector(posAndCamera));
-//
-//            if (dotProduct > 0)
-//            {
-//                continue;
-//            }
             const Vector2& p1 = projectedPoints.at(t.v1);
             const Vector2& p2 = projectedPoints.at(t.v2);
             const Vector2& p3 = projectedPoints.at(t.v3);

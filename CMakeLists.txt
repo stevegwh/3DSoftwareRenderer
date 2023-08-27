@@ -6,7 +6,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME} main.cpp
-        stevelib.h
+        slib.h
         constants.h
         ObjParser.cpp
         ObjParser.hpp

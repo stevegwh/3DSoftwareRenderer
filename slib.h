@@ -1,8 +1,76 @@
 #pragma once
+#include <utility>
+#include <vector>
+#include <iostream>
 
 struct Vector2
 {
     float x, y;
+};
+
+struct Matrix
+{
+    std::vector<std::vector<float>> data;
+    unsigned long rows;
+    unsigned long cols;
+    explicit Matrix(std::vector<std::vector<float>> _data) : data(std::move(_data))
+    {
+        rows = data.size();
+        cols = data.at(0).size();
+    };
+    
+    Matrix& operator += (const Matrix& rhs)
+    {
+        if (cols != rhs.rows)
+        {
+            std::cout << "Error: Matrix-size mismatch." << std::endl;
+            exit(1);
+        }
+        auto maxCols = cols >= rhs.cols ? cols : rhs.cols;
+        for (int row = 0; row < rows; ++row) 
+        {
+            for (int col = 0; col < maxCols; ++col) 
+            {
+                data[row][col] += rhs.data[row][col];
+            }
+        }
+        return *this;
+    }
+
+    Matrix& operator *= (const Matrix& rhs)
+    {
+        if (cols != rhs.rows)
+        {
+            std::cout << "Error: Matrix-size mismatch." << std::endl;
+            exit(1);
+        }
+
+        std::vector<std::vector<float>> result(rows, std::vector<float>(rhs.cols, 0));
+
+        for (size_t i = 0; i < rows; ++i)
+        {
+            for (size_t j = 0; j < rhs.cols; ++j)
+            {
+                float cellValue = 0;
+                for (size_t k = 0; k < cols; ++k)
+                {
+                    cellValue += data[i][k] * rhs.data[k][j];
+                }
+                result[i][j] = cellValue;
+            }
+        }
+
+        cols = rhs.cols;
+        data = result;
+        return *this;
+    }
+    
+    Matrix operator * (const Matrix& rhs) const
+    {
+        Matrix toReturn(data);
+        return toReturn *= rhs;
+    }
+    
 };
 
 struct Vector3
@@ -41,25 +109,25 @@ struct Vector3
         return *this;
     }
 
-    Vector3 operator - (float rhs)
+    Vector3 operator - (float rhs) const
     {
         Vector3 result = { x, y, z };
         return result -= rhs;
     }
 
-    Vector3 operator + (float rhs)
+    Vector3 operator + (float rhs) const
     {
         Vector3 result = { x, y, z };
         return result += rhs;
     }
 
-    Vector3 operator * (float rhs)
+    Vector3 operator * (float rhs) const
     {
         Vector3 result = { x, y, z };
         return result *= rhs;
     }
 
-    Vector3 operator / (float rhs)
+    Vector3 operator / (float rhs) const
     {
         Vector3 result = { x, y, z };
         return result /= rhs;
@@ -97,25 +165,25 @@ struct Vector3
         return *this;
     }
 
-    Vector3 operator - (const Vector3& rhs)
+    Vector3 operator - (const Vector3& rhs) const
     {
         Vector3 result = { x, y, z };
         return result -= rhs;
     }
 
-    Vector3 operator + (const Vector3& rhs)
+    Vector3 operator + (const Vector3& rhs) const
     {
         Vector3 result = { x, y, z };
         return result += rhs;
     }
     
-    Vector3 operator * (const Vector3& rhs)
+    Vector3 operator * (const Vector3& rhs) const
     {
         Vector3 result = { x, y, z };
         return result *= rhs;
     }
     
-    Vector3 operator / (const Vector3& rhs)
+    Vector3 operator / (const Vector3& rhs) const
     {
         Vector3 result = { x, y, z };
         return result /= rhs;

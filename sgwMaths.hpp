@@ -4,7 +4,7 @@
 
 #pragma once
 #include <vector>
-#include "stevelib.h"
+#include "slib.h"
 
 namespace sgwMaths
 {
@@ -15,7 +15,6 @@ namespace sgwMaths
     Vector3 getFaceNormal(const Triangle& t, std::vector<Vector3> points);
     float getDotProduct(const Vector3& v1, const Vector3& v2);
     void sortVectorsByZ(std::vector<Triangle>& values, const std::vector<Vector3>& points);
-    std::vector<std::vector<float>> squareMatrixMul(const std::vector<std::vector<float>> &a, const std::vector<std::vector<float>> &b, size_t n);
-    std::vector<std::vector<float>> getPerspectiveMatrix(float  zFar, float zNear, float aspect, float fov);
+    Matrix getPerspectiveMatrix(float  zFar, float zNear, float aspect, float fov);
 };
 
