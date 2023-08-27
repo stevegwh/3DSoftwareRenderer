@@ -15,7 +15,7 @@ namespace Transform
     };
     
     //void Rotate(RotationAxis axis, Vector3& v, float angle, Vector3 origin);
-    void RotateCube(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin);
-    void MoveCube(std::vector<Vector3>& points, Vector3 pos);
+    void Rotate(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin);
+    void Translate(std::vector<Vector3>& points, Vector3 pos);
     
 };

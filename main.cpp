@@ -29,8 +29,6 @@ void HSVtoRGB(float h, float s, float v, Uint8& r, Uint8& g, Uint8& b)
     }
 }
 
-
-
 bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c)
 {
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
@@ -59,40 +57,32 @@ std::array<float, 4> makeNDC(const std::vector<std::vector<float>>& mat, const s
     return result;
 }
 
-const std::vector<Vector3> orthoProjectionMatrix = {
-    { 1, 0, 0 },
-    { 0, 1, 0 }
-};
+//const std::vector<Vector3> orthoProjectionMatrix = {
+//    { 1, 0, 0 },
+//    { 0, 1, 0 }
+//};
 
-// Projection matrix
+//const std::vector<std::vector<float>> reflectionMat =
+//    {
+//        { 1, 0, 0, 0 },
+//        { 0, 1, 0, 0 },
+//        { 0, 0, 1, 0 },
+//        { 0, 0, 0, -1 }
+//    };
+
 const float zFar = 10;
 const float zNear = 0.1;
 const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 const float fov = 90  * PI/180;
-const float yScale = 1/std::tanf(fov/2);
-const float xScale = yScale / aspect;
-const float nearmfar = zNear - zFar;
-
-const std::vector<std::vector<float>> perspectiveMatPreFlip =
-    {
-        { xScale, 0, 0, 0 },
-        { 0, yScale, 0, 0 },
-        { 0, 0, (zFar + zNear) / nearmfar, -1 },
-        { 0, 0, 2*zFar*zNear / nearmfar, 0 }
-    };
-
-const std::vector<std::vector<float>> reflectionMat =
-    {
-        { 1, 0, 0, 0 },
-        { 0, 1, 0, 0 },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, -1 }
-    };
 
 int main(int argc, char *argv[])
-{ 
+{   
+    const auto perspectiveMat = sgwMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov);
     Clock clock;
-    Camera camera({0});
+    
+    Camera camera(zFar, zNear, { 0, 0, 0 });
+    Frustum frustum(camera, 0, 0, 0, 0);
+    
     float angle = 3;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -108,14 +98,13 @@ int main(int argc, char *argv[])
     // World position of the above cube
     Vector3 pos = {0, -0.1, -4};
 
-    Transform::MoveCube(ourMesh->verticies, pos);
-    //RotateCube(Y, 180, points, sgwMaths::getCentroid(points));
+    Transform::Translate(ourMesh->verticies, pos);
+    //Rotate(Y, 180, points, sgwMaths::getCentroid(points));
     
     bool wireFrame = true;
 
     Vector3 centroid = sgwMaths::getCentroid(ourMesh->verticies);
-    auto perspectiveMat = perspectiveMatPreFlip;
-    //auto perspectiveMat = sgwMaths::square_matrix_mul(reflectionMat, perspectiveMatPreFlip, 4);
+    //auto perspectiveMat = sgwMaths::squareMatrixMul(reflectionMat, perspectiveMatPreFlip, 4);
     std::vector<Vector2> projectedPoints;
     std::vector<std::pair<Vector2, Vector2>> projectedNormals;
     size_t cap = ourMesh->verticies.capacity();
@@ -136,32 +125,24 @@ int main(int argc, char *argv[])
                     case SDLK_ESCAPE:
                         loop = SDL_FALSE;
                         break;
-                    case SDLK_u:
-                        RotateCube(Transform::Y, -angle, ourMesh->verticies, centroid);
+                    case SDLK_q:Rotate(Transform::Y, -angle, ourMesh->verticies, centroid);
                         break;
-                    case SDLK_j:
-                        RotateCube(Transform::Y, angle, ourMesh->verticies, centroid);
+                    case SDLK_e:Rotate(Transform::Y, angle, ourMesh->verticies, centroid);
                         break;
-                    case SDLK_i:
-                        RotateCube(Transform::X, -angle, ourMesh->verticies, centroid);
+                    case SDLK_i:Rotate(Transform::X, -angle, ourMesh->verticies, centroid);
                         break;
-                    case SDLK_k:
-                        RotateCube(Transform::X, angle, ourMesh->verticies, centroid);
+                    case SDLK_k:Rotate(Transform::X, angle, ourMesh->verticies, centroid);
                         break;
-                    case SDLK_w:
-                        Transform::MoveCube(ourMesh->verticies, {0, 0, 0.1});
+                    case SDLK_w:Transform::Translate(ourMesh->verticies, {0, 0, 0.1});
                         centroid = sgwMaths::getCentroid(ourMesh->verticies);
                         break;
-                    case SDLK_s:
-                        Transform::MoveCube(ourMesh->verticies, {0, 0, -0.1});
+                    case SDLK_s:Transform::Translate(ourMesh->verticies, {0, 0, -0.1});
                         centroid = sgwMaths::getCentroid(ourMesh->verticies);
                         break;
-                    case SDLK_UP:
-                        Transform::MoveCube(ourMesh->verticies, {0, -0.01, 0});
+                    case SDLK_UP:Transform::Translate(ourMesh->verticies, {0, -0.01, 0});
                         centroid = sgwMaths::getCentroid(ourMesh->verticies);
                         break;
-                    case SDLK_DOWN:
-                        Transform::MoveCube(ourMesh->verticies, {0, 0.01, 0});
+                    case SDLK_DOWN:Transform::Translate(ourMesh->verticies, {0, 0.01, 0});
                         centroid = sgwMaths::getCentroid(ourMesh->verticies);
                         break;
                     case SDLK_SPACE:
@@ -175,10 +156,7 @@ int main(int argc, char *argv[])
         
         // Update
         // Cube transformations
-        //RotateCube(Z, angle, points, centroid);
-        
-        
-
+        //Rotate(Z, angle, points, centroid);
 
         /* -------------------- *
          * BEGIN RASTERIZATION *
@@ -190,11 +168,7 @@ int main(int argc, char *argv[])
             face.normal = sgwMaths::getFaceNormal(face, ourMesh->verticies);
             face.center = sgwMaths::getCentroid(face, ourMesh->verticies);
             
-            Vector3 posAndCamera = {
-                face.center.x - camera.pos.x,
-                face.center.y - camera.pos.y,
-                face.center.z - camera.pos.z
-            };
+            Vector3 posAndCamera = face.center - camera.pos;
             auto dotProduct = sgwMaths::getDotProduct(
                 face.normal,
                 sgwMaths::normaliseVector(posAndCamera));
@@ -203,7 +177,6 @@ int main(int argc, char *argv[])
             {
                 culledFaces.push_back(face);
             }
-            
         }
         
         // Painter's algorithm
@@ -235,9 +208,9 @@ int main(int argc, char *argv[])
             };
 
             std::array<float, 4> vec4End = {
-                static_cast<float>(v.center.x + (v.normal.x*0.1)),
-                static_cast<float>(v.center.y + (v.normal.y*0.1)),
-                static_cast<float>(v.center.z + (v.normal.z*0.1)), 1
+                static_cast<float>(v.center.x + (v.normal.x*0.001)),
+                static_cast<float>(v.center.y + (v.normal.y*0.001)),
+                static_cast<float>(v.center.z + (v.normal.z*0.001)), 1
             };
 
             auto ndc1 = makeNDC(perspectiveMat, vec4Start);
@@ -337,13 +310,13 @@ int main(int argc, char *argv[])
         }
 
 
-//        for (const auto& pn : projectedNormals) 
-//        {
-//            SDL_SetRenderDrawColor(renderer, 50, 255, 50, 255);
-//            SDL_RenderDrawLineF(renderer, pn.first.x, pn.first.y, 
-//                                pn.second.x, pn.second.y);
-//            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-//        }
+        for (const auto& pn : projectedNormals) 
+        {
+            SDL_SetRenderDrawColor(renderer, 50, 255, 50, 255);
+            SDL_RenderDrawLineF(renderer, pn.first.x, pn.first.y, 
+                                pn.second.x, pn.second.y);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        }
         
         
         SDL_RenderPresent(renderer);
