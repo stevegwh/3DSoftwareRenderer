@@ -8,11 +8,22 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 #include <cstring>
+#include "sgwMaths.hpp"
+
+void removeExcessiveWhitespace(const std::string& input, std::string& output)
+{
+    std::unique_copy (input.begin(), input.end(), std::back_insert_iterator<std::string>(output),
+                      [](char a,char b){ return std::isspace(a) && std::isspace(b);});
+}
+
 
 Vector3 getVector(std::string line)
 {
-    std::stringstream ss(line.erase(0,2));
+    std::string output;
+    removeExcessiveWhitespace(line, output);
+    std::stringstream ss(output.erase(0,2));
     std::vector<float> vec;
     vec.reserve(3);
     std::string token;
@@ -26,7 +37,9 @@ Vector3 getVector(std::string line)
 
 Triangle getFace(std::string line)
 {
-    std::stringstream ss(line.erase(0,2));
+    std::string output;
+    removeExcessiveWhitespace(line, output);
+    std::stringstream ss(output.erase(0,2));
     std::vector<int> vec;
     vec.reserve(3);
     std::string token;
@@ -81,6 +94,8 @@ Mesh* ObjParser::ParseObj(const char *path)
 //        }
         
     }
+    
+    
     Mesh* mesh = new Mesh(verticies, faces);
     //SDL_free(obj);
     obj.close();

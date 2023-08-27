@@ -8,12 +8,15 @@ include_directories(${SDL2_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} main.cpp
         stevelib.h
         constants.h
+        ObjParser.cpp
         ObjParser.hpp
         Mesh.cpp
         Mesh.hpp
-        ObjParser.cpp
-        Utils.cpp
-        Utils.hpp)
+        sgwMaths.cpp
+        sgwMaths.hpp
+        Transform.cpp
+        Transform.hpp
+        utils.hpp)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 
 set (source "${CMAKE_SOURCE_DIR}/resources")

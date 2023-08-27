@@ -8,7 +8,8 @@
 struct Mesh
 {
     const std::vector<Vector3> verticies_original;
-    const std::vector<Triangle> faces;
+    const std::vector<Triangle> faces_original;
+    std::vector<Triangle> faces;
     std::vector<Vector3> verticies;
-    Mesh(const std::vector<Vector3>& verticies_original, std::vector<Triangle> faces);
+    Mesh(const std::vector<Vector3>& _verticies_original, const std::vector<Triangle>& _faces);
 };

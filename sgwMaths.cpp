@@ -2,20 +2,20 @@
 // Created by Steve Wheeler on 23/08/2023.
 //
 
-#include "Utils.hpp"
+#include "sgwMaths.hpp"
 
 #include <algorithm>
 #include <cmath>
 
 bool compareTrianglesByDepth(const Triangle& t1, const Triangle& t2, const std::vector<Vector3>& points)
 {
-    auto c1 = utils::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
-    auto c2 = utils::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
+    auto c1 = sgwMaths::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
+    auto c2 = sgwMaths::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
     
-    return utils::getVectorDistance(c1) < utils::getVectorDistance(c2);
+    return sgwMaths::getVectorDistance(c1) > sgwMaths::getVectorDistance(c2);
 }
 
-namespace utils
+namespace sgwMaths
 {
     float getVectorDistance(const Vector3& vec)
     {
@@ -27,7 +27,7 @@ namespace utils
         auto t1 = points[t.v1];
         auto t2 = points[t.v2];
         auto t3 = points[t.v3];
-        return utils::getCentroid({ t1, t2, t3 });
+        return sgwMaths::getCentroid({t1, t2, t3 });
     }
     
     Vector3 getCentroid(const std::vector<Vector3>& points)
@@ -56,6 +56,28 @@ namespace utils
         float d = getVectorDistance(vec);
         return { vec.x/d, vec.y/d, vec.z/d };
     }
+
+    Vector3 getFaceNormal(const Triangle& t, const std::vector<Vector3>& points)
+    {
+        Vector3 n = {0};
+        Vector3 a = {0};
+        Vector3 b = {0};
+        
+        a.x = points[t.v2].x - points[t.v1].x;
+        a.y = points[t.v2].y - points[t.v1].y;
+        a.z = points[t.v2].z - points[t.v1].z;
+
+        b.x = points[t.v3].x - points[t.v1].x;
+        b.y = points[t.v3].y - points[t.v1].y;
+        b.z = points[t.v3].z - points[t.v1].z;
+        
+        
+        n.x = a.y * b.z - a.z * b.y;
+        n.y = a.z * b.x - a.x * b.z;
+        n.z = a.x * b.y - a.y * b.x;
+        
+        return normaliseVector(n);
+    }
     
     void sortVectorsByZ(std::vector<Triangle>& triangles, const std::vector<Vector3>& points) 
     {
@@ -63,16 +85,22 @@ namespace utils
             return compareTrianglesByDepth(t1, t2, points);
         });
     }
+    
+    float getDotProduct(const Vector3& v1, const Vector3& v2)
+    {
+        // Care: assumes both vectors have been normalised previously.
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
 
     std::vector<std::vector<float>> square_matrix_mul(const std::vector<std::vector<float>> &a, const std::vector<std::vector<float>> &b, size_t n)
     {
-    
         std::vector<std::vector<float>> c(n, std::vector<float> (n, 0));
         for (int row = 0; row < n; ++row)
         {
             for (int i = 0; i < n; ++i)
             {
                 std::vector<float> cell = {};
+                cell.reserve(n);
                 for (int j = 0; j < n; ++j)
                 {
                     cell.push_back(a[row][j] * b[j][i]);

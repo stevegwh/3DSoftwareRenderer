@@ -4,6 +4,7 @@
 
 #include "Mesh.hpp"
 
-Mesh::Mesh(const std::vector<Vector3>& verticies_original, std::vector<Triangle> faces) :
-verticies(verticies_original), verticies_original(verticies_original), faces(std::move(faces))
+Mesh::Mesh(const std::vector<Vector3>& _verticies_original, const std::vector<Triangle>& _faces) :
+    verticies(_verticies_original), verticies_original(_verticies_original), faces(_faces),
+    faces_original(_faces)
 {}

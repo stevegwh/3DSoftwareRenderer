@@ -10,6 +10,11 @@ struct Vector3
     float x, y, z;
 };
 
+struct Camera
+{
+    Vector3 pos;
+};
+
 struct Edge
 {
     Vector3& v1;
@@ -22,6 +27,8 @@ struct Edge
 struct Triangle
 {
     int v1, v2, v3;
+    Vector3 center;
+    Vector3 normal;
 };
 
 struct Color
