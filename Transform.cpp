@@ -78,7 +78,7 @@ namespace Transform
         //    Vector3 centroid = getCentroid(points);
         if (rotationOrigin == 0) 
         {
-            rotationOrigin = sgwMaths::getCentroid(mesh.verticies);
+            rotationOrigin = sMaths::getCentroid(mesh.verticies);
         }
     
         for (auto& p : mesh.verticies)

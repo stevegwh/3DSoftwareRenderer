@@ -30,18 +30,18 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    Mesh* ourMesh = ObjParser::ParseObj("resources/bunny.obj");
-    Mesh* mesh2 = ObjParser::ParseObj("resources/suzanne.obj");
+    Mesh* ourMesh = ObjParser::ParseObj("resources/suzanne.obj");
+    Mesh* mesh2 = ObjParser::ParseObj("resources/bunny.obj");
     // World position of the above cube
-    Vector3 pos = {2, -0.1, -2};
+    Vector3 pos = {2, -0.1, -5};
     
     // TODO: Mesh + Vector3 = translate?
     Transform::Translate(ourMesh->verticies, pos);
-    Transform::Translate(mesh2->verticies, { -1, -0.3, -3 });
+    Transform::Translate(mesh2->verticies, { -1, -0.3, -1 });
     
     Camera camera(zFar, zNear, { 0, 0, 0 });
     Frustum frustum(camera, 0, 0, 0, 0);
-    Rasterizer rasterizer(renderer, camera, sgwMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
+    Rasterizer rasterizer(renderer, camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
     rasterizer.AddMesh(*ourMesh);
     rasterizer.AddMesh(*mesh2);
     
@@ -71,19 +71,19 @@ int main(int argc, char *argv[])
                         break;
                     case SDLK_w:
                         //Transform::Translate(ourMesh->verticies, {0, 0, 0.1});
-                        //ourMesh->centroid = sgwMaths::getCentroid(ourMesh->verticies);
+                        //ourMesh->centroid = sMaths::getCentroid(ourMesh->verticies);
                         break;
                     case SDLK_s:
                         //Transform::Translate(ourMesh->verticies, {0, 0, -0.1});
-                        //ourMesh->centroid = sgwMaths::getCentroid(ourMesh->verticies);
+                        //ourMesh->centroid = sMaths::getCentroid(ourMesh->verticies);
                         break;
                     case SDLK_UP:
                         //Transform::Translate(ourMesh->verticies, {0, -0.01, 0});
-                        //ourMesh->centroid  = sgwMaths::getCentroid(ourMesh->verticies);
+                        //ourMesh->centroid  = sMaths::getCentroid(ourMesh->verticies);
                         break;
                     case SDLK_DOWN:
                         //Transform::Translate(ourMesh->verticies, {0, 0.01, 0});
-                        //ourMesh->centroid  = sgwMaths::getCentroid(ourMesh->verticies);
+                        //ourMesh->centroid  = sMaths::getCentroid(ourMesh->verticies);
                         break;
                     case SDLK_SPACE:
                         rasterizer.wireFrame = !rasterizer.wireFrame;

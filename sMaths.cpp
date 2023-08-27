@@ -9,13 +9,13 @@
 
 bool compareTrianglesByDepth(const Triangle& t1, const Triangle& t2, const std::vector<Vector3>& points)
 {
-    auto c1 = sgwMaths::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
-    auto c2 = sgwMaths::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
+    auto c1 = sMaths::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
+    auto c2 = sMaths::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
     
-    return sgwMaths::getVectorDistance(c1) > sgwMaths::getVectorDistance(c2);
+    return sMaths::getVectorDistance(c1) > sMaths::getVectorDistance(c2);
 }
 
-namespace sgwMaths
+namespace sMaths
 {
     float getVectorDistance(const Vector3& vec)
     {
@@ -27,7 +27,7 @@ namespace sgwMaths
         auto t1 = points[t.v1];
         auto t2 = points[t.v2];
         auto t3 = points[t.v3];
-        return sgwMaths::getCentroid({t1, t2, t3 });
+        return sMaths::getCentroid({t1, t2, t3 });
     }
     
     Vector3 getCentroid(const std::vector<Vector3>& points)
