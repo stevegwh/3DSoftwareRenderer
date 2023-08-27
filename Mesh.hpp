@@ -12,5 +12,6 @@ struct Mesh
     std::vector<Triangle> faces;
     std::vector<Vector3> verticies;
     std::vector<Triangle> facesCulled;
+    Vector3 centroid;
     Mesh(const std::vector<Vector3>& _verticies_original, const std::vector<Triangle>& _faces);
 };

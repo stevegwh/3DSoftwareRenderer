@@ -2,7 +2,7 @@
 // Created by Steve Wheeler on 23/08/2023.
 //
 
-#include "sgwMaths.hpp"
+#include "sMaths.hpp"
 
 #include <algorithm>
 #include <cmath>

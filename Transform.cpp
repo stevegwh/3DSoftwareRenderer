@@ -4,6 +4,7 @@
 
 #include "Transform.hpp"
 #include "constants.h"
+#include "sMaths.hpp"
 #include <SDL2/SDL.h>
 
 void rotate(Transform::RotationAxis axis, Vector3& v, float angle, Vector3 origin)
@@ -62,11 +63,25 @@ namespace Transform
 //    
 //    }
     
-    void Rotate(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin = {0})
+    void Rotate(RotationAxis axis, float angle, std::vector<Vector3>& points, Vector3 rotationOrigin)
     {
     //    Vector3 centroid = getCentroid(points);
     
         for (auto& p : points)
+        {
+            rotate(axis, p, angle, rotationOrigin);
+        }
+    }
+
+    void Rotate(RotationAxis axis, float angle, Mesh& mesh, Vector3 rotationOrigin)
+    {
+        //    Vector3 centroid = getCentroid(points);
+        if (rotationOrigin == 0) 
+        {
+            rotationOrigin = sgwMaths::getCentroid(mesh.verticies);
+        }
+    
+        for (auto& p : mesh.verticies)
         {
             rotate(axis, p, angle, rotationOrigin);
         }

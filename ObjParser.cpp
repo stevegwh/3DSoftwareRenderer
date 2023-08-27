@@ -10,7 +10,7 @@
 #include <string>
 #include <algorithm>
 #include <cstring>
-#include "sgwMaths.hpp"
+#include "sMaths.hpp"
 
 void removeExcessiveWhitespace(const std::string& input, std::string& output)
 {
