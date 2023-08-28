@@ -72,20 +72,20 @@ int main(int argc, char *argv[])
                         //Transform::Rotate(Transform::X, angle, *utahMesh);
                         break;
                     case SDLK_w:
-                        //Transform::Translate(utahMesh->verticies, {0, 0, 0.1});
-                        //utahMesh->centroid = sMaths::getCentroid(utahMesh->verticies);
+                        Transform::Translate(bunnyMesh->verticies, {0, 0, 0.1});
+                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_s:
-                        //Transform::Translate(utahMesh->verticies, {0, 0, -0.1});
-                        //utahMesh->centroid = sMaths::getCentroid(utahMesh->verticies);
+                        Transform::Translate(bunnyMesh->verticies, {0, 0, -0.1});
+                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_UP:
-                        //Transform::Translate(utahMesh->verticies, {0, -0.01, 0});
-                        //utahMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
+                        Transform::Translate(bunnyMesh->verticies, {0, -0.01, 0});
+                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_DOWN:
-                        //Transform::Translate(utahMesh->verticies, {0, 0.01, 0});
-                        //utahMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
+                        Transform::Translate(bunnyMesh->verticies, {0, 0.01, 0});
+                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_SPACE:
                         rasterizer.wireFrame = !rasterizer.wireFrame;
@@ -100,7 +100,6 @@ int main(int argc, char *argv[])
         
         Transform::Rotate(Transform::RotationAxis::Y, angle, *utahMesh);
         Transform::Rotate(Transform::RotationAxis::Y, -angle, *bunnyMesh);
-        bunnyMesh->transformed = true;
         
         // Scene tree/manager
         // Update mesh positions etc.

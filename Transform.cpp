@@ -79,6 +79,7 @@ namespace Transform
         if (rotationOrigin == 0) 
         {
             rotationOrigin = sMaths::getCentroid(mesh.verticies);
+            
         }
     
         for (auto& p : mesh.verticies)

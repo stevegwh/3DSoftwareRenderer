@@ -49,11 +49,6 @@ void Rasterizer::rasterizeTriangles(
     const Mesh* const mesh, const std::vector<zVector2>& projectedPoints, 
     const std::vector<Triangle>& backfaceCulledFaces)
 {
-    // get min/max depth of model, used for shading its colour.
-    //float maxDist = sMaths::getVectorDistance(backfaceCulledFaces[0].center);
-    //float minDist = sMaths::getVectorDistance(backfaceCulledFaces[backfaceCulledFaces.size()-1].center);
-
-    // Rasterize to screen
     for (const auto& t : backfaceCulledFaces)
     {
         const auto& p1 = projectedPoints.at(t.v1);
@@ -67,10 +62,8 @@ void Rasterizer::rasterizeTriangles(
         int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
 
         // Shading colour
-//        float d = sMaths::getVectorDistance(sMaths::getCentroid(t, mesh->verticies));
-//        float normalized_dist = (d - minDist) / (maxDist - minDist);
-//        float inverted_normalized_dist = 1.0f - normalized_dist;
-//        auto color_value = static_cast<Uint8>(inverted_normalized_dist * 255);
+        Vector3 lightingDirection = { 0, 0, -1 };
+        float lum = sMaths::getDotProduct(t.normal, lightingDirection) * -1;
 
         // Edge finding for triangle rasterization
         for (int x = xmin; x <= xmax; ++x)
@@ -97,16 +90,9 @@ void Rasterizer::rasterizeTriangles(
                     if (w < zBuffer[zIndex] || zBuffer[zIndex] == 0)
                     {
                         zBuffer[zIndex] = w;
-                        float hue = (static_cast<float>(x - xmin) / (xmax - xmin)) * 360.0f;  // Hue range [0, 360]
-                        Uint8 r, g, b;
-                        HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);  // Convert HSV to RGB
-
-                        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+                        SDL_SetRenderDrawColor(renderer, 200*lum, 150*lum, 125*lum, 255);
                         SDL_RenderDrawPoint(renderer, x, y);
                     }
-                    
-                    
-
                 }
             }
         }
