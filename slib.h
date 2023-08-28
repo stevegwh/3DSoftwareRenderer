@@ -8,6 +8,11 @@ struct Vector3;
 struct Vector4;
 struct Matrix;
 
+struct zVector2
+{
+    float x, y, w;
+};
+
 struct Vector2
 {
     float x, y;

@@ -3,7 +3,9 @@
 //
 
 #include "Rasterizer.hpp"
-#include "constants.h"
+#include <array>
+
+
 
 void HSVtoRGB(float h, float s, float v, Uint8& r, Uint8& g, Uint8& b)
 {
@@ -38,25 +40,25 @@ void HSVtoRGB(float h, float s, float v, Uint8& r, Uint8& g, Uint8& b)
 //    };
 
 
-bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c) 
+bool edgeFunction(const zVector2 &a, const zVector2 &b, const zVector2 &c) 
 {
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
 }
 
 void Rasterizer::rasterizeTriangles(
-    const Mesh* const mesh, const std::vector<Vector2>& projectedPoints, 
-    const std::vector<Triangle>& backfaceCulledFaces) const
+    const Mesh* const mesh, const std::vector<zVector2>& projectedPoints, 
+    const std::vector<Triangle>& backfaceCulledFaces)
 {
-// get min/max depth of model, used for shading its colour.
-    float maxDist = sMaths::getVectorDistance(backfaceCulledFaces[0].center);
-    float minDist = sMaths::getVectorDistance(backfaceCulledFaces[backfaceCulledFaces.size()-1].center);
+    // get min/max depth of model, used for shading its colour.
+    //float maxDist = sMaths::getVectorDistance(backfaceCulledFaces[0].center);
+    //float minDist = sMaths::getVectorDistance(backfaceCulledFaces[backfaceCulledFaces.size()-1].center);
 
     // Rasterize to screen
     for (const auto& t : backfaceCulledFaces)
     {
-        const Vector2& p1 = projectedPoints.at(t.v1);
-        const Vector2& p2 = projectedPoints.at(t.v2);
-        const Vector2& p3 = projectedPoints.at(t.v3);
+        const auto& p1 = projectedPoints.at(t.v1);
+        const auto& p2 = projectedPoints.at(t.v2);
+        const auto& p3 = projectedPoints.at(t.v3);
 
         // Get bounding box.
         int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
@@ -65,37 +67,47 @@ void Rasterizer::rasterizeTriangles(
         int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
 
         // Shading colour
-        float d = sMaths::getVectorDistance(sMaths::getCentroid(t, mesh->verticies));
-        float normalized_dist = (d - minDist) / (maxDist - minDist);
-        float inverted_normalized_dist = 1.0f - normalized_dist;
-        auto color_value = static_cast<Uint8>(inverted_normalized_dist * 255);
+//        float d = sMaths::getVectorDistance(sMaths::getCentroid(t, mesh->verticies));
+//        float normalized_dist = (d - minDist) / (maxDist - minDist);
+//        float inverted_normalized_dist = 1.0f - normalized_dist;
+//        auto color_value = static_cast<Uint8>(inverted_normalized_dist * 255);
 
         // Edge finding for triangle rasterization
         for (int x = xmin; x <= xmax; ++x)
         {
             for (int y = ymin; y <= ymax; ++y)
             {
-                Vector2 p = { static_cast<float>(x), static_cast<float>(y) };
+                zVector2 p = { static_cast<float>(x), static_cast<float>(y) };
                 bool inside = true;
                 inside &= edgeFunction(p1, p2, p);
                 inside &= edgeFunction(p2, p3, p);
                 inside &= edgeFunction(p3, p1, p);
 
+//                if (inside)
+//                {
+//                    SDL_SetRenderDrawColor(renderer, color_value, color_value, color_value, 255);
+//                    SDL_RenderDrawPoint(renderer, x, y);
+//                }
                 if (inside)
                 {
-                    SDL_SetRenderDrawColor(renderer, color_value, color_value, color_value, 255);
-                    SDL_RenderDrawPoint(renderer, x, y);
-                }
-//                    if (inside)
-//                    {
-//                        float hue = (static_cast<float>(x - xmin) / (xmax - xmin)) * 360.0f;  // Hue range [0, 360]
-//                        Uint8 r, g, b;
-//                        HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);  // Convert HSV to RGB
-//
-//                        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-//                        SDL_RenderDrawPoint(renderer, x, y);
-//                    }
+                    // zBuffer here.
+                    float w = (p1.w + p2.w + p3.w)/3;
+                    int zIndex = y * static_cast<int>(SCREEN_WIDTH) + x;
 
+                    if (w < zBuffer[zIndex] || zBuffer[zIndex] == 0)
+                    {
+                        zBuffer[zIndex] = w;
+                        float hue = (static_cast<float>(x - xmin) / (xmax - xmin)) * 360.0f;  // Hue range [0, 360]
+                        Uint8 r, g, b;
+                        HSVtoRGB(hue, 1.0f, 1.0f, r, g, b);  // Convert HSV to RGB
+
+                        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+                        SDL_RenderDrawPoint(renderer, x, y);
+                    }
+                    
+                    
+
+                }
             }
         }
         if (wireFrame)
@@ -134,37 +146,27 @@ Matrix makeNDC(const Matrix& mat, const Vector4& vec)
 
 void Rasterizer::Rasterize()
 {
+    zBuffer = {0};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     
-    // TODO: I feel this data doesn't need to be updated if there has been no transform.  
     for (const auto& mesh : meshes)
     {
-        std::vector<Vector2> projectedPoints;
-        std::vector<Triangle> backfaceCulledFaces;
-        //std::vector<std::pair<Vector2, Vector2>> projectedNormals;
-        //projectedNormals.reserve(mesh->faces.size());
+//        if (!mesh->transformed)
+//        {
+//            rasterizeTriangles(mesh, mesh->projectedPoints, mesh->backfaceCulledFaces);
+//            continue;
+//        };
+//        mesh->transformed = false;
 
-        
-        //mesh->facesCulled.clear();
-        for (auto &face : mesh->faces) 
-        {
-            face.normal = sMaths::getFaceNormal(face, mesh->verticies);
-            face.center = sMaths::getCentroid(face, mesh->verticies);
-            
-            auto dotProduct = sMaths::getDotProduct(
-                face.normal,
-                sMaths::normaliseVector(face.center - camera->pos));
+//        std::vector<std::pair<Vector2, Vector2>> projectedNormals;
+//        projectedNormals.reserve(mesh->faces.size());
 
-            if (dotProduct < 0) 
-            {
-                backfaceCulledFaces.push_back(face);
-            }
-        }
+
+        mesh->backfaceCulledFaces.clear();
+        mesh->projectedPoints.clear();
         
-        // TODO: A bit wasteful going through the entire list if many are backface culled.
-        // But, it might be more performant to just leave it.
         for (const auto &v : mesh->verticies)
         {
             Vector4 vec4({
@@ -172,21 +174,32 @@ void Rasterizer::Rasterize()
                          });
 
             auto ndc = makeNDC(perspectiveMat, vec4);
+            const auto x = static_cast<float>(SCREEN_WIDTH / 2 + ndc.data[0][0] * SCREEN_WIDTH / 2);
+            const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - ndc.data[0][1] * SCREEN_HEIGHT / 2);
 
-            Vector2 screenP = {
-                static_cast<float>(SCREEN_WIDTH / 2 + ndc.data[0][0] * SCREEN_WIDTH / 2),
-                static_cast<float>(SCREEN_HEIGHT / 2 - ndc.data[0][1] * SCREEN_HEIGHT / 2)
-            };
-
-            projectedPoints.push_back({screenP.x, screenP.y});
+            mesh->projectedPoints.push_back({ x, y, ndc.data[0][3] });
             // Calculations for drawing normals as lines pointing from the faces here.
         }
 
+        for (auto &face : mesh->faces)
+        {
+            face.normal = sMaths::getFaceNormal(face, mesh->verticies);
+            face.center = sMaths::getCentroid(face, mesh->verticies);
+
+            auto dotProduct = sMaths::getDotProduct(
+                face.normal,
+                sMaths::normaliseVector(face.center - camera->pos));
+
+            if (dotProduct < 0)
+            {
+                mesh->backfaceCulledFaces.push_back(face);
+            }
+        }
+
         // Painter's algorithm
-        // TODO: this needs to be done for the entire scene, not per mesh.
-        sMaths::sortVectorsByZ(backfaceCulledFaces, mesh->verticies);
+        //sMaths::sortVectorsByZ(mesh->backfaceCulledFaces, mesh->verticies);
         
-        rasterizeTriangles(mesh, projectedPoints, backfaceCulledFaces);
+        rasterizeTriangles(mesh, mesh->projectedPoints, mesh->backfaceCulledFaces);
     }
     
         

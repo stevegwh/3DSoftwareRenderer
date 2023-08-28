@@ -34,18 +34,18 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    Mesh* ourMesh = ObjParser::ParseObj("resources/utah.obj");
-    Mesh* mesh2 = ObjParser::ParseObj("resources/bunny.obj");
+    Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
+    Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
     
     // TODO: Mesh + Vector3 = translate?
-    //Transform::Translate(ourMesh->verticies, {2, -0.1, -10});
-    Transform::Translate(mesh2->verticies, { -0.35, -0.3, -0.5 });
+    Transform::Translate(utahMesh->verticies, {2, -0.1, -10});
+    Transform::Translate(bunnyMesh->verticies, {-0.35, -0.3, -0.5 });
     
     Camera camera(zFar, zNear, { 0, 0, 0 });
     Frustum frustum(camera, 0, 0, 0, 0);
     Rasterizer rasterizer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
-    //rasterizer.AddMesh(*ourMesh);
-    rasterizer.AddMesh(*mesh2);
+    rasterizer.AddMesh(*utahMesh);
+    rasterizer.AddMesh(*bunnyMesh);
     
     while (loop)
     {
@@ -60,32 +60,32 @@ int main(int argc, char *argv[])
                         loop = SDL_FALSE;
                         break;
                     case SDLK_q:
-                        //Transform::Rotate(Transform::Y, -angle, *ourMesh);
+                        //Transform::Rotate(Transform::Y, -angle, *utahMesh);
                         break;
                     case SDLK_e:
-                        //Transform::Rotate(Transform::Y, angle, *ourMesh);
+                        //Transform::Rotate(Transform::Y, angle, *utahMesh);
                         break;
                     case SDLK_i:
-                        //Transform::Rotate(Transform::X, -angle, *ourMesh);
+                        //Transform::Rotate(Transform::X, -angle, *utahMesh);
                         break;
                     case SDLK_k:
-                        //Transform::Rotate(Transform::X, angle, *ourMesh);
+                        //Transform::Rotate(Transform::X, angle, *utahMesh);
                         break;
                     case SDLK_w:
-                        //Transform::Translate(ourMesh->verticies, {0, 0, 0.1});
-                        //ourMesh->centroid = sMaths::getCentroid(ourMesh->verticies);
+                        //Transform::Translate(utahMesh->verticies, {0, 0, 0.1});
+                        //utahMesh->centroid = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_s:
-                        //Transform::Translate(ourMesh->verticies, {0, 0, -0.1});
-                        //ourMesh->centroid = sMaths::getCentroid(ourMesh->verticies);
+                        //Transform::Translate(utahMesh->verticies, {0, 0, -0.1});
+                        //utahMesh->centroid = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_UP:
-                        //Transform::Translate(ourMesh->verticies, {0, -0.01, 0});
-                        //ourMesh->centroid  = sMaths::getCentroid(ourMesh->verticies);
+                        //Transform::Translate(utahMesh->verticies, {0, -0.01, 0});
+                        //utahMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_DOWN:
-                        //Transform::Translate(ourMesh->verticies, {0, 0.01, 0});
-                        //ourMesh->centroid  = sMaths::getCentroid(ourMesh->verticies);
+                        //Transform::Translate(utahMesh->verticies, {0, 0.01, 0});
+                        //utahMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_SPACE:
                         rasterizer.wireFrame = !rasterizer.wireFrame;
@@ -97,9 +97,10 @@ int main(int argc, char *argv[])
         }
         
         // Update
-        // Cube transformations
-        Transform::Rotate(Transform::RotationAxis::Y, angle, *ourMesh);
-        Transform::Rotate(Transform::RotationAxis::Y, -angle, *mesh2);
+        
+        Transform::Rotate(Transform::RotationAxis::Y, angle, *utahMesh);
+        Transform::Rotate(Transform::RotationAxis::Y, -angle, *bunnyMesh);
+        bunnyMesh->transformed = true;
         
         // Scene tree/manager
         // Update mesh positions etc.
@@ -120,8 +121,8 @@ int main(int argc, char *argv[])
 
     }
 
-    delete ourMesh;
-    delete mesh2;
+    delete utahMesh;
+    delete bunnyMesh;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

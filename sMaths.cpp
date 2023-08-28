@@ -7,11 +7,11 @@
 #include <algorithm>
 #include <cmath>
 
+
 bool compareTrianglesByDepth(const Triangle& t1, const Triangle& t2, const std::vector<Vector3>& points)
 {
     auto c1 = sMaths::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
     auto c2 = sMaths::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
-    
     return sMaths::getVectorDistance(c1) > sMaths::getVectorDistance(c2);
 }
 
@@ -42,8 +42,7 @@ namespace sMaths
         return vec / getVectorDistance(vec);
     }
     
-    // TODO: Had to remove 'const' from points to make operator overloading work. Investigate.
-    Vector3 getFaceNormal(const Triangle& t, std::vector<Vector3> points)
+    Vector3 getFaceNormal(const Triangle& t, const std::vector<Vector3>& points)
     {
         Vector3 n = {0};
         Vector3 a = points[t.v2] - points[t.v1];

@@ -12,7 +12,7 @@ namespace sMaths
     Vector3 normaliseVector(Vector3 vec);
     Vector3 getCentroid(const std::vector<Vector3>& points);
     Vector3 getCentroid(const Triangle& t, const std::vector<Vector3>& points);
-    Vector3 getFaceNormal(const Triangle& t, std::vector<Vector3> points);
+    Vector3 getFaceNormal(const Triangle& t, const std::vector<Vector3>& points);
     float getDotProduct(const Vector3& v1, const Vector3& v2);
     void sortVectorsByZ(std::vector<Triangle>& triangles, const std::vector<Vector3>& points);
     Matrix getPerspectiveMatrix(float  zFar, float zNear, float aspect, float fov);
