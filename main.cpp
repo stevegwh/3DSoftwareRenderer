@@ -10,6 +10,7 @@
 #include <cmath>
 
 
+#define FPS_INTERVAL 1.0
 
 const float zFar = 10;
 const float zNear = 0.1;
@@ -18,6 +19,9 @@ const float fov = 90  * PI/180;
 
 int main(int argc, char *argv[])
 {
+    Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
+    Uint32 fps_current; //the current FPS.
+    Uint32 fps_frames = 0;
 
     Clock clock;    
     float angle = 3;
@@ -30,19 +34,17 @@ int main(int argc, char *argv[])
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    Mesh* ourMesh = ObjParser::ParseObj("resources/suzanne.obj");
+    Mesh* ourMesh = ObjParser::ParseObj("resources/utah.obj");
     Mesh* mesh2 = ObjParser::ParseObj("resources/bunny.obj");
-    // World position of the above cube
-    Vector3 pos = {2, -0.1, -5};
     
     // TODO: Mesh + Vector3 = translate?
-    Transform::Translate(ourMesh->verticies, pos);
-    Transform::Translate(mesh2->verticies, { -1, -0.3, -1 });
+    //Transform::Translate(ourMesh->verticies, {2, -0.1, -10});
+    Transform::Translate(mesh2->verticies, { -0.35, -0.3, -0.5 });
     
     Camera camera(zFar, zNear, { 0, 0, 0 });
     Frustum frustum(camera, 0, 0, 0, 0);
-    Rasterizer rasterizer(renderer, camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
-    rasterizer.AddMesh(*ourMesh);
+    Rasterizer rasterizer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
+    //rasterizer.AddMesh(*ourMesh);
     rasterizer.AddMesh(*mesh2);
     
     while (loop)
@@ -96,9 +98,26 @@ int main(int argc, char *argv[])
         
         // Update
         // Cube transformations
-        //Rotate(Z, angle, points, centroid);
+        Transform::Rotate(Transform::RotationAxis::Y, angle, *ourMesh);
+        Transform::Rotate(Transform::RotationAxis::Y, -angle, *mesh2);
+        
+        // Scene tree/manager
+        // Update mesh positions etc.
+        // Scene graph
+        // If there could be a concept of a root node and all children are rotated relevant to their parents then
+        // that would be awesome. Then, implementing a camera is basically almost done; as it would just involve
+        // transforming the root node.
 
         rasterizer.Rasterize();
+        fps_frames++;
+        if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
+        {
+            fps_lasttime = SDL_GetTicks();
+            fps_current = fps_frames;
+            std::cout << fps_frames << std::endl;
+            fps_frames = 0;
+        }
+
     }
 
     delete ourMesh;

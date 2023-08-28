@@ -138,23 +138,24 @@ void Rasterizer::Rasterize()
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     
+    // TODO: I feel this data doesn't need to be updated if there has been no transform.  
     for (const auto& mesh : meshes)
     {
         std::vector<Vector2> projectedPoints;
-        std::vector<std::pair<Vector2, Vector2>> projectedNormals;
         std::vector<Triangle> backfaceCulledFaces;
+        //std::vector<std::pair<Vector2, Vector2>> projectedNormals;
+        //projectedNormals.reserve(mesh->faces.size());
+
         
         //mesh->facesCulled.clear();
         for (auto &face : mesh->faces) 
         {
-            // TODO: With a concept of world/local space I don't think this will be necessary.
             face.normal = sMaths::getFaceNormal(face, mesh->verticies);
             face.center = sMaths::getCentroid(face, mesh->verticies);
-
-            Vector3 posAndCamera = face.center - camera.pos;
+            
             auto dotProduct = sMaths::getDotProduct(
                 face.normal,
-                sMaths::normaliseVector(posAndCamera));
+                sMaths::normaliseVector(face.center - camera->pos));
 
             if (dotProduct < 0) 
             {
