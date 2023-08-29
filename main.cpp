@@ -6,11 +6,11 @@
 #include "sMaths.hpp"
 #include "Transform.hpp"
 #include "utils.hpp"
-#include "Rasterizer.hpp"
+#include "Renderer.hpp"
 #include <cmath>
 
 
-#define FPS_INTERVAL 1.0
+
 
 const float zFar = 10;
 const float zNear = 0.1;
@@ -19,10 +19,7 @@ const float fov = 90  * PI/180;
 
 int main(int argc, char *argv[])
 {
-    Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
-    Uint32 fps_current; //the current FPS.
-    Uint32 fps_frames = 0;
-
+    FPSCounter fpsCounter;
     Clock clock;    
     float angle = 3;
     SDL_Window* window = NULL;
@@ -43,9 +40,9 @@ int main(int argc, char *argv[])
     
     Camera camera(zFar, zNear, { 0, 0, 0 });
     Frustum frustum(camera, 0, 0, 0, 0);
-    Rasterizer rasterizer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
-    rasterizer.AddMesh(*utahMesh);
-    rasterizer.AddMesh(*bunnyMesh);
+    Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
+    sRenderer.AddMesh(*utahMesh);
+    sRenderer.AddMesh(*bunnyMesh);
     
     while (loop)
     {
@@ -88,7 +85,7 @@ int main(int argc, char *argv[])
                         bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
                         break;
                     case SDLK_SPACE:
-                        rasterizer.wireFrame = !rasterizer.wireFrame;
+                        sRenderer.wireFrame = !sRenderer.wireFrame;
                         break;
                     default:
                         loop = SDL_TRUE;
@@ -99,7 +96,10 @@ int main(int argc, char *argv[])
         // Update
         
         Transform::Rotate(Transform::RotationAxis::Y, angle, *utahMesh);
+        Transform::Rotate(Transform::RotationAxis::X, -angle, *utahMesh);
+        Transform::Rotate(Transform::RotationAxis::Z, angle*2, *utahMesh);
         Transform::Rotate(Transform::RotationAxis::Y, -angle, *bunnyMesh);
+        Transform::Rotate(Transform::RotationAxis::X, angle, *bunnyMesh);
         
         // Scene tree/manager
         // Update mesh positions etc.
@@ -108,15 +108,10 @@ int main(int argc, char *argv[])
         // that would be awesome. Then, implementing a camera is basically almost done; as it would just involve
         // transforming the root node.
 
-        rasterizer.Rasterize();
-        fps_frames++;
-        if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
-        {
-            fps_lasttime = SDL_GetTicks();
-            fps_current = fps_frames;
-            std::cout << fps_frames << std::endl;
-            fps_frames = 0;
-        }
+        sRenderer.Render();
+        
+        fpsCounter.Update();
+        std::cout << fpsCounter.fps_current << std::endl;
 
     }
 

@@ -17,8 +17,8 @@ add_executable(${PROJECT_NAME} main.cpp
         Transform.cpp
         Transform.hpp
         utils.hpp
-        Rasterizer.cpp
-        Rasterizer.hpp)
+        Renderer.cpp
+        Renderer.hpp)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 
 set (source "${CMAKE_SOURCE_DIR}/resources")

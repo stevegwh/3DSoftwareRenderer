@@ -12,9 +12,10 @@
 #include <SDL2/SDL.h>
 
 
-class Rasterizer
+class Renderer
 {
-    void rasterizeTriangles(const Mesh* mesh, const std::vector<zVector2>& projectedPoints, const std::vector<Triangle>& backfaceCulledFaces);
+    void getProjectedPoints(Mesh& mesh);
+    void rasterize(const Mesh& mesh);
     const Matrix perspectiveMat;
     Camera* camera;
     SDL_Renderer* renderer;
@@ -24,13 +25,13 @@ class Rasterizer
     //[[nodiscard]] static Matrix makeNDC(const Matrix& mat, const Vector4& vec) ;
 public:
     bool wireFrame = false;
-    explicit Rasterizer(SDL_Renderer* _renderer, Camera* _camera, Matrix _perspectiveMat) : 
+    Renderer(SDL_Renderer* _renderer, Camera* _camera, Matrix _perspectiveMat) : 
     renderer(_renderer), camera(_camera), perspectiveMat(std::move(_perspectiveMat))
     {
         //size_t cap = ourMesh->verticies.capacity();
     }
     void AddMesh(Mesh& mesh);
-    void Rasterize();
+    void Render();
 };
 
 
