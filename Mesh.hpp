@@ -8,10 +8,10 @@
 struct Mesh
 {
     bool transformed = true;
-    const std::vector<Vector3> verticiesOriginal;
-    const std::vector<Triangle> facesOriginal;
-    std::vector<Triangle> faces;
     std::vector<Vector3> verticies;
+    const std::vector<Vector3> verticiesOriginal;
+    std::vector<Triangle> faces;
+    const std::vector<Triangle> facesOriginal;
     std::vector<zVector2> projectedPoints;
     std::vector<Triangle> backfaceCulledFaces;
     Vector3 centroid;
