@@ -19,7 +19,7 @@ void removeExcessiveWhitespace(const std::string& input, std::string& output)
 }
 
 
-Vector3 getVector(std::string line)
+Vector3 getVector(const std::string& line)
 {
     std::string output;
     removeExcessiveWhitespace(line, output);
@@ -35,7 +35,7 @@ Vector3 getVector(std::string line)
 }
 
 
-Triangle getFace(std::string line)
+Triangle getFace(const std::string& line)
 {
     std::string output;
     removeExcessiveWhitespace(line, output);
@@ -52,7 +52,7 @@ Triangle getFace(std::string line)
         }
         vec.push_back(std::stoi(token) - 1);
     }
-    return { vec[0], vec[1], vec[2] };
+    return { vec[0], vec[1], vec[2], { 0, 0, 0 }, { 0, 0, 0 } };
 }
 
 

@@ -9,6 +9,7 @@
 #include "constants.h"
 #include <utility>
 #include <vector>
+#include <array>
 #include <SDL2/SDL.h>
 
 
@@ -16,9 +17,9 @@ class Renderer
 {
     void getProjectedPoints(Mesh& mesh);
     void rasterize(const Mesh& mesh);
-    const Matrix perspectiveMat;
-    Camera* camera;
     SDL_Renderer* renderer;
+    Camera* camera;
+    const Matrix perspectiveMat;
     std::vector<Mesh*> meshes;
     std::array<float, 1280*720> zBuffer = {0};
     //[[nodiscard]] static bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c) ;

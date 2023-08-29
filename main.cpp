@@ -17,7 +17,7 @@ const float zNear = 0.1;
 const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 const float fov = 90  * PI/180;
 
-int main(int argc, char *argv[])
+int main()
 {
     FPSCounter fpsCounter;
     Clock clock;    
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     Transform::Translate(utahMesh->verticies, {2, -0.1, -10});
     Transform::Translate(bunnyMesh->verticies, {-0.35, -0.3, -0.5 });
     
-    Camera camera(zFar, zNear, { 0, 0, 0 });
+    Camera camera({ 0, 0, 0 }, zFar, zNear);
     Frustum frustum(camera, 0, 0, 0, 0);
     Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
     sRenderer.AddMesh(*utahMesh);

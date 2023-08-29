@@ -4,6 +4,8 @@
 
 #include "Renderer.hpp"
 #include <array>
+#include <cmath>
+#include <algorithm>
 
 //const std::vector<Vector3> orthoProjectionMatrix = {
 //    { 1, 0, 0 },
@@ -66,9 +68,7 @@ void Renderer::getProjectedPoints(Mesh& mesh)
 
     for (const auto &v : mesh.verticies)
     {
-        Vector4 vec4({
-                         v.x, v.y, v.z, 1
-                     });
+        Vector4 vec4({ { v.x, v.y, v.z }, 1 });
 
         auto ndc = makeNDC(perspectiveMat, vec4);
 
@@ -137,7 +137,7 @@ void Renderer::rasterize(const Mesh& mesh)
         {
             for (int y = ymin; y <= ymax; ++y)
             {
-                zVector2 p = { static_cast<float>(x), static_cast<float>(y) };
+                zVector2 p = { static_cast<float>(x), static_cast<float>(y), 0 };
                 bool inside = true;
                 inside &= edgeFunction(p1, p2, p);
                 inside &= edgeFunction(p2, p3, p);

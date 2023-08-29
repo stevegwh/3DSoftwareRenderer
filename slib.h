@@ -170,9 +170,9 @@ struct Matrix
             exit(1);
         }
         auto maxCols = cols >= rhs.cols ? cols : rhs.cols;
-        for (int row = 0; row < rows; ++row)
+        for (int row = 0; row < static_cast<int>(rows); ++row)
         {
-            for (int col = 0; col < maxCols; ++col)
+            for (auto col = 0; col < static_cast<int>(maxCols); ++col)
             {
                 data[row][col] += rhs.data[row][col];
             }
@@ -228,9 +228,9 @@ struct Camera
     Vector3 pos;
     const float zFar;
     const float zNear;
-    Camera(float _zFar, float _zNear, Vector3 _pos) :
-         zFar(_zFar), zNear(_zFar), pos(_pos)
-    {};
+    Camera(Vector3 _pos, float _zFar, float _zNear) :
+        pos(_pos), zFar(_zFar), zNear(_zNear)
+        {};
 };
 
 struct Frustum

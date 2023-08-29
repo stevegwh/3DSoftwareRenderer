@@ -84,7 +84,7 @@ namespace sMaths
     //    const float zNear = 0.1;
     //    const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
     //    const float fov = 90  * PI/180;
-        const float yScale = 1 / std::tanf(fov / 2);
+        const float yScale = 1 / tanf(fov / 2);
         const float xScale = yScale / aspect;
         const float nearmfar = zNear - zFar;
     
