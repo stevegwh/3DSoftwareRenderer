@@ -4,13 +4,10 @@
 #include "constants.h"
 #include "ObjParser.hpp"
 #include "sMaths.hpp"
-#include "Transform.hpp"
 #include "utils.hpp"
 #include "Renderer.hpp"
+#include "Renderable.hpp"
 #include <cmath>
-
-
-
 
 const float zFar = 10;
 const float zNear = 0.1;
@@ -20,8 +17,7 @@ const float fov = 90  * PI/180;
 int main()
 {
     FPSCounter fpsCounter;
-    Clock clock;    
-    float angle = 3;
+    Clock clock;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -33,16 +29,21 @@ int main()
 
     Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
+    Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj");
+    auto* bunnyInstance = new Renderable(*bunnyMesh, {-0.35, -0.3, -0.5 }, {45, 20, 30 }, 
+                                         bunnyMesh->verticies);
+    auto* utahInstance = new Renderable(*utahMesh, {2, -0.1, -10 }, {0, 90, 0 }, 
+                                        utahMesh->verticies);
+    auto* suzanneInstance = new Renderable(*suzanneMesh, {3, -0.3, -3 }, {0, 0, 0 },
+                                           suzanneMesh->verticies);
     
-    // TODO: Mesh + Vector3 = translate?
-    Transform::Translate(utahMesh->verticies, {2, -0.1, -10});
-    Transform::Translate(bunnyMesh->verticies, {-0.35, -0.3, -0.5 });
-    
-    Camera camera({ 0, 0, 0 }, zFar, zNear);
-    Frustum frustum(camera, 0, 0, 0, 0);
+    Frustum frustum(0, 0, 0, 0);
+    Camera camera({ 0, 0, 0 }, zFar, zNear, &frustum);
+
     Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
-    sRenderer.AddMesh(*utahMesh);
-    sRenderer.AddMesh(*bunnyMesh);
+    sRenderer.AddRenderable(*bunnyInstance);
+    sRenderer.AddRenderable(*utahInstance);
+    sRenderer.AddRenderable(*suzanneInstance);
     
     while (loop)
     {
@@ -65,24 +66,18 @@ int main()
                     case SDLK_i:
                         //Transform::Rotate(Transform::X, -angle, *utahMesh);
                         break;
-                    case SDLK_k:
-                        //Transform::Rotate(Transform::X, angle, *utahMesh);
-                        break;
+                    case SDLK_k:break;
                     case SDLK_w:
-                        Transform::Translate(bunnyMesh->verticies, {0, 0, 0.1});
-                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
+                        suzanneInstance->position.x -= 0.2;
                         break;
                     case SDLK_s:
-                        Transform::Translate(bunnyMesh->verticies, {0, 0, -0.1});
-                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
+                        suzanneInstance->position.x += 0.2;
                         break;
                     case SDLK_UP:
-                        Transform::Translate(bunnyMesh->verticies, {0, -0.01, 0});
-                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
+
                         break;
                     case SDLK_DOWN:
-                        Transform::Translate(bunnyMesh->verticies, {0, 0.01, 0});
-                        bunnyMesh->centroid  = sMaths::getCentroid(utahMesh->verticies);
+
                         break;
                     case SDLK_SPACE:
                         sRenderer.wireFrame = !sRenderer.wireFrame;
@@ -94,13 +89,7 @@ int main()
         }
         
         // Update
-        
-        Transform::Rotate(Transform::RotationAxis::Y, angle, *utahMesh);
-        Transform::Rotate(Transform::RotationAxis::X, -angle, *utahMesh);
-        Transform::Rotate(Transform::RotationAxis::Z, angle*2, *utahMesh);
-        Transform::Rotate(Transform::RotationAxis::Y, -angle, *bunnyMesh);
-        Transform::Rotate(Transform::RotationAxis::X, angle, *bunnyMesh);
-        
+
         // Scene tree/manager
         // Update mesh positions etc.
         // Scene graph
@@ -117,6 +106,10 @@ int main()
 
     delete utahMesh;
     delete bunnyMesh;
+    delete suzanneMesh;
+    delete utahInstance;
+    delete bunnyInstance;
+    delete suzanneInstance;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

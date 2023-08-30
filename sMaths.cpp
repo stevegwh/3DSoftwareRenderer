@@ -32,7 +32,7 @@ namespace sMaths
     
     Vector3 getCentroid(const std::vector<Vector3>& points)
     {
-        Vector3 result = {0};
+        Vector3 result = { 0, 0, 0 };
         for (const auto& v: points) result += v;
         return result/points.size();
     }
@@ -44,17 +44,9 @@ namespace sMaths
     
     Vector3 getFaceNormal(const Triangle& t, const std::vector<Vector3>& points)
     {
-        Vector3 n = {0};
+        Vector3 n = { 0, 0, 0 };
         Vector3 a = points[t.v2] - points[t.v1];
         Vector3 b = points[t.v3] - points[t.v1];
-        
-//        a.x = points[t.v2].x - points[t.v1].x;
-//        a.y = points[t.v2].y - points[t.v1].y;
-//        a.z = points[t.v2].z - points[t.v1].z;
-//
-//        b.x = points[t.v3].x - points[t.v1].x;
-//        b.y = points[t.v3].y - points[t.v1].y;
-//        b.z = points[t.v3].z - points[t.v1].z;
 
         n.x = a.y * b.z - a.z * b.y;
         n.y = a.z * b.x - a.x * b.z;
@@ -79,11 +71,6 @@ namespace sMaths
     Matrix getPerspectiveMatrix(
         const float  zFar, const float zNear, const float aspect, const float fov)
     {
-    //    // Projection matrix
-    //    const float zFar = 10;
-    //    const float zNear = 0.1;
-    //    const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-    //    const float fov = 90  * PI/180;
         const float yScale = 1 / tanf(fov / 2);
         const float xScale = yScale / aspect;
         const float nearmfar = zNear - zFar;

@@ -6,6 +6,7 @@
 #include <array>
 #include <cmath>
 #include <algorithm>
+#include "constants.h"
 
 //const std::vector<Vector3> orthoProjectionMatrix = {
 //    { 1, 0, 0 },
@@ -20,64 +21,149 @@
 //        { 0, 0, 0, -1 }
 //    };
 
+void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin)
+{
+    const float xrad = eulerAngles.x * RAD;
+    const float yrad = eulerAngles.y * RAD;
+    const float zrad = eulerAngles.z * RAD;
+    const float axc = std::cos(xrad);
+    const float axs = std::sin(xrad);
+    const float ayc = std::cos(yrad);
+    const float ays = -std::sin(yrad);
+    const float azc = std::cos(zrad);
+    const float azs = -std::sin(zrad);
+
+    // Combined rotation matrix
+    Matrix combinedRotationMatrix({
+                                      { ayc * azc, ayc * azs, -ays },
+                                      { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc },
+                                      { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc }
+                                  });
+
+    v *= combinedRotationMatrix;
+}
 
 
+void rotateRenderable(Renderable& renderable, Vector3 rotationOrigin = { 0, 0, 0 })
+{
+    //    Vector3 centroid = getCentroid(points);
+//    if (rotationOrigin == 0)
+//    {
+//        rotationOrigin = sMaths::getCentroid(renderable.verticies);
+//
+//    }
+
+    for (auto& p : renderable.verticies)
+    {
+        rotateVertex(p, renderable.eulerAngles, renderable.position);
+    }
+}
+
+void translateRenderable(Renderable& renderable)
+{
+    for (Vector3& p : renderable.verticies) p += renderable.position;
+}
 
 bool edgeFunction(const zVector2 &a, const zVector2 &b, const zVector2 &c) 
 {
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
 }
 
-void backfaceCulling(Mesh& mesh, const Camera& camera)
+void backfaceCulling(const Renderable& renderable, const Camera& camera, std::vector<Triangle>& backfaceCulledFaces)
 {
-    mesh.backfaceCulledFaces.clear();
-    for (auto &face : mesh.faces)
+    for (const auto &face : renderable.mesh.faces)
     {
-        face.normal = sMaths::getFaceNormal(face, mesh.verticies);
-        face.center = sMaths::getCentroid(face, mesh.verticies);
+        const auto normal = sMaths::getFaceNormal(face, renderable.verticies);
+        const auto center = sMaths::getCentroid(face, renderable.verticies);
 
         auto dotProduct = sMaths::getDotProduct(
-            face.normal,
-            sMaths::normaliseVector(face.center - camera.pos));
+            normal,
+            sMaths::normaliseVector(center - camera.pos));
 
         if (dotProduct < 0)
         {
-            mesh.backfaceCulledFaces.push_back(face);
+            // TODO: Seems a bit fragile relying on the center/normal to be initialised here.
+            auto f = face;
+            f.center = center;
+            f.normal = normal;
+            backfaceCulledFaces.push_back(f);
         }
     }
 }
 
-Matrix makeNDC(const Matrix& mat, const Vector4& vec)
+void Renderer::makeClipSpace(Mesh& mesh)
 {
-    Matrix result(mat * vec);
+//    std::vector<int> validIndicies;
+//
+//    for (const auto& v : mesh.verticies) 
+//    {
+//        if (v.x < camera->frustum->nearW)
+//        {
+//            
+//        }
+//    }
+//    
+//    // TODO: Clip the triangles that lay on the edges of the camera's frustum
+//    
+//    for (auto& face : mesh.faces) 
+//    {
+//        // TODO: For now, ignore any face whose verticies do not lie completely within the camera's frustum
+//        
+//
+//    }    
+}
+
+void Renderer::makeViewSpace(Mesh& mesh)
+{
+    // TODO: Transform this object in relation to the camera
+}
+
+Vector4 makeNDC(const Matrix& perspectiveMat, const Vector4& vec)
+{
+    
+    // " Clip Space : Positions of vertices after projection into a non-linear homogeneous coordinate. 
+    // Normalized Device Coordinate (NDC) Space : Vertex coordinates are said to be in NDC after their
+    // clip-space coordinates have been divided by their own w component." 
+    
+    // Clip space
+    auto result(vec * perspectiveMat);
 
     // Perspective divide
-    if (result.data[0][3] != 0)
+    // NDC Space
+    if (result.w != 0)
     {
-        result.data[0][0] /= result.data[0][3]; //x
-        result.data[0][1] /= result.data[0][3]; //y
-        result.data[0][2] /= result.data[0][3]; //z
+        result.vec.x /= result.w;
+        result.vec.y /= result.w;
+        result.vec.z /= result.w;
     }
     //-----------------------------
     return result;
 }
 
-void Renderer::getProjectedPoints(Mesh& mesh)
+void getProjectedPoints(const Renderable& renderable, const Matrix& perspectiveMat, std::vector<zVector2>& projectedPoints)
 {
-    mesh.projectedPoints.clear();
-
-    for (const auto &v : mesh.verticies)
+    for (const auto &v : renderable.verticies)
     {
         Vector4 vec4({ { v.x, v.y, v.z }, 1 });
-
+        
+        // NDC Space (Clip space abstracted)
         auto ndc = makeNDC(perspectiveMat, vec4);
+        
+        // Screen space
+        const auto x = static_cast<float>(SCREEN_WIDTH / 2 + ndc.vec.x * SCREEN_WIDTH / 2);
+        const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - ndc.vec.y * SCREEN_HEIGHT / 2);
 
-        const auto x = static_cast<float>(SCREEN_WIDTH / 2 + ndc.data[0][0] * SCREEN_WIDTH / 2);
-        const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - ndc.data[0][1] * SCREEN_HEIGHT / 2);
-
-        mesh.projectedPoints.push_back({ x, y, ndc.data[0][3] });
+        projectedPoints.push_back({ x, y, ndc.w });
         // Calculations for drawing normals as lines pointing from the faces here.
     }
+}
+
+void makeWorldSpace(Renderable& renderable)
+{
+//    Matrix transform = {
+//        {  }
+//    }
+    
 }
 
 void Renderer::Render()
@@ -87,7 +173,7 @@ void Renderer::Render()
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     
-    for (const auto& mesh : meshes)
+    for (auto& renderable : renderables)
     {
 //        if (!mesh->transformed)
 //        {
@@ -99,28 +185,63 @@ void Renderer::Render()
 //        std::vector<std::pair<Vector2, Vector2>> projectedNormals;
 //        projectedNormals.reserve(mesh->faces.size());
 
-
-        getProjectedPoints(*mesh);
-        backfaceCulling(*mesh, *camera);
+        // Pipeline 
+        // https://learnopengl.com/Getting-started/Coordinate-Systems
+        // local (model) space
+        // Model matrix
+        // world space
+        // View matrix
+        // view (camera) space
+        // ~backface culling1~
+        // Projection matrix
+        // projection space
+        // ~backface culling2~
+        // ~camera clipping here~
+        // clip space
+        // Perspective Divide
+        // ndc (image) space
+        // View transform
+        // screen space
+        
+        // Local -> World
+        
+        // Instead of transforming every vertex before rendering, have world position/transform in the mesh and
+        // transform it here.
+        renderable->verticies.clear();
+        renderable->verticies = renderable->mesh.verticies;
+        
+        // TODO Apply world transform matrix here.
+        rotateRenderable(*renderable);
+        translateRenderable(*renderable);
+        
+        
+        // World -> View
+        //makeClipSpace(mesh);
+        // Clip, NDC, Screen
+        std::vector<zVector2> projectedPoints;
+        std::vector<Triangle> backfaceCulledFaces;
+        getProjectedPoints(*renderable, perspectiveMat, projectedPoints);
+        backfaceCulling(*renderable, *camera, backfaceCulledFaces);
+        
+        
 
         // Painter's algorithm
         //sMaths::sortVectorsByZ(mesh->backfaceCulledFaces, mesh->verticies);
         
-        // Viewport transform here, before passing to rasterize for screen space.
-        rasterize(*mesh);
+        rasterize(projectedPoints, backfaceCulledFaces);
     }
     
         
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::rasterize(const Mesh& mesh)
+void Renderer::rasterize(const std::vector<zVector2>& projectedPoints, const std::vector<Triangle>& backfaceCulledFaces)
 {
-    for (const auto& t : mesh.backfaceCulledFaces)
+    for (const auto& t : backfaceCulledFaces)
     {
-        const auto& p1 = mesh.projectedPoints.at(t.v1);
-        const auto& p2 = mesh.projectedPoints.at(t.v2);
-        const auto& p3 = mesh.projectedPoints.at(t.v3);
+        const auto& p1 = projectedPoints.at(t.v1);
+        const auto& p2 = projectedPoints.at(t.v2);
+        const auto& p3 = projectedPoints.at(t.v3);
 
         // Get bounding box.
         int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
@@ -177,9 +298,9 @@ void Renderer::rasterize(const Mesh& mesh)
     }
 }
 
-void Renderer::AddMesh(Mesh& mesh)
+void Renderer::AddRenderable(Renderable& renderable)
 {
-    meshes.push_back(&mesh);
+    renderables.push_back(&renderable);
 }
 
 

@@ -5,6 +5,7 @@
 #pragma once
 #include "slib.h"
 #include "sMaths.hpp"
+#include "Renderable.hpp"
 #include "Mesh.hpp"
 #include "constants.h"
 #include <utility>
@@ -15,12 +16,13 @@
 
 class Renderer
 {
-    void getProjectedPoints(Mesh& mesh);
-    void rasterize(const Mesh& mesh);
+    void rasterize(const std::vector<zVector2>& projectedPoints, const std::vector<Triangle>& backfaceCulledFaces);
+    void makeClipSpace(Mesh& mesh);
+    void makeViewSpace(Mesh& mesh);
     SDL_Renderer* renderer;
     Camera* camera;
     const Matrix perspectiveMat;
-    std::vector<Mesh*> meshes;
+    std::vector<Renderable*> renderables;
     std::array<float, 1280*720> zBuffer = {0};
     //[[nodiscard]] static bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c) ;
     //[[nodiscard]] static Matrix makeNDC(const Matrix& mat, const Vector4& vec) ;
@@ -31,7 +33,7 @@ public:
     {
         //size_t cap = ourMesh->verticies.capacity();
     }
-    void AddMesh(Mesh& mesh);
+    void AddRenderable(Renderable& renderable);
     void Render();
 };
 
