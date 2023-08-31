@@ -138,17 +138,20 @@ Vector3 Vector3::operator *= (const Matrix& rhs)
     return *this;
 }
 
-
-
 Matrix& Matrix::operator += (const Matrix& rhs)
 {
-    if (cols != rhs.rows)
+    const auto rhsrows = rhs.data.size();
+    const auto rhscols = rhs.data.at(0).size();
+    const auto lhsrows = data.size();
+    const auto lhscols = data.at(0).size();
+
+    if (lhscols != rhsrows)
     {
         std::cout << "Error: Matrix-size mismatch." << std::endl;
         exit(1);
     }
-    auto maxCols = cols >= rhs.cols ? cols : rhs.cols;
-    for (int row = 0; row < static_cast<int>(rows); ++row)
+    auto maxCols = lhscols >= rhscols ? lhscols : rhscols;
+    for (int row = 0; row < static_cast<int>(lhsrows); ++row)
     {
         for (auto col = 0; col < static_cast<int>(maxCols); ++col)
         {
@@ -160,28 +163,32 @@ Matrix& Matrix::operator += (const Matrix& rhs)
 
 Matrix& Matrix::operator *= (const Matrix& rhs)
 {
-    if (cols != rhs.rows)
+    const auto rhsrows = rhs.data.size();
+    const auto rhscols = rhs.data.at(0).size();
+    const auto lhsrows = data.size();
+    const auto lhscols = data.at(0).size();
+    
+    if (lhscols != rhsrows)
     {
         std::cout << "Error: Matrix-size mismatch." << std::endl;
         exit(1);
     }
 
-    std::vector<std::vector<float>> result(rows, std::vector<float>(rhs.cols, 0));
+    std::vector<std::vector<float>> result(lhsrows, std::vector<float>(rhscols, 0));
 
-    for (size_t i = 0; i < rows; ++i)
+    for (size_t i = 0; i < lhsrows; ++i)
     {
-        for (size_t j = 0; j < rhs.cols; ++j)
+        for (size_t j = 0; j < rhscols; ++j)
         {
             float cellValue = 0;
-            for (size_t k = 0; k < cols; ++k)
+            for (size_t k = 0; k < lhscols; ++k)
             {
                 cellValue += data[i][k] * rhs.data[k][j];
             }
             result[i][j] = cellValue;
         }
     }
-
-    cols = rhs.cols;
+    
     data = result;
     return *this;
 }

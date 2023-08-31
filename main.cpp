@@ -30,11 +30,14 @@ int main()
     Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
     Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj");
-    auto* bunnyInstance = new Renderable(*bunnyMesh, {-0.35, -0.3, -0.5 }, {45, 20, 30 }, 
+    auto* bunnyInstance = new Renderable(*bunnyMesh, {-2, -0.1, -2 }, 
+                                         {0, 20, 0 }, {5,5,5},
                                          bunnyMesh->verticies);
-    auto* utahInstance = new Renderable(*utahMesh, {2, -0.1, -10 }, {0, 90, 0 }, 
+    auto* utahInstance = new Renderable(*utahMesh, {0, -0.1, -2 }, 
+                                        {0, 90, 0 }, {0.2,0.2,0.2},
                                         utahMesh->verticies);
-    auto* suzanneInstance = new Renderable(*suzanneMesh, {3, -0.3, -3 }, {0, 0, 0 },
+    auto* suzanneInstance = new Renderable(*suzanneMesh, {3, -0.3, -3 }, 
+                                           {0, 0, 0 }, {1,1,1},
                                            suzanneMesh->verticies);
     
     Frustum frustum(0, 0, 0, 0);

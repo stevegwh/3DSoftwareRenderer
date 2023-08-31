@@ -54,13 +54,8 @@ struct Vector4
 struct Matrix
 {
     std::vector<std::vector<float>> data;
-    unsigned long rows;
-    unsigned long cols;
     explicit Matrix(std::vector<std::vector<float>> _data) : data(std::move(_data))
-    {
-        rows = data.size();
-        cols = data.at(0).size();
-    };
+    {};
 
     Matrix& operator += (const Matrix& rhs);
     Matrix& operator *= (const Matrix& rhs);

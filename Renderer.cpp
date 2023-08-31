@@ -7,6 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include "constants.h"
+#include <glm/glm.hpp>
 
 //const std::vector<Vector3> orthoProjectionMatrix = {
 //    { 1, 0, 0 },
@@ -43,19 +44,58 @@ void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin)
     v *= combinedRotationMatrix;
 }
 
-
-void rotateRenderable(Renderable& renderable, Vector3 rotationOrigin = { 0, 0, 0 })
+void transformVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& translation, const Vector3& scale)
 {
-    //    Vector3 centroid = getCentroid(points);
-//    if (rotationOrigin == 0)
-//    {
-//        rotationOrigin = sMaths::getCentroid(renderable.verticies);
-//
-//    }
+    const float xrad = eulerAngles.x * RAD;
+    const float yrad = eulerAngles.y * RAD;
+    const float zrad = eulerAngles.z * RAD;
+    const float axc = std::cos(xrad);
+    const float axs = std::sin(xrad);
+    const float ayc = std::cos(yrad);
+    const float ays = -std::sin(yrad);
+    const float azc = std::cos(zrad);
+    const float azs = -std::sin(zrad);
+    
+    // TODO: This works with glm but not my own matrix/vector4 classes.
+    
+//    glm::mat4x4 transformMatrix({
+//                                      { ayc * azc, ayc * azs, -ays, translation.x },
+//                                      { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc, translation.y },
+//                                      { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc, translation.z },
+//                                      { 0, 0, 0, 1.0f }
+//                                  });
 
+    glm::mat4x4  transformMatrix({
+                                            { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, translation.x },
+                                            { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, translation.y },
+                                            { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, translation.z },
+                                            { 0, 0, 0, 1.0f } // Homogeneous coordinate
+                                        });
+
+    // Translation matrix
+//    glm::mat4x4 translationMatrix({
+//                                 { 1.0f, 0.0f, 0.0f, translation.x },
+//                                 { 0.0f, 1.0f, 0.0f, translation.y },
+//                                 { 0.0f, 0.0f, 1.0f, translation.z },
+//                                 { 0.0f, 0.0f, 0.0f, 1.0f }
+//                             });
+
+    glm::vec4 v4({v.x, v.y, v.z, 1 });
+    // Combined transformation matrix
+    auto transformedVector = v4  * transformMatrix;
+    
+    v = { transformedVector.x, transformedVector.y, transformedVector.z };  
+}
+
+
+
+
+
+void transformRenderable(Renderable& renderable)
+{
     for (auto& p : renderable.verticies)
     {
-        rotateVertex(p, renderable.eulerAngles, renderable.position);
+        transformVertex(p, renderable.eulerAngles, renderable.position, renderable.scale);
     }
 }
 
@@ -211,8 +251,10 @@ void Renderer::Render()
         renderable->verticies = renderable->mesh.verticies;
         
         // TODO Apply world transform matrix here.
-        rotateRenderable(*renderable);
-        translateRenderable(*renderable);
+        transformRenderable(*renderable);
+        
+        //translateRenderable(*renderable);
+        //scaleRenderable(*renderable);
         
         
         // World -> View
