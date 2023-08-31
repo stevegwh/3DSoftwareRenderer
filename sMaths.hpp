@@ -16,5 +16,6 @@ namespace sMaths
     float getDotProduct(const Vector3& v1, const Vector3& v2);
     void sortVectorsByZ(std::vector<Triangle>& triangles, const std::vector<Vector3>& points);
     Matrix getPerspectiveMatrix(float  zFar, float zNear, float aspect, float fov);
+    void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin);
 };
 

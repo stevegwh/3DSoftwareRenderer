@@ -7,7 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include "constants.h"
-#include <glm/glm.hpp>
+
 
 //const std::vector<Vector3> orthoProjectionMatrix = {
 //    { 1, 0, 0 },
@@ -22,7 +22,9 @@
 //        { 0, 0, 0, -1 }
 //    };
 
-void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin)
+
+
+void Renderer::transformVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& translation, const Vector3& scale, const glm::mat4& cameraMatrix)
 {
     const float xrad = eulerAngles.x * RAD;
     const float yrad = eulerAngles.y * RAD;
@@ -33,69 +35,30 @@ void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin)
     const float ays = -std::sin(yrad);
     const float azc = std::cos(zrad);
     const float azs = -std::sin(zrad);
-
-    // Combined rotation matrix
-    Matrix combinedRotationMatrix({
-                                      { ayc * azc, ayc * azs, -ays },
-                                      { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc },
-                                      { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc }
-                                  });
-
-    v *= combinedRotationMatrix;
-}
-
-void transformVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& translation, const Vector3& scale)
-{
-    const float xrad = eulerAngles.x * RAD;
-    const float yrad = eulerAngles.y * RAD;
-    const float zrad = eulerAngles.z * RAD;
-    const float axc = std::cos(xrad);
-    const float axs = std::sin(xrad);
-    const float ayc = std::cos(yrad);
-    const float ays = -std::sin(yrad);
-    const float azc = std::cos(zrad);
-    const float azs = -std::sin(zrad);
+    const float transx = translation.x + camera->pos.x;
+    const float transy = translation.y + camera->pos.y;
+    const float transz = translation.z - camera->pos.z;
     
     // TODO: This works with glm but not my own matrix/vector4 classes.
     
-//    glm::mat4x4 transformMatrix({
-//                                      { ayc * azc, ayc * azs, -ays, translation.x },
-//                                      { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc, translation.y },
-//                                      { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc, translation.z },
-//                                      { 0, 0, 0, 1.0f }
-//                                  });
-
     glm::mat4x4  transformMatrix({
-                                            { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, translation.x },
-                                            { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, translation.y },
-                                            { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, translation.z },
-                                            { 0, 0, 0, 1.0f } // Homogeneous coordinate
-                                        });
-
-    // Translation matrix
-//    glm::mat4x4 translationMatrix({
-//                                 { 1.0f, 0.0f, 0.0f, translation.x },
-//                                 { 0.0f, 1.0f, 0.0f, translation.y },
-//                                 { 0.0f, 0.0f, 1.0f, translation.z },
-//                                 { 0.0f, 0.0f, 0.0f, 1.0f }
-//                             });
+                                { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, transx },
+                                { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, transy },
+                                { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, transz },
+                                { 0, 0, 0, 1.0f } // Homogeneous coordinate
+                                });
 
     glm::vec4 v4({v.x, v.y, v.z, 1 });
-    // Combined transformation matrix
-    auto transformedVector = v4  * transformMatrix;
-    
-    v = { transformedVector.x, transformedVector.y, transformedVector.z };  
+    auto transformedVector = v4  * transformMatrix * cameraMatrix;
+    v = { transformedVector.x, transformedVector.y, transformedVector.z };
 }
 
 
-
-
-
-void transformRenderable(Renderable& renderable)
+void Renderer::transformRenderable(Renderable& renderable, const glm::mat4& cameraMatrix)
 {
     for (auto& p : renderable.verticies)
     {
-        transformVertex(p, renderable.eulerAngles, renderable.position, renderable.scale);
+        transformVertex(p, renderable.eulerAngles, renderable.position, renderable.scale, cameraMatrix);
     }
 }
 
@@ -166,18 +129,22 @@ Vector4 makeNDC(const Matrix& perspectiveMat, const Vector4& vec)
     // clip-space coordinates have been divided by their own w component." 
     
     // Clip space
-    auto result(vec * perspectiveMat);
-
+    //auto result(vec * perspectiveMat);
+    
+    auto persp = glm::perspective(fov, aspect, zNear, zFar);
+    glm::vec4 v4({vec.vec.x, vec.vec.y, vec.vec.z, vec.w});
+    
+    auto result = v4 * persp;
     // Perspective divide
     // NDC Space
     if (result.w != 0)
     {
-        result.vec.x /= result.w;
-        result.vec.y /= result.w;
-        result.vec.z /= result.w;
+        result.x /= result.w;
+        result.y /= result.w;
+        result.z /= result.w;
     }
     //-----------------------------
-    return result;
+    return {{result.x, result.y, result.z}, result.w};
 }
 
 void getProjectedPoints(const Renderable& renderable, const Matrix& perspectiveMat, std::vector<zVector2>& projectedPoints)
@@ -212,6 +179,10 @@ void Renderer::Render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+    glm::mat4 cameraMatrix = glm::lookAt(glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
+                                         glm::vec3(camera->direction.x, camera->direction.y, camera->direction.z),
+                                         glm::vec3(0,1,0));
     
     for (auto& renderable : renderables)
     {
@@ -250,12 +221,11 @@ void Renderer::Render()
         renderable->verticies.clear();
         renderable->verticies = renderable->mesh.verticies;
         
-        // TODO Apply world transform matrix here.
-        transformRenderable(*renderable);
+
+        // World space
+        transformRenderable(*renderable, cameraMatrix);
         
-        //translateRenderable(*renderable);
-        //scaleRenderable(*renderable);
-        
+
         
         // World -> View
         //makeClipSpace(mesh);
@@ -292,7 +262,7 @@ void Renderer::rasterize(const std::vector<zVector2>& projectedPoints, const std
         int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
 
         // Lighting
-        Vector3 lightingDirection = { 0, 0, -1 };
+        Vector3 lightingDirection = { 0, -1, 0 };
         float lum = sMaths::getDotProduct(t.normal, lightingDirection) * -1;
 
         // Edge finding for triangle rasterization

@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include "constants.h"
 
 
 bool compareTrianglesByDepth(const Triangle& t1, const Triangle& t2, const std::vector<Vector3>& points)
@@ -60,6 +61,30 @@ namespace sMaths
         std::sort(triangles.begin(), triangles.end(), [&](const Triangle& t1, const Triangle& t2) {
             return compareTrianglesByDepth(t1, t2, points);
         });
+    }
+
+    void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin)
+    {
+        v -= origin;
+        const float xrad = eulerAngles.x * RAD;
+        const float yrad = eulerAngles.y * RAD;
+        const float zrad = eulerAngles.z * RAD;
+        const float axc = std::cos(xrad);
+        const float axs = std::sin(xrad);
+        const float ayc = std::cos(yrad);
+        const float ays = -std::sin(yrad);
+        const float azc = std::cos(zrad);
+        const float azs = -std::sin(zrad);
+    
+        // Combined rotation matrix
+        Matrix combinedRotationMatrix({
+                                          { ayc * azc, ayc * azs, -ays },
+                                          { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc },
+                                          { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc }
+                                      });
+    
+        v *= combinedRotationMatrix;
+        v += origin;
     }
     
     float getDotProduct(const Vector3& v1, const Vector3& v2)

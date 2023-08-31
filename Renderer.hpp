@@ -12,11 +12,16 @@
 #include <vector>
 #include <array>
 #include <SDL2/SDL.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 class Renderer
 {
     void rasterize(const std::vector<zVector2>& projectedPoints, const std::vector<Triangle>& backfaceCulledFaces);
+    void transformRenderable(Renderable& renderable, const glm::mat4& cameraMatrix);
+    void transformVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& translation, const Vector3& scale, const glm::mat4& cameraMatrix);
     void makeClipSpace(Mesh& mesh);
     void makeViewSpace(Mesh& mesh);
     SDL_Renderer* renderer;
@@ -29,7 +34,7 @@ class Renderer
 public:
     bool wireFrame = false;
     Renderer(SDL_Renderer* _renderer, Camera* _camera, Matrix _perspectiveMat) : 
-    renderer(_renderer), camera(_camera), perspectiveMat(std::move(_perspectiveMat))
+    renderer(_renderer), camera(_camera), perspectiveMat(_perspectiveMat)
     {
         //size_t cap = ourMesh->verticies.capacity();
     }

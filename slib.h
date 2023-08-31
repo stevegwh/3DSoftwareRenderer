@@ -69,11 +69,13 @@ struct Frustum;
 struct Camera
 {
     Vector3 pos;
+    Vector3 rotation;
+    Vector3 direction;
     const float zFar;
     const float zNear;
     Frustum* frustum;
-    Camera(Vector3 _pos, float _zFar, float _zNear, Frustum* _frustum) :
-        pos(_pos), zFar(_zFar), zNear(_zNear), frustum(_frustum)
+    Camera(Vector3 _pos, Vector3 _rotation, Vector3 _direction, float _zFar, float _zNear, Frustum* _frustum) :
+        pos(_pos), rotation(_rotation), direction(_direction), zFar(_zFar), zNear(_zNear), frustum(_frustum)
         {};
 };
 

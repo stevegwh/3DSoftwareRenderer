@@ -9,10 +9,18 @@
 #include "Renderable.hpp"
 #include <cmath>
 
-const float zFar = 10;
-const float zNear = 0.1;
-const float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-const float fov = 90  * PI/180;
+//glm::vec3 getRayFromScreenSpace(const glm::vec2 & pos)
+//{
+//    glm::mat4 invMat= glm::inverse(m_glData.getPerspective()*m_glData.getView());
+//    glm::vec4 near = vec4((pos.x - Constants::m_halfScreenWidth) / Constants::m_halfScreenWidth, -1*(pos.y - Constants::m_halfScreenHeight) / Constants::m_halfScreenHeight, -1, 1.0);
+//    glm::vec4 far = vec4((pos.x - Constants::m_halfScreenWidth) / Constants::m_halfScreenWidth, -1*(pos.y - Constants::m_halfScreenHeight) / Constants::m_halfScreenHeight, 1, 1.0);
+//    glm::vec4 nearResult = invMat*near;
+//    glm::vec4 farResult = invMat*far;
+//    nearResult /= nearResult.w;
+//    farResult /= farResult.w;
+//    glm::vec3 dir = glm::vec3(farResult - nearResult );
+//    return normalize(dir);
+//}
 
 int main()
 {
@@ -30,23 +38,35 @@ int main()
     Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
     Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj");
-    auto* bunnyInstance = new Renderable(*bunnyMesh, {-2, -0.1, -2 }, 
-                                         {0, 20, 0 }, {5,5,5},
-                                         bunnyMesh->verticies);
-    auto* utahInstance = new Renderable(*utahMesh, {0, -0.1, -2 }, 
-                                        {0, 90, 0 }, {0.2,0.2,0.2},
-                                        utahMesh->verticies);
-    auto* suzanneInstance = new Renderable(*suzanneMesh, {3, -0.3, -3 }, 
-                                           {0, 0, 0 }, {1,1,1},
-                                           suzanneMesh->verticies);
+    Mesh* planeMesh = ObjParser::ParseObj("resources/plane.obj");
+    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -2 }, 
+                                         {0, 20, 0 }, {1,1,1},
+                                          bunnyMesh->verticies);
+//    auto* bunnyInstance2 = new Renderable(*suzanneMesh, {0, -0.1, -15 },
+//                                          {0, 20, 0 }, {1,1,1},
+//                                          suzanneMesh->verticies);
+//    auto* bunnyInstance3 = new Renderable(*suzanneMesh, {3, -0.1, -15 },
+//                                          {0, 20, 0 }, {1,1,1},
+//                                          suzanneMesh->verticies);
+    auto* planeInstance = new Renderable(*planeMesh, {0, -0.3, -2 },
+                                        {0, 0, 0 }, {1,1,1},
+                                        planeMesh->verticies);
+//    auto* utahInstance = new Renderable(*utahMesh, {0, -0.1, -2 }, 
+//                                        {0, 90, 0 }, {0.2,0.2,0.2},
+//                                        utahMesh->verticies);
+//    auto* suzanneInstance = new Renderable(*suzanneMesh, {3, -0.3, -3 }, 
+//                                           {0, 0, 0 }, {1,1,1},
+//                                           suzanneMesh->verticies);
     
     Frustum frustum(0, 0, 0, 0);
-    Camera camera({ 0, 0, 0 }, zFar, zNear, &frustum);
-
+    Camera camera({ 0, 0, 5 }, { 0, 0, 0 }, { 0, 0, 0 }, zFar, zNear, &frustum);
+    
+    
     Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
-    sRenderer.AddRenderable(*bunnyInstance);
-    sRenderer.AddRenderable(*utahInstance);
-    sRenderer.AddRenderable(*suzanneInstance);
+    sRenderer.AddRenderable(*bunnyInstance1);
+//    sRenderer.AddRenderable(*bunnyInstance2);
+//    sRenderer.AddRenderable(*bunnyInstance3);
+    sRenderer.AddRenderable(*planeInstance);
     
     while (loop)
     {
@@ -61,20 +81,26 @@ int main()
                         loop = SDL_FALSE;
                         break;
                     case SDLK_q:
-                        //Transform::Rotate(Transform::Y, -angle, *utahMesh);
+                        sMaths::rotateVertex(camera.direction, { 0, 10, 0 }, camera.pos);
                         break;
                     case SDLK_e:
-                        //Transform::Rotate(Transform::Y, angle, *utahMesh);
+                        sMaths::rotateVertex(camera.direction, { 0, -10, 0 }, camera.pos);
                         break;
                     case SDLK_i:
                         //Transform::Rotate(Transform::X, -angle, *utahMesh);
                         break;
                     case SDLK_k:break;
                     case SDLK_w:
-                        suzanneInstance->position.x -= 0.2;
+                        camera.pos.z -= 0.1f;
                         break;
                     case SDLK_s:
-                        suzanneInstance->position.x += 0.2;
+                        camera.pos.z += 0.1f;
+                        break;
+                    case SDLK_a:
+                        camera.pos.x += 0.1f;
+                        break;
+                    case SDLK_d:
+                        camera.pos.x -= 0.1f;
                         break;
                     case SDLK_UP:
 
@@ -99,9 +125,12 @@ int main()
         // If there could be a concept of a root node and all children are rotated relevant to their parents then
         // that would be awesome. Then, implementing a camera is basically almost done; as it would just involve
         // transforming the root node.
-
-        sRenderer.Render();
         
+//        bunnyInstance1->eulerAngles.y += 0.01f * clock.delta;
+//        bunnyInstance2->eulerAngles.y += 0.01f * clock.delta;
+//        bunnyInstance3->eulerAngles.y += 0.01f * clock.delta;
+        
+        sRenderer.Render();
         fpsCounter.Update();
         std::cout << fpsCounter.fps_current << std::endl;
 
@@ -110,9 +139,11 @@ int main()
     delete utahMesh;
     delete bunnyMesh;
     delete suzanneMesh;
-    delete utahInstance;
-    delete bunnyInstance;
-    delete suzanneInstance;
+    delete planeMesh;
+    delete bunnyInstance1;
+//    delete bunnyInstance2;
+//    delete bunnyInstance3;
+    delete planeInstance;
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
