@@ -8,14 +8,15 @@
 
 namespace sMaths
 {
-    float getVectorDistance(const Vector3& vec);
-    Vector3 normaliseVector(Vector3 vec);
-    Vector3 getCentroid(const std::vector<Vector3>& points);
-    Vector3 getCentroid(const Triangle& t, const std::vector<Vector3>& points);
-    Vector3 getFaceNormal(const Triangle& t, const std::vector<Vector3>& points);
-    float getDotProduct(const Vector3& v1, const Vector3& v2);
-    void sortVectorsByZ(std::vector<Triangle>& triangles, const std::vector<Vector3>& points);
-    Matrix getPerspectiveMatrix(float  zFar, float zNear, float aspect, float fov);
-    void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin);
+    float getVectorDistance(const slib::vec3& vec);
+    slib::vec3 normaliseVector(slib::vec3 vec);
+    slib::vec3 getCentroid(const std::vector<slib::vec3>& points);
+    slib::vec3 getCentroid(const slib::tri& t, const std::vector<slib::vec3>& points);
+    slib::vec3 getFaceNormal(const slib::tri& t, const std::vector<slib::vec3>& points);
+    float getDotProduct(const slib::vec3& v1, const slib::vec3& v2);
+    slib::vec3 getCrossProduct(const slib::vec3& v1, const slib::vec3& v2);
+    void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points);
+    slib::mat getPerspectiveMatrix(float  zFar, float zNear, float aspect, float fov);
+    void rotateVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin);
 };
 

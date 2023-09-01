@@ -8,10 +8,10 @@
 
 struct Mesh
 {
-    const std::vector<Vector3> verticies;
-    const std::vector<Triangle> faces;
-    const Vector3 centroid;
-    Mesh(const std::vector<Vector3>& _verticies, const std::vector<Triangle>& _faces) :
+    const std::vector<slib::vec3> verticies;
+    const std::vector<slib::tri> faces;
+    const slib::vec3 centroid;
+    Mesh(const std::vector<slib::vec3>& _verticies, const std::vector<slib::tri>& _faces) :
         verticies(_verticies), faces(_faces), centroid(sMaths::getCentroid(verticies))
     {}
 };

@@ -58,11 +58,14 @@ int main()
 //                                           {0, 0, 0 }, {1,1,1},
 //                                           suzanneMesh->verticies);
     
-    Frustum frustum(0, 0, 0, 0);
-    Camera camera({ 0, 0, 5 }, { 0, 0, 0 }, { 0, 0, 0 }, zFar, zNear, &frustum);
+    slib::Frustum frustum(0, 0, 0, 0);
+    slib::Camera camera({ 0, 0, 5 }, { 0, 0, 0 }, { 0, 0, -1 }, zFar, zNear, &frustum);
+
+    auto viewMatrix = glm::lookAt(glm::vec3(camera.pos.x,camera.pos.y,camera.pos.z),
+                             glm::vec3(camera.direction.x, camera.direction.y, camera.direction.z),
+                             glm::vec3(0,1,0));
     
-    
-    Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov));
+    Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov), viewMatrix);
     sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*bunnyInstance2);
 //    sRenderer.AddRenderable(*bunnyInstance3);
@@ -70,12 +73,18 @@ int main()
     
     while (loop)
     {
+
+        
         clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 loop = SDL_FALSE;
             } else if (event.type == SDL_KEYDOWN) {
+                slib::vec3 fwd = sMaths::normaliseVector(camera.direction - camera.pos);
+                slib::vec3 left = sMaths::getCrossProduct(fwd, { 0, 1, 0 });
+                slib::vec3 right = sMaths::getCrossProduct({ 0, 1, 0 }, fwd);
+                
                 switch (event.key.keysym.sym) {
                     case SDLK_ESCAPE:
                         loop = SDL_FALSE;
@@ -91,16 +100,20 @@ int main()
                         break;
                     case SDLK_k:break;
                     case SDLK_w:
-                        camera.pos.z -= 0.1f;
+                        camera.pos += fwd * 0.1f;
+                        camera.direction -= fwd * 0.1f;
                         break;
                     case SDLK_s:
-                        camera.pos.z += 0.1f;
+                        camera.pos -= fwd * 0.1f;
+                        camera.direction += fwd * 0.1f;
                         break;
                     case SDLK_a:
-                        camera.pos.x += 0.1f;
+                        camera.direction += left * 0.1f;
+                        camera.pos += left * 0.1f;
                         break;
                     case SDLK_d:
-                        camera.pos.x -= 0.1f;
+                        camera.direction += right * 0.1f;
+                        camera.pos += right * 0.1f;
                         break;
                     case SDLK_UP:
 
@@ -132,10 +145,16 @@ int main()
         
         sRenderer.Render();
         fpsCounter.Update();
-        std::cout << fpsCounter.fps_current << std::endl;
+        std::cout << camera.pos.x << ", " << camera.pos.y << ", " << camera.pos.z << std::endl;
+        //std::cout << fpsCounter.fps_current << std::endl;
+        
 
+
+        
+        
     }
 
+    
     delete utahMesh;
     delete bunnyMesh;
     delete suzanneMesh;

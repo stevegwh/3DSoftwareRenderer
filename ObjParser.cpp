@@ -19,7 +19,7 @@ void removeExcessiveWhitespace(const std::string& input, std::string& output)
 }
 
 
-Vector3 getVector(const std::string& line)
+slib::vec3 getVector(const std::string& line)
 {
     std::string output;
     removeExcessiveWhitespace(line, output);
@@ -35,7 +35,7 @@ Vector3 getVector(const std::string& line)
 }
 
 
-Triangle getFace(const std::string& line)
+slib::tri getFace(const std::string& line)
 {
     std::string output;
     removeExcessiveWhitespace(line, output);
@@ -65,8 +65,8 @@ Mesh* ObjParser::ParseObj(const char *path)
         exit(1);
     }
 
-    std::vector<Vector3> verticies;
-    std::vector<Triangle> faces;
+    std::vector<slib::vec3> verticies;
+    std::vector<slib::tri> faces;
     
     std::string  line;
     while (getline(obj, line))

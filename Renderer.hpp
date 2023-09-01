@@ -19,27 +19,29 @@
 
 class Renderer
 {
-    void rasterize(const std::vector<zVector2>& projectedPoints, const std::vector<Triangle>& backfaceCulledFaces);
-    void transformRenderable(Renderable& renderable, const glm::mat4& cameraMatrix);
-    void transformVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& translation, const Vector3& scale, const glm::mat4& cameraMatrix);
+    void rasterize(const std::vector<slib::zvec2>& projectedPoints, const std::vector<slib::tri>& backfaceCulledFaces);
+    void transformRenderable(Renderable& renderable);
+    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale, const glm::mat4& cameraMatrix);
     void makeClipSpace(Mesh& mesh);
     void makeViewSpace(Mesh& mesh);
     SDL_Renderer* renderer;
-    Camera* camera;
-    const Matrix perspectiveMat;
+    slib::Camera* camera;
+    const slib::mat perspectiveMat;
+    glm::mat4& viewMatrix;
     std::vector<Renderable*> renderables;
     std::array<float, 1280*720> zBuffer = {0};
-    //[[nodiscard]] static bool edgeFunction(const Vector2 &a, const Vector2 &b, const Vector2 &c) ;
-    //[[nodiscard]] static Matrix makeNDC(const Matrix& mat, const Vector4& vec) ;
+    //[[nodiscard]] static bool edgeFunction(const vec2 &a, const vec2 &b, const vec2 &c) ;
+    //[[nodiscard]] static mat makeNDC(const mat& mat, const vec4& vec) ;
 public:
     bool wireFrame = false;
-    Renderer(SDL_Renderer* _renderer, Camera* _camera, Matrix _perspectiveMat) : 
-    renderer(_renderer), camera(_camera), perspectiveMat(_perspectiveMat)
+    Renderer(SDL_Renderer* _renderer, slib::Camera* _camera, slib::mat _perspectiveMat, glm::mat4& _viewMatrix) : 
+    renderer(_renderer), camera(_camera), perspectiveMat(std::move(_perspectiveMat)), viewMatrix(_viewMatrix) 
     {
         //size_t cap = ourMesh->verticies.capacity();
     }
     void AddRenderable(Renderable& renderable);
     void Render();
+    [[nodiscard]] glm::mat4 GetView() const;
 };
 
 

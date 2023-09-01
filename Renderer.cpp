@@ -9,7 +9,7 @@
 #include "constants.h"
 
 
-//const std::vector<Vector3> orthoProjectionMatrix = {
+//const std::vector<vec3> orthoProjectionMatrix = {
 //    { 1, 0, 0 },
 //    { 0, 1, 0 }
 //};
@@ -24,7 +24,8 @@
 
 
 
-void Renderer::transformVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& translation, const Vector3& scale, const glm::mat4& cameraMatrix)
+void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation,
+                               const slib::vec3& scale, const glm::mat4& cameraMatrix)
 {
     const float xrad = eulerAngles.x * RAD;
     const float yrad = eulerAngles.y * RAD;
@@ -54,25 +55,25 @@ void Renderer::transformVertex(Vector3& v, const Vector3& eulerAngles, const Vec
 }
 
 
-void Renderer::transformRenderable(Renderable& renderable, const glm::mat4& cameraMatrix)
+void Renderer::transformRenderable(Renderable& renderable)
 {
     for (auto& p : renderable.verticies)
     {
-        transformVertex(p, renderable.eulerAngles, renderable.position, renderable.scale, cameraMatrix);
+        transformVertex(p, renderable.eulerAngles, renderable.position, renderable.scale, viewMatrix);
     }
 }
 
 void translateRenderable(Renderable& renderable)
 {
-    for (Vector3& p : renderable.verticies) p += renderable.position;
+    for (slib::vec3& p : renderable.verticies) p += renderable.position;
 }
 
-bool edgeFunction(const zVector2 &a, const zVector2 &b, const zVector2 &c) 
+bool edgeFunction(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 &c) 
 {
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
 }
 
-void backfaceCulling(const Renderable& renderable, const Camera& camera, std::vector<Triangle>& backfaceCulledFaces)
+void backfaceCulling(const Renderable& renderable, const slib::Camera& camera, std::vector<slib::tri>& backfaceCulledFaces)
 {
     for (const auto &face : renderable.mesh.faces)
     {
@@ -121,7 +122,7 @@ void Renderer::makeViewSpace(Mesh& mesh)
     // TODO: Transform this object in relation to the camera
 }
 
-Vector4 makeNDC(const Matrix& perspectiveMat, const Vector4& vec)
+slib::vec4 makeNDC(const slib::mat& perspectiveMat, const slib::vec4& vec)
 {
     
     // " Clip Space : Positions of vertices after projection into a non-linear homogeneous coordinate. 
@@ -129,10 +130,10 @@ Vector4 makeNDC(const Matrix& perspectiveMat, const Vector4& vec)
     // clip-space coordinates have been divided by their own w component." 
     
     // Clip space
-    //auto result(vec * perspectiveMat);
-    
+    //auto result = vec * perspectiveMat;
+    // TODO: Placeholder just to get the perspective matrix working correctly.
     auto persp = glm::perspective(fov, aspect, zNear, zFar);
-    glm::vec4 v4({vec.vec.x, vec.vec.y, vec.vec.z, vec.w});
+    glm::vec4 v4({vec.x, vec.y, vec.z, vec.w});
     
     auto result = v4 * persp;
     // Perspective divide
@@ -144,21 +145,22 @@ Vector4 makeNDC(const Matrix& perspectiveMat, const Vector4& vec)
         result.z /= result.w;
     }
     //-----------------------------
-    return {{result.x, result.y, result.z}, result.w};
+    return {result.x, result.y, result.z, result.w};
+    //return result;
 }
 
-void getProjectedPoints(const Renderable& renderable, const Matrix& perspectiveMat, std::vector<zVector2>& projectedPoints)
+void getProjectedPoints(const Renderable& renderable, const slib::mat& perspectiveMat, std::vector<slib::zvec2>& projectedPoints)
 {
     for (const auto &v : renderable.verticies)
     {
-        Vector4 vec4({ { v.x, v.y, v.z }, 1 });
+        slib::vec4 vec4 = {v.x, v.y, v.z, 1};
         
         // NDC Space (Clip space abstracted)
         auto ndc = makeNDC(perspectiveMat, vec4);
         
         // Screen space
-        const auto x = static_cast<float>(SCREEN_WIDTH / 2 + ndc.vec.x * SCREEN_WIDTH / 2);
-        const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - ndc.vec.y * SCREEN_HEIGHT / 2);
+        const auto x = static_cast<float>(SCREEN_WIDTH / 2 + ndc.x * SCREEN_WIDTH / 2);
+        const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - ndc.y * SCREEN_HEIGHT / 2);
 
         projectedPoints.push_back({ x, y, ndc.w });
         // Calculations for drawing normals as lines pointing from the faces here.
@@ -167,7 +169,7 @@ void getProjectedPoints(const Renderable& renderable, const Matrix& perspectiveM
 
 void makeWorldSpace(Renderable& renderable)
 {
-//    Matrix transform = {
+//    mat transform = {
 //        {  }
 //    }
     
@@ -179,8 +181,10 @@ void Renderer::Render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    glm::mat4 cameraMatrix = glm::lookAt(glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
+    
+    // This is a "View Matrix". You can extract the forward direction of this space (look at bookmarks). Make this a field
+    // of the class and make it publicly accessible, so you can move objects based on these directions.
+    viewMatrix = glm::lookAt(glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
                                          glm::vec3(camera->direction.x, camera->direction.y, camera->direction.z),
                                          glm::vec3(0,1,0));
     
@@ -193,7 +197,7 @@ void Renderer::Render()
 //        };
 //        mesh->transformed = false;
 
-//        std::vector<std::pair<Vector2, Vector2>> projectedNormals;
+//        std::vector<std::pair<vec2, vec2>> projectedNormals;
 //        projectedNormals.reserve(mesh->faces.size());
 
         // Pipeline 
@@ -223,15 +227,15 @@ void Renderer::Render()
         
 
         // World space
-        transformRenderable(*renderable, cameraMatrix);
+        transformRenderable(*renderable);
         
 
         
         // World -> View
         //makeClipSpace(mesh);
         // Clip, NDC, Screen
-        std::vector<zVector2> projectedPoints;
-        std::vector<Triangle> backfaceCulledFaces;
+        std::vector<slib::zvec2> projectedPoints;
+        std::vector<slib::tri> backfaceCulledFaces;
         getProjectedPoints(*renderable, perspectiveMat, projectedPoints);
         backfaceCulling(*renderable, *camera, backfaceCulledFaces);
         
@@ -247,7 +251,7 @@ void Renderer::Render()
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::rasterize(const std::vector<zVector2>& projectedPoints, const std::vector<Triangle>& backfaceCulledFaces)
+void Renderer::rasterize(const std::vector<slib::zvec2>& projectedPoints, const std::vector<slib::tri>& backfaceCulledFaces)
 {
     for (const auto& t : backfaceCulledFaces)
     {
@@ -262,7 +266,7 @@ void Renderer::rasterize(const std::vector<zVector2>& projectedPoints, const std
         int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
 
         // Lighting
-        Vector3 lightingDirection = { 0, -1, 0 };
+        slib::vec3 lightingDirection = {0, -1, 0 };
         float lum = sMaths::getDotProduct(t.normal, lightingDirection) * -1;
 
         // Edge finding for triangle rasterization
@@ -270,7 +274,7 @@ void Renderer::rasterize(const std::vector<zVector2>& projectedPoints, const std
         {
             for (int y = ymin; y <= ymax; ++y)
             {
-                zVector2 p = { static_cast<float>(x), static_cast<float>(y), 0 };
+                slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 0 };
                 bool inside = true;
                 inside &= edgeFunction(p1, p2, p);
                 inside &= edgeFunction(p2, p3, p);
@@ -315,6 +319,11 @@ void Renderer::AddRenderable(Renderable& renderable)
     renderables.push_back(&renderable);
 }
 
+glm::mat4x4 Renderer::GetView() const
+{
+    return viewMatrix;
+}
+
 
 //        for (auto & v : mesh->facesCulled)
 //        {
@@ -331,12 +340,12 @@ void Renderer::AddRenderable(Renderable& renderable)
 //            auto ndc1 = makeNDC(perspectiveMat, vec4Start);
 //            auto ndc2 = makeNDC(perspectiveMat, vec4End);
 //
-//            Vector2 screenP1 = {
+//            vec2 screenP1 = {
 //                static_cast<float>(SCREEN_WIDTH/2 + ndc1[0] * SCREEN_WIDTH/2),
 //                static_cast<float>(SCREEN_HEIGHT/2 - ndc1[1] * SCREEN_HEIGHT/2)
 //            };
 //
-//            Vector2 screenP2 = {
+//            vec2 screenP2 = {
 //                static_cast<float>(SCREEN_WIDTH/2 + ndc2[0] * SCREEN_WIDTH/2),
 //                static_cast<float>(SCREEN_HEIGHT/2 - ndc2[1] * SCREEN_HEIGHT/2)
 //            };

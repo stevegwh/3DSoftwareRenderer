@@ -12,12 +12,12 @@
 struct Renderable
 {
     Mesh& mesh;
-    Vector3 position;
-    Vector3 eulerAngles;
-    Vector3 scale;
-    std::vector<Vector3> verticies;
-    Vector3 centroid;
-    Renderable(Mesh& _mesh, Vector3 _position, Vector3 _eulerAngles, Vector3 _scale, std::vector<Vector3> _verticies)
+    slib::vec3 position;
+    slib::vec3 eulerAngles;
+    slib::vec3 scale;
+    std::vector<slib::vec3> verticies;
+    slib::vec3 centroid;
+    Renderable(Mesh& _mesh, slib::vec3 _position, slib::vec3 _eulerAngles, slib::vec3 _scale, std::vector<slib::vec3> _verticies)
     : mesh(_mesh), position(_position), eulerAngles(_eulerAngles), scale(_scale), verticies(std::move(_verticies))
     {};
 

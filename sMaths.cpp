@@ -9,7 +9,7 @@
 #include "constants.h"
 
 
-bool compareTrianglesByDepth(const Triangle& t1, const Triangle& t2, const std::vector<Vector3>& points)
+bool compareTrianglesByDepth(const slib::tri& t1, const slib::tri& t2, const std::vector<slib::vec3>& points)
 {
     auto c1 = sMaths::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
     auto c2 = sMaths::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
@@ -18,12 +18,12 @@ bool compareTrianglesByDepth(const Triangle& t1, const Triangle& t2, const std::
 
 namespace sMaths
 {
-    float getVectorDistance(const Vector3& vec)
+    float getVectorDistance(const slib::vec3& vec)
     {
         return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
     }
     
-    Vector3 getCentroid(const Triangle& t, const std::vector<Vector3>& points)
+    slib::vec3 getCentroid(const slib::tri& t, const std::vector<slib::vec3>& points)
     {
         auto t1 = points[t.v1];
         auto t2 = points[t.v2];
@@ -31,23 +31,23 @@ namespace sMaths
         return sMaths::getCentroid({t1, t2, t3 });
     }
     
-    Vector3 getCentroid(const std::vector<Vector3>& points)
+    slib::vec3 getCentroid(const std::vector<slib::vec3>& points)
     {
-        Vector3 result = { 0, 0, 0 };
+        slib::vec3 result = {0, 0, 0 };
         for (const auto& v: points) result += v;
         return result/points.size();
     }
     
-    Vector3 normaliseVector(Vector3 vec)
+    slib::vec3 normaliseVector(slib::vec3 vec)
     {
         return vec / getVectorDistance(vec);
     }
     
-    Vector3 getFaceNormal(const Triangle& t, const std::vector<Vector3>& points)
+    slib::vec3 getFaceNormal(const slib::tri& t, const std::vector<slib::vec3>& points)
     {
-        Vector3 n = { 0, 0, 0 };
-        Vector3 a = points[t.v2] - points[t.v1];
-        Vector3 b = points[t.v3] - points[t.v1];
+        slib::vec3 n = {0, 0, 0 };
+        slib::vec3 a = points[t.v2] - points[t.v1];
+        slib::vec3 b = points[t.v3] - points[t.v1];
 
         n.x = a.y * b.z - a.z * b.y;
         n.y = a.z * b.x - a.x * b.z;
@@ -56,14 +56,14 @@ namespace sMaths
         return normaliseVector(n);
     }
     
-    void sortVectorsByZ(std::vector<Triangle>& triangles, const std::vector<Vector3>& points) 
+    void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points) 
     {
-        std::sort(triangles.begin(), triangles.end(), [&](const Triangle& t1, const Triangle& t2) {
+        std::sort(triangles.begin(), triangles.end(), [&](const slib::tri& t1, const slib::tri& t2) {
             return compareTrianglesByDepth(t1, t2, points);
         });
     }
 
-    void rotateVertex(Vector3& v, const Vector3& eulerAngles, const Vector3& origin)
+    void rotateVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin)
     {
         v -= origin;
         const float xrad = eulerAngles.x * RAD;
@@ -77,7 +77,7 @@ namespace sMaths
         const float azs = -std::sin(zrad);
     
         // Combined rotation matrix
-        Matrix combinedRotationMatrix({
+        slib::mat combinedRotationMatrix({
                                           { ayc * azc, ayc * azs, -ays },
                                           { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc },
                                           { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc }
@@ -87,20 +87,29 @@ namespace sMaths
         v += origin;
     }
     
-    float getDotProduct(const Vector3& v1, const Vector3& v2)
+    float getDotProduct(const slib::vec3& v1, const slib::vec3& v2)
     {
         // Care: assumes both vectors have been normalised previously.
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
-    Matrix getPerspectiveMatrix(
+    slib::vec3 getCrossProduct(const slib::vec3& v1, const slib::vec3& v2)
+    {
+        return { 
+            v1.y * v2.z - v1.z * v2.y,
+            v1.z * v2.x - v1.x * v2.y,
+            v1.x * v2.y - v1.y * v2.x,
+                 };
+    }
+
+    slib::mat getPerspectiveMatrix(
         const float  zFar, const float zNear, const float aspect, const float fov)
     {
         const float yScale = 1 / tanf(fov / 2);
         const float xScale = yScale / aspect;
         const float nearmfar = zNear - zFar;
-    
-        Matrix mat(
+
+        slib::mat mat(
             {
                 {xScale, 0, 0, 0},
                 {0, yScale, 0, 0},
