@@ -55,7 +55,6 @@ void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, con
     v = { transformedVector.x, transformedVector.y, transformedVector.z };
 }
 
-
 void Renderer::transformRenderable(Renderable& renderable)
 {
     for (auto& p : renderable.verticies)
@@ -74,77 +73,56 @@ bool edgeFunction(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 
     return ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x) >= 0);
 }
 
-// TODO: Doing backface culling based on normals is apparently wrong.
-//void backfaceCulling(const Renderable& renderable, const slib::Camera& camera, std::vector<slib::tri>& backfaceCulledFaces)
-//{
-//    for (const auto &face : renderable.mesh.faces)
-//    {
-//        const auto normal = sMaths::getFaceNormal(face, renderable.verticies);
-//        const auto center = sMaths::getCentroid(face, renderable.verticies);
-//
-//        auto dotProduct = sMaths::getDotProduct(
-//            normal,
-//            sMaths::normaliseVector(center - camera.pos));
-//
-//        if (dotProduct < 0)
-//        {
-//            // TODO: Seems a bit fragile relying on the center/normal to be initialised here.
-//            auto f = face;
-//            f.center = center;
-//            f.normal = normal;
-//            backfaceCulledFaces.push_back(f);
-//        }
-//    }
-//}
-
-void backfaceCulling(const slib::tri face, const std::vector<slib::vec4>& projectedPoints, std::vector<slib::tri>& processedFaces)
+bool backfaceCulling(const slib::tri face, const std::vector<slib::vec4>& projectedPoints)
 {
-        auto v1 = projectedPoints.at(face.v1);
-        auto v2 = projectedPoints.at(face.v2);
-        auto v3 = projectedPoints.at(face.v3);
+    auto v1 = projectedPoints.at(face.v1);
+    auto v2 = projectedPoints.at(face.v2);
+    auto v3 = projectedPoints.at(face.v3);
 
-        slib::vec3 a = slib::vec3( {v2.x, v2.y, v2.z} ) - slib::vec3( {v1.x, v1.y, v1.z} );
-        slib::vec3 b = slib::vec3( {v3.x, v3.y, v3.z} ) - slib::vec3( {v1.x, v1.y, v1.z} );
+    slib::vec3 a = slib::vec3( {v2.x, v2.y, v2.z} ) - slib::vec3( {v1.x, v1.y, v1.z} );
+    slib::vec3 b = slib::vec3( {v3.x, v3.y, v3.z} ) - slib::vec3( {v1.x, v1.y, v1.z} );
 
-        auto sign = a.x * b.y - b.x * a.y;
-
-        if (sign > 0)
-        {
-            processedFaces.push_back(face);
-        }
+    return (a.x * b.y - b.x * a.y) > 0;
 }
 
-void makeClipSpace(slib::vec4& vertex)
+bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& projectedPoints, std::vector<slib::tri>& processedFaces)
 {
-//    std::vector<int> validIndicies;
-//
-//    for (const auto& v : mesh.verticies) 
-//    {
-//        if (v.x < camera->frustum->nearW)
-//        {
-//            
-//        }
-//    }
-//    
-//    // TODO: Clip the triangles that lay on the edges of the camera's frustum
-//    
-//    for (auto& face : mesh.faces) 
-//    {
-//        // TODO: For now, ignore any face whose verticies do not lie completely within the camera's frustum
-//        
-//
-//    }    
+    // count inside/outside points
+    // if face is entirely in the frustum, push it to processedFaces.
+    // if face is entirely outside the frustum, return.
+    // if partially, clip triangle.
+    // // if inside == 2, form a quad.
+    // // if inside == 1, form triangle.
+
+    const auto v1 = projectedPoints.at(face.v1);
+    const auto v2 = projectedPoints.at(face.v2);
+    const auto v3 = projectedPoints.at(face.v3);
+
+    if (v1.x > v1.w && v2.x > v2.w && v3.x > v3.w) return false;
+    if (v1.x < -v1.w && v2.x < -v2.w && v3.x < -v3.w) return false;
+    if (v1.y > v1.w && v2.y > v2.w && v3.y > v3.w) return false;
+    if (v1.y < -v1.w && v2.y < -v2.w && v3.y < -v3.w) return false;
+    if (v1.z < 0.0f && v2.z < 0.0f && v3.z < 0.0f) return false;
+    // TODO: far plane clipping doesn't work?
+    //if (v1.z > v1.w && v2.z > v2.w && v3.z > v3.w) return false;
+
+    
+    processedFaces.push_back(face);
+    return true;
+    // clip *all* triangles against 1 edge, then all against the next, and the next.
+    
+
 }
 
-slib::vec4 makeProjectedSpace(const slib::mat& perspectiveMat, slib::vec4& vec)
+slib::vec4 makeProjectedSpace(const glm::mat4& perspectiveMat, slib::vec4& vec)
 {
     //auto result = vec * perspectiveMat;
     // TODO: Placeholder just to get the perspective matrix working correctly.
-    auto persp = glm::perspective(fov, aspect, zNear, zFar);
+    //auto persp = glm::perspective(fov, aspect, zNear, zFar);
     glm::vec4 v4({vec.x, vec.y, vec.z, vec.w});
 
     // Projected space
-    auto result = v4 * persp;
+    auto result = v4 * perspectiveMat;
     
     //-----------------------------
     vec = {result.x, result.y, result.z, result.w};
@@ -192,7 +170,7 @@ void Renderer::Render()
         // view (camera) space
         // Projection matrix
         // projection space
-        // ~backface culling2~
+        // ~backface culling~
         // ~camera clipping here~
         // clip space
         // Perspective Divide
@@ -209,10 +187,6 @@ void Renderer::Render()
         std::vector<slib::tri> processedFaces;
         std::vector<slib::zvec2> screenPoints;
         
-        //std::vector<slib::tri> backfaceCulledFaces;
-//        makeScreenSpace(*renderable, perspectiveMat, projectedPoints);
-        //backfaceCulling(*renderable, projectedPoints, backfaceCulledFaces);
-        
         for (const auto &v : renderable->verticies) 
         {
             slib::vec4 vec4 = {v.x, v.y, v.z, 1};
@@ -224,11 +198,15 @@ void Renderer::Render()
         
         for (const auto &f : renderable->mesh.faces) 
         {
-            
             // Backface culling
-            backfaceCulling(f, projectedPoints, processedFaces);
-            // Clip space
-            //makeClipSpace(vec4);
+            if (backfaceCulling(f, projectedPoints))
+            {
+                // Clip space
+                if (!makeClipSpace(f, projectedPoints, processedFaces))
+                {
+                    std::cout << "Culled." << std::endl;
+                }
+            }
         }
 
         for (auto &v : projectedPoints)
@@ -241,7 +219,6 @@ void Renderer::Render()
             screenPoints.push_back({ x, y, v.w });
         }
         
-        // TODO: Remember to change processedFaces to the vector above and not the renderable's faces
         rasterize(*renderable, screenPoints, processedFaces);
     }
     
@@ -313,4 +290,9 @@ void Renderer::AddRenderable(Renderable& renderable)
 glm::mat4x4 Renderer::GetView() const
 {
     return viewMatrix;
+}
+
+glm::mat4x4 Renderer::GetPerspective() const
+{
+    return perspectiveMat;
 }

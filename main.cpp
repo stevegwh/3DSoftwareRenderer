@@ -9,28 +9,29 @@
 #include "Renderable.hpp"
 #include <cmath>
 
-//glm::vec3 getRayFromScreenSpace(const glm::vec2 & pos)
-//{
-//    glm::mat4 invMat= glm::inverse(m_glData.getPerspective()*m_glData.getView());
-//    glm::vec4 near = vec4((pos.x - Constants::m_halfScreenWidth) / Constants::m_halfScreenWidth, -1*(pos.y - Constants::m_halfScreenHeight) / Constants::m_halfScreenHeight, -1, 1.0);
-//    glm::vec4 far = vec4((pos.x - Constants::m_halfScreenWidth) / Constants::m_halfScreenWidth, -1*(pos.y - Constants::m_halfScreenHeight) / Constants::m_halfScreenHeight, 1, 1.0);
-//    glm::vec4 nearResult = invMat*near;
-//    glm::vec4 farResult = invMat*far;
-//    nearResult /= nearResult.w;
-//    farResult /= farResult.w;
-//    glm::vec3 dir = glm::vec3(farResult - nearResult );
-//    return normalize(dir);
-//}
+glm::vec3 getRayFromScreenSpace(const glm::vec2 & pos, const Renderer& renderer)
+{
+    glm::mat4 invMat= glm::inverse(renderer.GetPerspective()*renderer.GetView());
+    glm::vec4 near = glm::vec4((pos.x - SCREEN_WIDTH/2) / SCREEN_WIDTH/2, -1*(pos.y - SCREEN_HEIGHT/2) / SCREEN_HEIGHT/2, -1, 1.0);
+    glm::vec4 far = glm::vec4((pos.x - SCREEN_WIDTH/2) / SCREEN_WIDTH/2, -1*(pos.y - SCREEN_HEIGHT/2) / SCREEN_HEIGHT/2, 1, 1.0);
+    glm::vec4 nearResult = invMat*near;
+    glm::vec4 farResult = invMat*far;
+    nearResult /= nearResult.w;
+    farResult /= farResult.w;
+    glm::vec3 dir = glm::vec3(farResult - nearResult );
+    return normalize(dir);
+}
 
 int main()
 {
     FPSCounter fpsCounter;
     Clock clock;
-    SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRelativeMouseMode(SDL_TRUE);
     
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
@@ -38,8 +39,8 @@ int main()
     Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj");
     Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj");
-    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -5 }, 
-                                         {0, 20, 0 }, {5,5,5},
+    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
+                                         {0, 20, 0 }, {1,1,1},
                                           bunnyMesh->verticies);
 //    auto* bunnyInstance2 = new Renderable(*suzanneMesh, {0, -0.1, -15 },
 //                                          {0, 20, 0 }, {1,1,1},
@@ -50,18 +51,20 @@ int main()
 //    auto* utahInstance = new Renderable(*utahMesh, {0, -0.1, -2 }, 
 //                                        {0, 90, 0 }, {0.2,0.2,0.2},
 //                                        utahMesh->verticies);
-    auto* suzanneInstance = new Renderable(*suzanneMesh, {3, 0.1, -5 }, 
-                                           {0, 0, 0 }, {.5,.5,.5},
+    auto* suzanneInstance = new Renderable(*suzanneMesh, {.2, 0.1, -1.5 }, 
+                                           {0, 0, 0 }, {.1,.1,.1},
                                            suzanneMesh->verticies);
     
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 0, 5 }, { 0, 0, 0 }, { 0, 0, -1 }, zFar, zNear, &frustum);
+    slib::Camera camera({ 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, -1 }, zFar, zNear, &frustum);
 
     auto viewMatrix = glm::lookAt(glm::vec3(camera.pos.x,camera.pos.y,camera.pos.z),
                              glm::vec3(camera.direction.x, camera.direction.y, camera.direction.z),
                              glm::vec3(0,1,0));
     
-    Renderer sRenderer(renderer, &camera, sMaths::getPerspectiveMatrix(zFar, zNear, aspect, fov), viewMatrix);
+    auto perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
+    
+    Renderer sRenderer(renderer, &camera, perspectiveMat, viewMatrix);
     sRenderer.AddRenderable(*bunnyInstance1);
     sRenderer.AddRenderable(*suzanneInstance);
 //    sRenderer.AddRenderable(*bunnyInstance2);
@@ -113,10 +116,10 @@ int main()
                         camera.pos += right * 0.1f;
                         break;
                     case SDLK_UP:
-
+                        SDL_SetRelativeMouseMode(SDL_FALSE);
                         break;
                     case SDLK_DOWN:
-
+                        SDL_SetRelativeMouseMode(SDL_TRUE);
                         break;
                     case SDLK_SPACE:
                         sRenderer.wireFrame = !sRenderer.wireFrame;
@@ -126,6 +129,11 @@ int main()
                 }
             }
         }
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        auto newPos = getRayFromScreenSpace({ x, y }, sRenderer);
+        std::cout << newPos.x << ", " << newPos.y << ", " << newPos.z << std::endl;
+        //camera.direction = { newPos.x, newPos.y, newPos.z};
         
         // Update
 
