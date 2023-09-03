@@ -52,7 +52,7 @@ slib::tri getFace(const std::string& line)
         }
         vec.push_back(std::stoi(token) - 1);
     }
-    return { vec[0], vec[1], vec[2], { 0, 0, 0 }, { 0, 0, 0 } };
+    return { vec[0], vec[1], vec[2] };
 }
 
 

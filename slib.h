@@ -44,6 +44,10 @@ struct mat;
         vec3 operator*=(const mat &rhs);
         bool operator==(const vec3 &rhs) const;
         bool operator==(float rhs) const;
+        bool operator<(const vec3 &rhs) const;
+        bool operator>(const vec3 &rhs) const;
+        bool operator<=(const vec3 &rhs) const;
+        bool operator>=(const vec3 &rhs) const;
     };
     
     struct vec4
@@ -109,8 +113,6 @@ struct mat;
     struct tri
     {
         int v1, v2, v3;
-        vec3 center;
-        vec3 normal;
     };
     
     struct Color

@@ -139,7 +139,27 @@ namespace slib
         return *this;
     }
     
-    mat &mat::operator+=(const mat &rhs)
+    bool vec3::operator<(const vec3 &rhs) const
+    {
+        return x < rhs.x && y < rhs.y && z < rhs.z;
+    }
+
+    bool vec3::operator>(const vec3 &rhs) const
+    {
+        return !(*this < rhs);
+    }
+    
+    bool vec3::operator<=(const vec3 &rhs) const
+    {
+        return x <= rhs.x && y <= rhs.y && z <= rhs.z;
+    }
+    
+    bool vec3::operator>=(const vec3 &rhs) const
+    {
+        return x >= rhs.x && y >= rhs.y && z >= rhs.z;
+    }
+
+mat &mat::operator+=(const mat &rhs)
     {
         const auto rhsrows = rhs.data.size();
         const auto rhscols = rhs.data.at(0).size();

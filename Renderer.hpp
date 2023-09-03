@@ -19,11 +19,9 @@
 
 class Renderer
 {
-    void rasterize(const std::vector<slib::zvec2>& projectedPoints, const std::vector<slib::tri>& backfaceCulledFaces);
+    void rasterize(const Renderable& renderable, const std::vector<slib::zvec2>& projectedPoints, const std::vector<slib::tri>& processedFaces);
     void transformRenderable(Renderable& renderable);
-    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale, const glm::mat4& cameraMatrix);
-    void makeClipSpace(Mesh& mesh);
-    void makeViewSpace(Mesh& mesh);
+    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
     SDL_Renderer* renderer;
     slib::Camera* camera;
     const slib::mat perspectiveMat;
