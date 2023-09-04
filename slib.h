@@ -19,6 +19,9 @@ struct mat;
     struct vec2
     {
         float x, y;
+        vec2 &operator*=(const vec2& rhs);
+        vec2 &operator*=(float rhs);
+        vec2 operator-(const vec2& rhs) const;
     };
     
     struct vec3

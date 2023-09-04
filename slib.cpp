@@ -2,6 +2,23 @@
 
 namespace slib
 {
+    vec2 &vec2::operator*=(const vec2& rhs)
+    {
+        x *= rhs.x;
+        y *= rhs.y;
+        return *this;
+    }
+
+    vec2 &vec2::operator*=(float rhs)
+    {
+        x *= rhs;
+        y *= rhs;
+        return *this;
+    }
+    vec2 vec2::operator-(const vec2& rhs) const
+    {
+        return { x - rhs.x, y - rhs.y};
+    }
     vec3 &vec3::operator+=(float rhs)
     {
         x += rhs;

@@ -204,7 +204,7 @@ void Renderer::Render()
                 // Clip space
                 if (!makeClipSpace(f, projectedPoints, processedFaces))
                 {
-                    std::cout << "Culled." << std::endl;
+                    //std::cout << "Culled." << std::endl;
                 }
             }
         }
