@@ -20,10 +20,6 @@ T customClamp(const T& value, const T& minValue, const T& maxValue) {
     }
 }
 
-
-static int mouseX;
-static int mouseY;
-
 int main()
 {
     FPSCounter fpsCounter;
@@ -36,6 +32,7 @@ int main()
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
     slib::vec2 lastMousePos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2  };
+    bool mouseMotion = false;
     
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
@@ -83,14 +80,22 @@ int main()
             if (event.type == SDL_QUIT) {
                 loop = SDL_FALSE;
             }
+            else if (event.type == SDL_MOUSEMOTION)
+            {
+                mouseMotion = true;
+            }
             else if (event.type == SDL_KEYDOWN) {
 
                 slib::vec3 fwd = sMaths::normaliseVector(camera.direction - camera.pos);
+                fwd.y = 0;
                 slib::vec3 left = sMaths::getCrossProduct(fwd, {0, 1, 0});
+                left.y = 0;
                 slib::vec3 right = sMaths::getCrossProduct({0, 1, 0}, fwd);
+                right.y = 0;
                 //std::cout << fwd.x << ", " << fwd.y << ", " << fwd.z << std::endl;
-                switch (event.key.keysym.sym) {
-                case SDLK_ESCAPE:loop = SDL_FALSE;
+                switch (event.key.keysym.sym) {                    
+                case SDLK_ESCAPE:
+                    loop = SDL_FALSE;
                     break;
                 case SDLK_q:
                     sMaths::rotateVertex(camera.direction, {0, 10, 0}, camera.pos);
@@ -102,16 +107,20 @@ int main()
                     //Transform::Rotate(Transform::X, -angle, *utahMesh);
                     break;
                 case SDLK_k:break;
-                case SDLK_w:camera.pos += fwd * 0.1f;
+                case SDLK_w:
+                    camera.pos += fwd * 0.1f;
                     camera.direction += fwd * 0.1f;
                     break;
-                case SDLK_s:camera.pos -= fwd * 0.1f;
+                case SDLK_s:
+                    camera.pos -= fwd * 0.1f;
                     camera.direction -= fwd * 0.1f;
                     break;
-                case SDLK_a:camera.direction += left * 0.1f;
+                case SDLK_a:
+                    camera.direction += left * 0.1f;
                     camera.pos += left * 0.1f;
                     break;
-                case SDLK_d:camera.direction += right * 0.1f;
+                case SDLK_d:
+                    camera.direction += right * 0.1f;
                     camera.pos += right * 0.1f;
                     break;
                 case SDLK_UP:SDL_SetRelativeMouseMode(SDL_FALSE);
@@ -148,36 +157,44 @@ int main()
 
         //std::cout << planeInstance->position.x << ", " << planeInstance->position.y << ", " << planeInstance->position.z << std::endl;
 //        std::cout << camera.pos.x << ", " << camera.pos.y << ", " << camera.pos.z << std::endl;
-        //std::cout << fpsCounter.fps_current << std::endl;
+        std::cout << fpsCounter.fps_current << std::endl;
 
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-        slib::vec2 currentMousePosition = { static_cast<float>(x), static_cast<float>(y) };
+        
+        if (mouseMotion)
+        {
+            mouseMotion = false;
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            slib::vec2 currentMousePosition = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
+            
+            // Calculate the change in mouse position
+            slib::vec2 deltaMouse = currentMousePosition - lastMousePos;
+            //std::cout << deltaMouse.x << ", " << deltaMouse.y << std::endl;
+
+            // Adjust sensitivity or scale the delta values
+            float rotationSpeed = 0.1f;
+            deltaMouse *= rotationSpeed;
+
+            // Calculate rotation angles based on deltaMouse
+            float yaw = deltaMouse.x;
+            float pitch = deltaMouse.y;
+
+//            yaw = customClamp(yaw, -1.0f, 1.0f);
+//            pitch = customClamp(pitch, -1.0f, 1.0f);
+            sMaths::rotateVertex(camera.direction, {0, -yaw, 0}, camera.pos);
+            sMaths::rotateVertex(camera.direction, {pitch, 0, 0}, camera.pos);
+
+            //std::cout << camera.direction.x << ", " << camera.direction.y << ", " << camera.direction.z << std::endl;
+            //std::cout << yaw << ", " << pitch << ", " << std::endl;
+            lastMousePos = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
+        }
+        else
+        {
+            SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+            lastMousePos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
+        }
         
 
-
-        // Calculate the change in mouse position
-        slib::vec2 deltaMouse = currentMousePosition - lastMousePos;
-        //std::cout << deltaMouse.x << ", " << deltaMouse.y << std::endl;
-
-        // Adjust sensitivity or scale the delta values
-        float rotationSpeed = 0.1f;
-        deltaMouse *= rotationSpeed;
-
-        // Calculate rotation angles based on deltaMouse
-        float yaw = deltaMouse.x;
-        float pitch = deltaMouse.y;
-
-        yaw = customClamp(yaw, -1.0f, 1.0f);
-        pitch = customClamp(pitch, -1.0f, 1.0f);
-        sMaths::rotateVertex(camera.direction, {0, -yaw, 0}, camera.pos);
-        sMaths::rotateVertex(camera.direction, {pitch, 0, 0}, camera.pos);
-
-        //std::cout << camera.direction.x << ", " << camera.direction.y << ", " << camera.direction.z << std::endl;
-        //std::cout << yaw << ", " << pitch << ", " << std::endl;
-        lastMousePos = { static_cast<float>(x), static_cast<float>(y) };
-
-        //SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
 
 
