@@ -19,7 +19,6 @@
 
 class Renderer
 {
-    void rasterize(const Renderable& renderable, const std::vector<slib::zvec2>& projectedPoints, const std::vector<slib::tri>& processedFaces);
     void transformRenderable(Renderable& renderable);
     void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
     SDL_Renderer* renderer;
@@ -40,7 +39,7 @@ public:
     }
     void AddRenderable(Renderable& renderable);
     void Render();
-    [[nodiscard]] glm::mat4 GetView() const;
+    [[nodiscard]] const glm::mat4& GetView() const;
     [[nodiscard]] glm::mat4 GetPerspective() const;
     
 };

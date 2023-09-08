@@ -6,10 +6,21 @@
 
 namespace slib
 {
-struct vec2;
-struct vec3;
-struct vec4;
-struct mat;
+    struct vec2;
+    struct vec3;
+    struct vec4;
+    struct mat;
+    
+    
+    
+    struct texture
+    {
+        int w, h;
+        std::vector<unsigned char> data;
+        unsigned int bpp;
+    };
+
+    texture DecodePng(const char* filename);
 
     struct zvec2
     {
@@ -81,12 +92,13 @@ struct mat;
         vec3 pos;
         vec3 rotation;
         vec3 direction;
+        vec3 up;
         const float zFar;
         const float zNear;
         Frustum *frustum;
-        Camera(vec3 _pos, vec3 _rotation, vec3 _direction, float _zFar, float _zNear, Frustum *_frustum)
+        Camera(vec3 _pos, vec3 _rotation, vec3 _direction, vec3 _up, float _zFar, float _zNear, Frustum *_frustum)
             :
-            pos(_pos), rotation(_rotation), direction(_direction), zFar(_zFar), zNear(_zNear), frustum(_frustum)
+            pos(_pos), rotation(_rotation), direction(_direction), up(_up), zFar(_zFar), zNear(_zNear), frustum(_frustum)
         {};
     };
     
@@ -115,7 +127,9 @@ struct mat;
      */
     struct tri
     {
-        int v1, v2, v3;
+        const int v1, v2, v3;
+        const int vt1, vt2, vt3;
+        const int vn1, vn2, vn3;
     };
     
     struct Color

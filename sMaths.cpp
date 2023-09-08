@@ -56,12 +56,12 @@ namespace sMaths
         return normaliseVector(n);
     }
     
-    void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points) 
-    {
-        std::sort(triangles.begin(), triangles.end(), [&](const slib::tri& t1, const slib::tri& t2) {
-            return compareTrianglesByDepth(t1, t2, points);
-        });
-    }
+//    void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points) 
+//    {
+//        std::sort(triangles.begin(), triangles.end(), [&](const slib::tri& t1, const slib::tri& t2) {
+//            return compareTrianglesByDepth(t1, t2, points);
+//        });
+//    }
 
     void rotateVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin)
     {

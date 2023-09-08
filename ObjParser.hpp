@@ -8,9 +8,10 @@
 #include "slib.h"
 #include "Mesh.hpp"
 
+
 class ObjParser
 {
     ObjParser() = default;
 public:
-    static Mesh* ParseObj(const char* path);
+    static Mesh* ParseObj(const char* path, const slib::texture& texture);
 };

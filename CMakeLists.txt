@@ -21,7 +21,9 @@ add_executable(${PROJECT_NAME} main.cpp
         Renderer.hpp
         slib.cpp
         Renderable.cpp
-        Renderable.hpp)
+        Renderable.hpp
+        lodepng.cpp
+        lodepng.h)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} glm::glm)
 
 set (source "${CMAKE_SOURCE_DIR}/resources")

@@ -9,7 +9,6 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
-#include <cstring>
 #include "sMaths.hpp"
 
 void removeExcessiveWhitespace(const std::string& input, std::string& output)
@@ -34,29 +33,59 @@ slib::vec3 getVector(const std::string& line)
     return { vec[0], vec[1], vec[2] };
 }
 
+slib::vec2 getTextureVector(const std::string& line)
+{
+    std::string output;
+    removeExcessiveWhitespace(line, output);
+    std::stringstream ss(output.erase(0,3));
+    std::vector<float> vec;
+    vec.reserve(2);
+    std::string token;
+    while(std::getline(ss, token, ' '))
+    {
+        vec.push_back(std::stof(token));
+        
+    }
+    return { vec[0], vec[1] };
+}
+
 
 slib::tri getFace(const std::string& line)
 {
     std::string output;
     removeExcessiveWhitespace(line, output);
     std::stringstream ss(output.erase(0,2));
-    std::vector<int> vec;
-    vec.reserve(3);
+    std::vector<int> verticies;
+    std::vector<int> textureCoords;
+    std::vector<int> normals;
     std::string token;
+    std::string delim = "/";
     while(std::getline(ss, token, ' '))
     {
-        if (line.find('/') != std::string::npos)
-        {
-            token = strtok(token.data(), "/");
-            
-        }
-        vec.push_back(std::stoi(token) - 1);
+        token.substr(0, token.find(delim));
+        verticies.push_back(std::stoi(token) - 1);
+        token.erase(0, token.find(delim) + delim.length());
+        
+        token.substr(0, token.find(delim));
+        textureCoords.push_back(std::stoi(token) - 1);
+        token.erase(0, token.find(delim) + delim.length());
+        
+        token.substr(0, token.find(delim));
+        normals.push_back(std::stoi(token) - 1);
+        token.erase(0, token.find(delim) + delim.length());
+        
+
     }
-    return { vec[0], vec[1], vec[2] };
+    
+    return { 
+            verticies[0], verticies[1], verticies[2], 
+             textureCoords[0], textureCoords[1], textureCoords[3],
+             normals[0], normals[1], normals[2]
+         };
 }
 
 
-Mesh* ObjParser::ParseObj(const char *path)
+Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
 {
     std::ifstream obj(path);
     if (!obj.is_open())
@@ -66,7 +95,9 @@ Mesh* ObjParser::ParseObj(const char *path)
     }
 
     std::vector<slib::vec3> verticies;
+    std::vector<slib::vec2> textureCoords;
     std::vector<slib::tri> faces;
+    
     
     std::string  line;
     while (getline(obj, line))
@@ -78,6 +109,10 @@ Mesh* ObjParser::ParseObj(const char *path)
         else if (line[0] == 'f' && line[1] == ' ')
         {
             faces.push_back(getFace(line));
+        }
+        else if (line[0] == 'v' && line[1] == 't')
+        {
+            textureCoords.push_back(getTextureVector(line));
         }
 //        else if (line[0] == '#')
 //        {
@@ -96,7 +131,7 @@ Mesh* ObjParser::ParseObj(const char *path)
     }
     
     
-    Mesh* mesh = new Mesh(verticies, faces);
+    Mesh* mesh = new Mesh(verticies, faces, textureCoords, texture);
     //SDL_free(obj);
     obj.close();
     return mesh;
