@@ -60,7 +60,7 @@ int main()
 //                                           suzanneMesh->verticies);
 
     auto* cubeInstance = new Renderable(*cubeMesh, {.2, -0.2, -1.5 },
-                                           {0, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
+                                           {180, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
                                            cubeMesh->verticies);
     
     slib::Frustum frustum(0, 0, 0, 0);

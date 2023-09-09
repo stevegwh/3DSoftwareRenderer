@@ -78,9 +78,9 @@ slib::tri getFace(const std::string& line)
     }
     
     return { 
-            verticies[0], verticies[1], verticies[2], 
-             textureCoords[0], textureCoords[1], textureCoords[3],
-             normals[0], normals[1], normals[2]
+            verticies.at(0), verticies.at(1), verticies.at(2), 
+             textureCoords.at(0), textureCoords.at(1), textureCoords.at(2),
+             normals.at(0), normals.at(1), normals.at(2)
          };
 }
 
