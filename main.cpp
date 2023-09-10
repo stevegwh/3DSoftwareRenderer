@@ -37,12 +37,12 @@ int main()
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
     
-    slib::texture texture = slib::DecodePng("resources/texture3.png");
+    slib::texture texture = slib::DecodePng("resources/spyro.png");
     
     //Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj", texture);
     //Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
-    Mesh* cubeMesh = ObjParser::ParseObj("resources/cube.obj", texture);
+    Mesh* cubeMesh = ObjParser::ParseObj("resources/spyro.obj", texture);
 //    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
 //                                         {0, 20, 0 }, {1,1,1}, {200, 200, 200},
 //                                          bunnyMesh->verticies);
@@ -59,8 +59,8 @@ int main()
 //                                           {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 100 },
 //                                           suzanneMesh->verticies);
 
-    auto* cubeInstance = new Renderable(*cubeMesh, {.2, -0.2, -1.5 },
-                                           {180, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
+    auto* cubeInstance = new Renderable(*cubeMesh, {.2, -0.2, -3.5 },
+                                           {0, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
                                            cubeMesh->verticies);
     
     slib::Frustum frustum(0, 0, 0, 0);

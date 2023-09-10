@@ -189,7 +189,7 @@ void Renderer::Render()
             // Screen space
             const auto x = static_cast<float>(SCREEN_WIDTH / 2 + v.x * SCREEN_WIDTH / 2);
             const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - v.y * SCREEN_HEIGHT / 2);
-            screenPoints.push_back({ x, y, v.w });
+            screenPoints.push_back({ x, y, v.z });
             //-----------------------------
         }
         
@@ -199,6 +199,12 @@ void Renderer::Render()
             const auto& p1 = screenPoints.at(t.v1);
             const auto& p2 = screenPoints.at(t.v2);
             const auto& p3 = screenPoints.at(t.v3);
+            const auto& tx1 = renderable->mesh.textureCoords.at(t.vt1);
+            const auto& tx2 = renderable->mesh.textureCoords.at(t.vt2);
+            const auto& tx3 = renderable->mesh.textureCoords.at(t.vt3);
+            const auto& viewW1 = projectedPoints.at(t.v1).w;
+            const auto& viewW2 = projectedPoints.at(t.v2).w;
+            const auto& viewW3 = projectedPoints.at(t.v3).w;
 
             // Get bounding box.
             int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
@@ -214,13 +220,15 @@ void Renderer::Render()
                 slib::vec3 lightingDirection = {-.5, .5, 1 };
                 lum = sMaths::getDotProduct(normal, lightingDirection);
             }
+
+
             
             // Edge finding for triangle rasterization
             for (int x = xmin; x <= xmax; ++x)
             {
                 for (int y = ymin; y <= ymax; ++y)
                 {
-                    slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 0 };
+                    slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 1 };
 
                     // Barycentric coords using an edge function
                     float area = edgeFunctionArea(p1, p2, p3); // area of the triangle multiplied by 2
@@ -236,22 +244,24 @@ void Renderer::Render()
                         coords.z /= area;
                         
                         // zBuffer.
-                        float w = (p1.w + p2.w + p3.w)/3; // TODO: Should be interpolated, not just the mean?
+                        float interpolated_z = coords.x * p1.w + coords.y * p2.w + coords.z * p3.w;
                         int zIndex = y * static_cast<int>(SCREEN_WIDTH) + x;
 
-                        if (w < zBuffer[zIndex] || zBuffer[zIndex] == 0) // Keeping the w positive because negative values scare me.
+                        if (interpolated_z < zBuffer[zIndex] || zBuffer[zIndex] == 0) // Keeping the w positive because negative values scare me.
                         {
-                            zBuffer[zIndex] = w;
-                            // Texturing
+                            zBuffer[zIndex] = interpolated_z;
                             
-//                            
-                            auto at = renderable->mesh.textureCoords.at(t.vt1);
-                            auto bt = renderable->mesh.textureCoords.at(t.vt2);
-                            auto ct = renderable->mesh.textureCoords.at(t.vt3);
+                            // Texturing
+                            auto at = (slib::vec3) { tx1.x, tx1.y, 1.0f } / viewW1;
+                            auto bt = (slib::vec3) { tx2.x, tx2.y, 1.0f } / viewW2;
+                            auto ct = (slib::vec3) { tx3.x, tx3.y, 1.0f } / viewW3;
+                            float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
 //                            // "coords" are the barycentric coordinates of the current pixel 
 //                            // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
-                            float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x);
-                            float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y);
+                            float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x)/wt;
+                            float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y)/wt;
+                            uvx = 1 - uvx;
+                            uvy = 1 - uvy;
                             
 //                            // convert to texture space
                             auto tx = static_cast<int>(static_cast<int>(uvx * renderable->mesh.texture.w) % renderable->mesh.texture.w);

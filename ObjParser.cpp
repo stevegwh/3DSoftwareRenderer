@@ -30,7 +30,7 @@ slib::vec3 getVector(const std::string& line)
     {
         vec.push_back(std::stof(token));
     }
-    return { vec[0], vec[1], vec[2] };
+    return { vec.at(0), vec.at(1), vec.at(2) };
 }
 
 slib::vec2 getTextureVector(const std::string& line)
@@ -46,7 +46,7 @@ slib::vec2 getTextureVector(const std::string& line)
         vec.push_back(std::stof(token));
         
     }
-    return { vec[0], vec[1] };
+    return { vec.at(0), vec.at(1) };
 }
 
 
