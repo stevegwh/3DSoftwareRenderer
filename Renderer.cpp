@@ -220,8 +220,6 @@ void Renderer::Render()
                 slib::vec3 lightingDirection = {-.5, .5, 1 };
                 lum = sMaths::getDotProduct(normal, lightingDirection);
             }
-
-
             
             // Edge finding for triangle rasterization
             for (int x = xmin; x <= xmax; ++x)
@@ -260,18 +258,20 @@ void Renderer::Render()
 //                            // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
                             float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x)/wt;
                             float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y)/wt;
-                            uvx = 1 - uvx;
                             uvy = 1 - uvy;
+                            uvx = std::max(0.0f, std::min(uvx, 1.0f));
+                            uvy = std::max(0.0f, std::min(uvy, 1.0f));
                             
 //                            // convert to texture space
-                            auto tx = static_cast<int>(static_cast<int>(uvx * renderable->mesh.texture.w) % renderable->mesh.texture.w);
-                            auto ty = static_cast<int>(static_cast<int>(uvy * renderable->mesh.texture.h) % renderable->mesh.texture.h);
+                            auto tx = static_cast<int>(uvx * renderable->mesh.texture.w);
+                            auto ty = static_cast<int>(uvy * renderable->mesh.texture.h);
 //
 //                            // grab the corresponding pixel color on the texture
-                            int index = ty * renderable->mesh.texture.w * 4 + tx * 4;
-                            char r = renderable->mesh.texture.data[index];
-                            char g = renderable->mesh.texture.data[index + 1];
-                            char b = renderable->mesh.texture.data[index + 2];
+                            int index = ty * renderable->mesh.texture.w * renderable->mesh.texture.bpp + 
+                                tx * renderable->mesh.texture.bpp;
+                            char r = renderable->mesh.texture.data.at(index);
+                            char g = renderable->mesh.texture.data.at(index + 1);
+                            char b = renderable->mesh.texture.data.at(index + 2);
                             
                             //--------------------
 //                            SDL_SetRenderDrawColor(renderer,

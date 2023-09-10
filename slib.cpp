@@ -27,7 +27,7 @@ namespace slib
         }
     
         //the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
-        return { static_cast<int>(width), static_cast<int>(height), image,  bpp };
+        return { static_cast<int>(width), static_cast<int>(height), image,  4 };
     }
     
     
