@@ -24,27 +24,27 @@ int main()
 {
     FPSCounter fpsCounter;
     Clock clock;
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
+    SDL_Window* window = SDL_CreateWindow("3D Software Renderer", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, NULL);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    //SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
+    //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
     slib::vec2 lastMousePos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2  };
     bool mouseMotion = false;
-    
+
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
-    
-    slib::texture texture = slib::DecodePng("resources/texture3.png");
-    slib::texture laraTexture = slib::DecodePng("resources/Lara.png");
-    
+
+    slib::texture texture = slib::DecodePng("resources/spyro.png");
+    slib::texture skyboxTexture = slib::DecodePng("resources/clouds.png");
     //Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj", texture);
     //Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
-    Mesh* cubeMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
-    Mesh* laraMesh = ObjParser::ParseObj("resources/Lara.obj", laraTexture);
+    Mesh* cubeMesh = ObjParser::ParseObj("resources/spyro.obj", texture);
+    Mesh* skyboxMesh = ObjParser::ParseObj("resources/skybox.obj", skyboxTexture);
 //    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
 //                                         {0, 20, 0 }, {1,1,1}, {200, 200, 200},
 //                                          bunnyMesh->verticies);
@@ -61,29 +61,29 @@ int main()
 //                                           {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 100 },
 //                                           suzanneMesh->verticies);
 
-    auto* cubeInstance = new Renderable(*cubeMesh, {0, 0, -3 },
-                                           {0, 0, 0 }, {.2,.2,.2}, { 200, 100, 100 },
-                                           cubeMesh->verticies);
+    auto* cubeInstance = new Renderable(*cubeMesh, {.2, 0, -1.5 },
+                                        {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 200 },
+                                        cubeMesh->verticies);
 
-    auto* laraInstance = new Renderable(*laraMesh, {-1, 0, -7.5 },
-                                        {0, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
-                                        laraMesh->verticies);
-    
+    auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
+                                  {0, 0, 0 }, {5,5,5}, { 200, 100, 200 },
+                                  skyboxMesh->verticies);
+
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 0, 2 }, { 0, 0, 0 }, { 0, 0, -1 }, 
+    slib::Camera camera({ 0, 0, 2 }, { 0, 0, 0 }, { 0, 0, -1 },
                         { 0, 1, 0 }, zFar, zNear, &frustum);
 
     auto viewMatrix = glm::lookAt(glm::vec3(camera.pos.x,camera.pos.y,camera.pos.z),
-                             glm::vec3(camera.direction.x, camera.direction.y, camera.direction.z),
-                             glm::vec3(0,1,0));
-    
+                                  glm::vec3(camera.direction.x, camera.direction.y, camera.direction.z),
+                                  glm::vec3(0,1,0));
+
     auto perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
-    
+
     Renderer sRenderer(renderer, &camera, perspectiveMat, viewMatrix);
 //    sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*suzanneInstance);
     sRenderer.AddRenderable(*cubeInstance);
-    //sRenderer.AddRenderable(*laraInstance);
+    sRenderer.AddRenderable(*skybox);
 //    sRenderer.AddRenderable(*bunnyInstance2);
 //    sRenderer.AddRenderable(*bunnyInstance3);
     bool shouldRotate = true;
@@ -104,9 +104,9 @@ int main()
                 slib::vec3 fwd = sMaths::normaliseVector(camera.direction - camera.pos);
                 slib::vec3 left = sMaths::getCrossProduct(fwd, camera.up);
                 slib::vec3 right = sMaths::getCrossProduct(camera.up, fwd);
-                
+
                 //std::cout << fwd.x << ", " << fwd.y << ", " << fwd.z << std::endl;
-                switch (event.key.keysym.sym) {                    
+                switch (event.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     loop = SDL_FALSE;
                     break;
@@ -142,7 +142,7 @@ int main()
 
         // Screen -> Proj -> View (Camera) -> World
 
-        
+
 
         // Update
 
@@ -152,19 +152,15 @@ int main()
         // If there could be a concept of a root node and all children are rotated relevant to their parents then
         // that would be awesome. Then, implementing a camera is basically almost done; as it would just involve
         // transforming the root node.
-        
+
 //        bunnyInstance1->eulerAngles.y += 0.01f * clock.delta;
 //        bunnyInstance2->eulerAngles.y += 0.01f * clock.delta;
 //        bunnyInstance3->eulerAngles.y += 0.01f * clock.delta;
 
         std::cout << fpsCounter.fps_current << std::endl;
         //cubeInstance->eulerAngles.z += 0.5f;
-        if (shouldRotate) 
-        {
-            cubeInstance->eulerAngles.y -= 0.6f;
-            //laraInstance->eulerAngles.y += 0.6f;
-        }
-        
+        if (shouldRotate) cubeInstance->eulerAngles.y -= 0.2f;
+
         if (mouseMotion)
         {
             mouseMotion = false;
@@ -196,10 +192,10 @@ int main()
         sRenderer.Render();
         fpsCounter.Update();
 
-        
+
     }
 
-    
+
     //delete utahMesh;
     //delete bunnyMesh;
     //delete suzanneMesh;
@@ -207,9 +203,9 @@ int main()
     //delete bunnyInstance1;
     //delete suzanneInstance;
     delete cubeMesh;
-    delete laraMesh;
     delete cubeInstance;
-    delete laraInstance;
+    delete skybox;
+    delete skyboxMesh;
 //    delete bunnyInstance2;
 //    delete bunnyInstance3;
 

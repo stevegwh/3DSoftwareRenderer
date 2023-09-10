@@ -7,7 +7,6 @@
 #include <algorithm>
 #include "constants.h"
 
-
 void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation,
                                const slib::vec3& scale)
 {
@@ -105,10 +104,14 @@ bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& project
 
 void Renderer::Render()
 {
-    zBuffer = {0};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // Clear zBuffer
+    std::fill_n(zBuffer.begin(), screenSize, 0);
+
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0,0,0,0);
+    SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
+//    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+//    SDL_RenderClear(renderer);
+//    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     
     // This is a "View Matrix". You can extract the forward direction of this space (look at bookmarks). Make this a field
     // of the class and make it publicly accessible, so you can move objects based on these directions.
@@ -118,22 +121,6 @@ void Renderer::Render()
     
     for (auto& renderable : renderables)
     {
-        // Pipeline 
-        // https://learnopengl.com/Getting-started/Coordinate-Systems
-        // local (model) space
-        // Model matrix
-        // world space
-        // View matrix
-        // view (camera) space
-        // Projection matrix
-        // projection space
-        // ~backface culling~
-        // ~camera clipping here~
-        // clip space
-        // Perspective Divide
-        // ndc (image) space
-        // View transform
-        // screen space
         renderable->verticies.clear();
         renderable->verticies = renderable->mesh.verticies;
         
@@ -284,9 +271,9 @@ void Renderer::Render()
 //                            // grab the corresponding pixel color on the texture
                             int index = ty * renderable->mesh.texture.w * renderable->mesh.texture.bpp + 
                                 tx * renderable->mesh.texture.bpp;
-                            char r = renderable->mesh.texture.data.at(index);
-                            char g = renderable->mesh.texture.data.at(index + 1);
-                            char b = renderable->mesh.texture.data.at(index + 2);
+                            auto r = renderable->mesh.texture.data.at(index);
+                            auto g = renderable->mesh.texture.data.at(index + 1);
+                            auto b = renderable->mesh.texture.data.at(index + 2);
                             
                             //--------------------
 //                            auto r1 = std::max(0.0f, std::min(renderable->col.r*lum, 255.0f));
@@ -296,28 +283,38 @@ void Renderer::Render()
 //                                                   r1,
 //                                                   g1,
 //                                                   b1, 255);
-                            SDL_SetRenderDrawColor(renderer,
-                                                   r,
-                                                   g,
-                                                   b, 255);
-                            SDL_RenderDrawPoint(renderer, x, y);
+//                            SDL_SetRenderDrawColor(renderer,
+//                                                   r,
+//                                                   g,
+//                                                   b, 255);
+//                            SDL_RenderDrawPoint(renderer, x, y);
+                            
+                            // Buffer pixels
+                            auto* pixels = (unsigned char*)surface -> pixels;
+                            pixels[4 * (y * surface -> w + x) + 0] = b;
+                            pixels[4 * (y * surface -> w + x) + 1] = g;
+                            pixels[4 * (y * surface -> w + x) + 2] = r;
+                            pixels[4 * (y * surface -> w + x) + 3] = 255;
                         }
                     }
                 }
             }
-            if (wireFrame)
-            {
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
-                SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
-                SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            }
+//            if (wireFrame)
+//            {
+//                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//                SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
+//                SDL_RenderDrawLineF(renderer, p2.x, p2.y, p3.x, p3.y);
+//                SDL_RenderDrawLineF(renderer, p3.x, p3.y, p1.x, p1.y);
+//                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//            }
         }
     }
-    
-        
+
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_RenderCopy(renderer, tex, nullptr, nullptr);
     SDL_RenderPresent(renderer);
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(tex);
 }
 
 void Renderer::AddRenderable(Renderable& renderable)
