@@ -55,7 +55,7 @@ namespace slib
         vec3 operator*(const vec3 &rhs) const;
         vec3 operator/(const vec3 &rhs) const;
         vec3 operator*(const mat &rhs) const;
-        vec3 operator*=(const mat &rhs);
+        vec3 &operator*=(const mat &rhs);
         bool operator==(const vec3 &rhs) const;
         bool operator==(float rhs) const;
         bool operator<(const vec3 &rhs) const;

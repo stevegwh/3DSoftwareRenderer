@@ -30,8 +30,6 @@ namespace slib
         return { static_cast<int>(width), static_cast<int>(height), image,  4 };
     }
     
-    
-    
     vec2 &vec2::operator*=(const vec2& rhs)
     {
         x *= rhs.x;
@@ -45,10 +43,12 @@ namespace slib
         y *= rhs;
         return *this;
     }
+    
     vec2 vec2::operator-(const vec2& rhs) const
     {
         return { x - rhs.x, y - rhs.y};
     }
+    
     vec3 &vec3::operator+=(float rhs)
     {
         x += rhs;
@@ -157,8 +157,7 @@ namespace slib
     
     vec3 vec3::operator/(const vec3 &rhs) const
     {
-        vec3 result = {x, y, z};
-        return result /= rhs;
+        return { x/rhs.x, y/rhs.y, z/rhs.z};
     }
     
     bool vec3::operator==(const vec3 &rhs) const
@@ -178,7 +177,7 @@ namespace slib
         return {lhs.data[0][0], lhs.data[0][1], lhs.data[0][2]};
     }
     
-    vec3 vec3::operator*=(const mat &rhs)
+    vec3 &vec3::operator*=(const mat &rhs)
     {
         mat lhs({{this->x, this->y, this->z}});
         lhs *= rhs;
@@ -229,9 +228,9 @@ mat &mat::operator+=(const mat &rhs)
     mat &mat::operator*=(const mat &rhs)
     {
         const auto rhsrows = rhs.data.size();
-        const auto rhscols = rhs.data.at(0).size();
+        const auto rhscols = rhs.data[0].size();
         const auto lhsrows = data.size();
-        const auto lhscols = data.at(0).size();
+        const auto lhscols = data[0].size();
     
         if (lhscols != rhsrows) {
             std::cout << "Error: mat-size mismatch." << std::endl;

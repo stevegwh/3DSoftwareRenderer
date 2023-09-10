@@ -63,9 +63,9 @@ float edgeFunctionArea(const slib::zvec2 &a, const slib::zvec2 &b, const slib::z
 
 bool backfaceCulling(const slib::tri face, const std::vector<slib::vec4>& projectedPoints)
 {
-    auto v1 = projectedPoints.at(face.v1);
-    auto v2 = projectedPoints.at(face.v2);
-    auto v3 = projectedPoints.at(face.v3);
+    auto v1 = projectedPoints[face.v1];
+    auto v2 = projectedPoints[face.v2];
+    auto v3 = projectedPoints[face.v3];
 
     slib::vec3 a = slib::vec3( {v2.x, v2.y, v2.z} ) - slib::vec3( {v1.x, v1.y, v1.z} );
     slib::vec3 b = slib::vec3( {v3.x, v3.y, v3.z} ) - slib::vec3( {v1.x, v1.y, v1.z} );
@@ -82,9 +82,9 @@ bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& project
     // // if inside == 2, form a quad.
     // // if inside == 1, form triangle.
 
-    const auto v1 = projectedPoints.at(face.v1);
-    const auto v2 = projectedPoints.at(face.v2);
-    const auto v3 = projectedPoints.at(face.v3);
+    const auto v1 = projectedPoints[face.v1];
+    const auto v2 = projectedPoints[face.v2];
+    const auto v3 = projectedPoints[face.v3];
 
     if (v1.x > v1.w && v2.x > v2.w && v3.x > v3.w) return false;
     if (v1.x < -v1.w && v2.x < -v2.w && v3.x < -v3.w) return false;
@@ -99,7 +99,15 @@ bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& project
     return true;
     // clip *all* triangles against 1 edge, then all against the next, and the next.
     
+}
 
+void BufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, unsigned char g, unsigned  char b)
+{
+    auto* pixels = (unsigned char*)surface -> pixels;
+    pixels[4 * (y * surface -> w + x) + 0] = b;
+    pixels[4 * (y * surface -> w + x) + 1] = g;
+    pixels[4 * (y * surface -> w + x) + 2] = r;
+    pixels[4 * (y * surface -> w + x) + 3] = 255;
 }
 
 void Renderer::Render()
@@ -183,16 +191,19 @@ void Renderer::Render()
         // Rasterize
         for (const auto& t : processedFaces)
         {
-            const auto& p1 = screenPoints.at(t.v1);
-            const auto& p2 = screenPoints.at(t.v2);
-            const auto& p3 = screenPoints.at(t.v3);
-            const auto& tx1 = renderable->mesh.textureCoords.at(t.vt1);
-            const auto& tx2 = renderable->mesh.textureCoords.at(t.vt2);
-            const auto& tx3 = renderable->mesh.textureCoords.at(t.vt3);
-            const auto& viewW1 = projectedPoints.at(t.v1).w;
-            const auto& viewW2 = projectedPoints.at(t.v2).w;
-            const auto& viewW3 = projectedPoints.at(t.v3).w;
-
+            const auto& p1 = screenPoints[t.v1];
+            const auto& p2 = screenPoints[t.v2];
+            const auto& p3 = screenPoints[t.v3];
+            const auto& tx1 = renderable->mesh.textureCoords[t.vt1];
+            const auto& tx2 = renderable->mesh.textureCoords[t.vt2];
+            const auto& tx3 = renderable->mesh.textureCoords[t.vt3];
+            const auto& n1 = renderable->mesh.normals[t.vn1];
+            const auto& n2 = renderable->mesh.normals[t.vn2];
+            const auto& n3 = renderable->mesh.normals[t.vn3];
+            const auto& viewW1 = projectedPoints[t.v1].w;
+            const auto& viewW2 = projectedPoints[t.v2].w;
+            const auto& viewW3 = projectedPoints[t.v3].w;
+            
             // Get bounding box.
             int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
             int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
@@ -233,11 +244,6 @@ void Renderer::Render()
                             if (!renderable->ignoreLighting)
                             {
                                 slib::vec3 lightingDirection = {0, 1, 1 };
-                                
-                                
-                                auto n1 = renderable->mesh.normals.at(t.vn1);
-                                auto n2 = renderable->mesh.normals.at(t.vn2);
-                                auto n3 = renderable->mesh.normals.at(t.vn3);
 
                                 // Gouraud shading
 //                                auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
@@ -271,9 +277,9 @@ void Renderer::Render()
 //                            // grab the corresponding pixel color on the texture
                             int index = ty * renderable->mesh.texture.w * renderable->mesh.texture.bpp + 
                                 tx * renderable->mesh.texture.bpp;
-                            auto r = renderable->mesh.texture.data.at(index);
-                            auto g = renderable->mesh.texture.data.at(index + 1);
-                            auto b = renderable->mesh.texture.data.at(index + 2);
+                            auto r = renderable->mesh.texture.data[index];
+                            auto g = renderable->mesh.texture.data[index + 1];
+                            auto b = renderable->mesh.texture.data[index + 2];
                             
                             //--------------------
 //                            auto r1 = std::max(0.0f, std::min(renderable->col.r*lum, 255.0f));
@@ -290,11 +296,8 @@ void Renderer::Render()
 //                            SDL_RenderDrawPoint(renderer, x, y);
                             
                             // Buffer pixels
-                            auto* pixels = (unsigned char*)surface -> pixels;
-                            pixels[4 * (y * surface -> w + x) + 0] = b;
-                            pixels[4 * (y * surface -> w + x) + 1] = g;
-                            pixels[4 * (y * surface -> w + x) + 2] = r;
-                            pixels[4 * (y * surface -> w + x) + 3] = 255;
+                            BufferPixels(surface, x, y, r, g, b);
+
                         }
                     }
                 }
@@ -316,6 +319,7 @@ void Renderer::Render()
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(tex);
 }
+
 
 void Renderer::AddRenderable(Renderable& renderable)
 {

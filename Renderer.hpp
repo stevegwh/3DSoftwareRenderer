@@ -24,7 +24,6 @@ class Renderer
     void transformRenderable(Renderable& renderable);
     void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
     SDL_Renderer* renderer;
-    SDL_Texture* sdlTexture;
     slib::Camera* camera;
     //const slib::mat perspectiveMat;
     const glm::mat4 perspectiveMat;
