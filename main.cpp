@@ -37,12 +37,14 @@ int main()
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
     
-    slib::texture texture = slib::DecodePng("resources/spyro.png");
+    slib::texture texture = slib::DecodePng("resources/texture3.png");
+    slib::texture laraTexture = slib::DecodePng("resources/Lara.png");
     
     //Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj", texture);
     //Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
-    Mesh* cubeMesh = ObjParser::ParseObj("resources/spyro.obj", texture);
+    Mesh* cubeMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
+    Mesh* laraMesh = ObjParser::ParseObj("resources/Lara.obj", laraTexture);
 //    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
 //                                         {0, 20, 0 }, {1,1,1}, {200, 200, 200},
 //                                          bunnyMesh->verticies);
@@ -59,12 +61,16 @@ int main()
 //                                           {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 100 },
 //                                           suzanneMesh->verticies);
 
-    auto* cubeInstance = new Renderable(*cubeMesh, {.2, -0.2, -3.5 },
-                                           {0, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
+    auto* cubeInstance = new Renderable(*cubeMesh, {0, 0, -3 },
+                                           {0, 0, 0 }, {.2,.2,.2}, { 200, 100, 100 },
                                            cubeMesh->verticies);
+
+    auto* laraInstance = new Renderable(*laraMesh, {-1, 0, -7.5 },
+                                        {0, 0, 0 }, {.3,.3,.3}, { 200, 100, 200 },
+                                        laraMesh->verticies);
     
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 0, 1 }, { 0, 0, 0 }, { 0, 0, -1 }, 
+    slib::Camera camera({ 0, 0, 2 }, { 0, 0, 0 }, { 0, 0, -1 }, 
                         { 0, 1, 0 }, zFar, zNear, &frustum);
 
     auto viewMatrix = glm::lookAt(glm::vec3(camera.pos.x,camera.pos.y,camera.pos.z),
@@ -77,6 +83,7 @@ int main()
 //    sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*suzanneInstance);
     sRenderer.AddRenderable(*cubeInstance);
+    //sRenderer.AddRenderable(*laraInstance);
 //    sRenderer.AddRenderable(*bunnyInstance2);
 //    sRenderer.AddRenderable(*bunnyInstance3);
     bool shouldRotate = true;
@@ -152,7 +159,11 @@ int main()
 
         std::cout << fpsCounter.fps_current << std::endl;
         //cubeInstance->eulerAngles.z += 0.5f;
-        if (shouldRotate) cubeInstance->eulerAngles.y -= 0.2f;
+        if (shouldRotate) 
+        {
+            cubeInstance->eulerAngles.y -= 0.6f;
+            //laraInstance->eulerAngles.y += 0.6f;
+        }
         
         if (mouseMotion)
         {
@@ -195,7 +206,10 @@ int main()
     //delete cubeMesh;
     //delete bunnyInstance1;
     //delete suzanneInstance;
+    delete cubeMesh;
+    delete laraMesh;
     delete cubeInstance;
+    delete laraInstance;
 //    delete bunnyInstance2;
 //    delete bunnyInstance3;
 

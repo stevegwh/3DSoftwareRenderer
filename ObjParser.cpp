@@ -33,6 +33,21 @@ slib::vec3 getVector(const std::string& line)
     return { vec.at(0), vec.at(1), vec.at(2) };
 }
 
+slib::vec3 getNormal(const std::string& line)
+{
+    std::string output;
+    removeExcessiveWhitespace(line, output);
+    std::stringstream ss(output.erase(0,3));
+    std::vector<float> vec;
+    vec.reserve(3);
+    std::string token;
+    while(std::getline(ss, token, ' '))
+    {
+        vec.push_back(std::stof(token));
+    }
+    return { vec.at(0), vec.at(1), vec.at(2) };
+}
+
 slib::vec2 getTextureVector(const std::string& line)
 {
     std::string output;
@@ -96,6 +111,7 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
 
     std::vector<slib::vec3> verticies;
     std::vector<slib::vec2> textureCoords;
+    std::vector<slib::vec3> normals;
     std::vector<slib::tri> faces;
     
     
@@ -114,6 +130,10 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
         {
             textureCoords.push_back(getTextureVector(line));
         }
+        else if (line[0] == 'v' && line[1] == 'n')
+        {
+            normals.push_back(getNormal(line));
+        }
 //        else if (line[0] == '#')
 //        {
 //            if (line.find("vertex count") != std::string::npos)
@@ -131,7 +151,7 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
     }
     
     
-    Mesh* mesh = new Mesh(verticies, faces, textureCoords, texture);
+    Mesh* mesh = new Mesh(verticies, faces, textureCoords, normals, texture);
     //SDL_free(obj);
     obj.close();
     return mesh;

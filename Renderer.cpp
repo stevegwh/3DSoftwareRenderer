@@ -211,15 +211,7 @@ void Renderer::Render()
             int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
             int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
             int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
-
-            const auto normal = sMaths::getFaceNormal(t, renderable->verticies);
-            // Lighting
-            float lum = 1;
-            if (!renderable->ignoreLighting)
-            {
-                slib::vec3 lightingDirection = {-.5, .5, 1 };
-                lum = sMaths::getDotProduct(normal, lightingDirection);
-            }
+            
             
             // Edge finding for triangle rasterization
             for (int x = xmin; x <= xmax; ++x)
@@ -248,6 +240,27 @@ void Renderer::Render()
                         if (interpolated_z < zBuffer[zIndex] || zBuffer[zIndex] == 0) // Keeping the w positive because negative values scare me.
                         {
                             zBuffer[zIndex] = interpolated_z;
+
+                            // Lighting
+                            float lum = 1;
+                            if (!renderable->ignoreLighting)
+                            {
+                                slib::vec3 lightingDirection = {0, 1, 1 };
+                                
+                                
+                                auto n1 = renderable->mesh.normals.at(t.vn1);
+                                auto n2 = renderable->mesh.normals.at(t.vn2);
+                                auto n3 = renderable->mesh.normals.at(t.vn3);
+
+                                // Gouraud shading
+//                                auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
+//                                interpolated_normal = sMaths::normaliseVector(interpolated_normal);
+//                                lum = sMaths::getDotProduct(interpolated_normal, lightingDirection);
+                                
+                                // Flat shading
+//                                auto normal = n1 + n2 + n3/3;
+//                                lum = sMaths::getDotProduct(normal, lightingDirection);
+                            }
                             
                             // Texturing
                             auto at = (slib::vec3) { tx1.x, tx1.y, 1.0f } / viewW1;
@@ -258,10 +271,12 @@ void Renderer::Render()
 //                            // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
                             float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x)/wt;
                             float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y)/wt;
+
+                            // Flip Y texture coordinate to account for NDC vs screen difference.
                             uvy = 1 - uvy;
                             uvx = std::max(0.0f, std::min(uvx, 1.0f));
                             uvy = std::max(0.0f, std::min(uvy, 1.0f));
-                            
+
 //                            // convert to texture space
                             auto tx = static_cast<int>(uvx * renderable->mesh.texture.w);
                             auto ty = static_cast<int>(uvy * renderable->mesh.texture.h);
@@ -274,10 +289,13 @@ void Renderer::Render()
                             char b = renderable->mesh.texture.data.at(index + 2);
                             
                             //--------------------
+//                            auto r1 = std::max(0.0f, std::min(renderable->col.r*lum, 255.0f));
+//                            auto g1 = std::max(0.0f, std::min(renderable->col.g*lum, 255.0f));
+//                            auto b1 = std::max(0.0f, std::min(renderable->col.b*lum, 255.0f));
 //                            SDL_SetRenderDrawColor(renderer,
-//                                                   renderable->col.r*lum,
-//                                                   renderable->col.g*lum,
-//                                                   renderable->col.b*lum, 255);
+//                                                   r1,
+//                                                   g1,
+//                                                   b1, 255);
                             SDL_SetRenderDrawColor(renderer,
                                                    r,
                                                    g,
