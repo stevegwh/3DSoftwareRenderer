@@ -243,7 +243,7 @@ void Renderer::Render()
                             float lum = 1;
                             if (!renderable->ignoreLighting)
                             {
-                                slib::vec3 lightingDirection = {0, 1, 1 };
+                                slib::vec3 lightingDirection = {1, 1, 1.5 };
 
                                 // Gouraud shading
 //                                auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
@@ -251,8 +251,8 @@ void Renderer::Render()
 //                                lum = sMaths::getDotProduct(interpolated_normal, lightingDirection);
                                 
                                 // Flat shading
-//                                auto normal = n1 + n2 + n3/3;
-//                                lum = sMaths::getDotProduct(normal, lightingDirection);
+                                auto normal = (n1 + n2 + n3)/3;
+                                lum = sMaths::getDotProduct(normal, lightingDirection);
                             }
                             
                             // Texturing
@@ -277,11 +277,25 @@ void Renderer::Render()
 //                            // grab the corresponding pixel color on the texture
                             int index = ty * renderable->mesh.texture.w * renderable->mesh.texture.bpp + 
                                 tx * renderable->mesh.texture.bpp;
-                            auto r = renderable->mesh.texture.data[index];
-                            auto g = renderable->mesh.texture.data[index + 1];
-                            auto b = renderable->mesh.texture.data[index + 2];
+                            
+                            int r, g, b;
+                            if (lum > 1)
+                            {
+                                r = std::max(0.0f, std::min(renderable->mesh.texture.data[index] * lum, 255.0f));
+                                g = std::max(0.0f, std::min(renderable->mesh.texture.data[index + 1] * lum, 255.0f));
+                                b = std::max(0.0f, std::min(renderable->mesh.texture.data[index + 2] * lum, 255.0f));
+                            }
+                            else
+                            {
+                                r = renderable->mesh.texture.data[index];
+                                g = renderable->mesh.texture.data[index + 1];
+                                b = renderable->mesh.texture.data[index + 2];
+                            }
                             
                             //--------------------
+                            // Buffer pixels
+                            BufferPixels(surface, x, y, r, g, b);
+                            
 //                            auto r1 = std::max(0.0f, std::min(renderable->col.r*lum, 255.0f));
 //                            auto g1 = std::max(0.0f, std::min(renderable->col.g*lum, 255.0f));
 //                            auto b1 = std::max(0.0f, std::min(renderable->col.b*lum, 255.0f));
@@ -295,8 +309,7 @@ void Renderer::Render()
 //                                                   b, 255);
 //                            SDL_RenderDrawPoint(renderer, x, y);
                             
-                            // Buffer pixels
-                            BufferPixels(surface, x, y, r, g, b);
+
 
                         }
                     }

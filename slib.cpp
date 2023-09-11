@@ -83,26 +83,22 @@ namespace slib
     
     vec3 vec3::operator-(float rhs) const
     {
-        vec3 result = {x, y, z};
-        return result -= rhs;
+        return { x - rhs, y - rhs, z - rhs };
     }
     
     vec3 vec3::operator+(float rhs) const
     {
-        vec3 result = {x, y, z};
-        return result += rhs;
+        return { x + rhs, y + rhs, z + rhs };
     }
     
     vec3 vec3::operator*(float rhs) const
     {
-        vec3 result = {x, y, z};
-        return result *= rhs;
+        return { x * rhs, y * rhs, z * rhs };
     }
     
     vec3 vec3::operator/(float rhs) const
     {
-        vec3 result = {x, y, z};
-        return result /= rhs;
+        return { x/rhs, y/rhs, z/rhs };
     }
     
     vec3 &vec3::operator+=(const vec3 &rhs)
@@ -139,20 +135,17 @@ namespace slib
     
     vec3 vec3::operator-(const vec3 &rhs) const
     {
-        vec3 result = {x, y, z};
-        return result -= rhs;
+        return { x - rhs.x, y - rhs.y, z - rhs.z };
     }
     
     vec3 vec3::operator+(const vec3 &rhs) const
     {
-        vec3 result = {x, y, z};
-        return result += rhs;
+        return { x + rhs.x, y + rhs.y, z + rhs.z };
     }
     
     vec3 vec3::operator*(const vec3 &rhs) const
     {
-        vec3 result = {x, y, z};
-        return result *= rhs;
+        return { x * rhs.x, y * rhs.y, z * rhs.z };
     }
     
     vec3 vec3::operator/(const vec3 &rhs) const
