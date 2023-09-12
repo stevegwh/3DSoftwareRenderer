@@ -42,12 +42,12 @@ int main()
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
 
-    slib::texture texture = slib::DecodePng("resources/spyro.png");
+    slib::texture texture = slib::DecodePng("resources/spyrolevel.png");
     slib::texture skyboxTexture = slib::DecodePng("resources/clouds.png");
     //Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj", texture);
     //Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
-    Mesh* cubeMesh = ObjParser::ParseObj("resources/spyro.obj", texture);
+    Mesh* cubeMesh = ObjParser::ParseObj("resources/spyrolevel.obj", texture);
     Mesh* skyboxMesh = ObjParser::ParseObj("resources/skybox.obj", skyboxTexture);
 //    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
 //                                         {0, 20, 0 }, {1,1,1}, {200, 200, 200},
@@ -66,7 +66,7 @@ int main()
 //                                           suzanneMesh->verticies);
 
     auto* cubeInstance = new Renderable(*cubeMesh, {.2, 0, -1.5 },
-                                        {0, 0, 0 }, {.2,.2,.2}, { 200, 100, 200 },
+                                        {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 200 },
                                         cubeMesh->verticies);
 
     auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
@@ -74,7 +74,7 @@ int main()
                                   skyboxMesh->verticies);
 
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 0, 3 }, { 0, 0, 0 }, { 0, 0, -1 },
+    slib::Camera camera({ 0, -300, 200 }, { 0, 0, 0 }, { 0, 0, -1 },
                         { 0, 1, 0 }, zFar, zNear, &frustum);
 
     auto viewMatrix = glm::lookAt(glm::vec3(camera.pos.x,camera.pos.y,camera.pos.z),
