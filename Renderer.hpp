@@ -24,25 +24,29 @@ class Renderer
     void rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints,
                              const Renderable& renderable, const std::vector<slib::vec4>& projectedPoints);
     void transformRenderable(Renderable& renderable);
-    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
+    
     SDL_Renderer* renderer;
     slib::Camera* camera;
     //const slib::mat perspectiveMat;
-    const glm::mat4 perspectiveMat;
-    glm::mat4& viewMatrix;
+    glm::mat4 perspectiveMat;
+    glm::mat4 viewMatrix;
     std::vector<Renderable*> renderables;
     std::array<float, screenSize> zBuffer{};
     SDL_Surface* surface;
 public:
     bool wireFrame = false;
-    
-    Renderer(SDL_Renderer* _renderer, slib::Camera* _camera, glm::mat4 _perspectiveMat, glm::mat4& _viewMatrix) : 
-    renderer(_renderer), camera(_camera), perspectiveMat(_perspectiveMat), viewMatrix(_viewMatrix)
+    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
+    void UpdateViewMatrix();
+    Renderer(SDL_Renderer* _renderer, slib::Camera* _camera) : 
+    renderer(_renderer), camera(_camera)
     {
         surface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0,0,
                                        0,0);
         SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
-        // TODO: Move SDL_Renderer declaration here and make this class in charge of its memory.
+        perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
+        viewMatrix = glm::lookAt(glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
+                                   glm::vec3(camera->direction.x, camera->direction.y, camera->direction.z),
+                                   glm::vec3(0,1,0));
     }
     
     ~Renderer()

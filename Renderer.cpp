@@ -38,7 +38,7 @@ void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, con
     v = { transformedVector.x, transformedVector.y, transformedVector.z };
 }
 
-void Renderer::transformRenderable(Renderable& renderable)
+inline void Renderer::transformRenderable(Renderable& renderable)
 {
     for (auto& p : renderable.verticies)
     {
@@ -46,7 +46,7 @@ void Renderer::transformRenderable(Renderable& renderable)
     }
 }
 
-void createProjectedSpace(const Renderable& renderable, glm::mat4 perspectiveMat, std::vector<slib::vec4>& projectedPoints)
+inline void createProjectedSpace(const Renderable& renderable, glm::mat4 perspectiveMat, std::vector<slib::vec4>& projectedPoints)
 {
     // Make projected space
     for (const auto &v : renderable.verticies) {
@@ -62,7 +62,7 @@ void createProjectedSpace(const Renderable& renderable, glm::mat4 perspectiveMat
     }
 }
 
-void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<slib::zvec2>& screenPoints)
+inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<slib::zvec2>& screenPoints)
 {
     // Convert to screen
     for (auto &v : projectedPoints) {
@@ -83,7 +83,7 @@ void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<sli
     }
 }
 
-bool backfaceCulling(const slib::tri face, const std::vector<slib::vec4>& projectedPoints)
+inline bool backfaceCulling(const slib::tri face, const std::vector<slib::vec4>& projectedPoints)
 {
 //    auto v1 = projectedPoints[face.v1];
 //    auto v2 = projectedPoints[face.v2];
@@ -96,7 +96,7 @@ bool backfaceCulling(const slib::tri face, const std::vector<slib::vec4>& projec
     return true;
 }
 
-bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& projectedPoints, std::vector<slib::tri>& processedFaces)
+inline bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& projectedPoints, std::vector<slib::tri>& processedFaces)
 {
     // count inside/outside points
     // if face is entirely in the frustum, push it to processedFaces.
@@ -123,13 +123,13 @@ bool makeClipSpace(const slib::tri& face, const std::vector<slib::vec4>& project
     // clip *all* triangles against 1 edge, then all against the next, and the next.
 }
 
-void clearBuffer(SDL_Surface* surface)
+inline void clearBuffer(SDL_Surface* surface)
 {
     auto* pixels = (unsigned char*)surface -> pixels;
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
 }
 
-void renderBuffer(SDL_Renderer* const renderer, SDL_Surface* const surface)
+inline void renderBuffer(SDL_Renderer* const renderer, SDL_Surface* const surface)
 {
     SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_RenderCopy(renderer, tex, nullptr, nullptr);
@@ -138,16 +138,23 @@ void renderBuffer(SDL_Renderer* const renderer, SDL_Surface* const surface)
     clearBuffer(surface);
 }
 
+void Renderer::UpdateViewMatrix()
+{
+    // This is a "View Matrix". You can extract the forward direction of this space (look at bookmarks). Make this a field
+    // of the class and make it publicly accessible, so you can move objects based on these directions.
+    viewMatrix = glm::lookAt(
+        glm::vec3(camera->pos.x, camera->pos.y, camera->pos.z),
+        glm::vec3(camera->pos.x + camera->direction.x, camera->pos.y + camera->direction.y, camera->pos.z + camera->direction.z),
+        glm::vec3(camera->up.x, camera->up.y, camera->up.z)
+    );
+}
+
 void Renderer::Render()
 {
     // Clear zBuffer
     std::fill_n(zBuffer.begin(), screenSize, 0);
     
-    // This is a "View Matrix". You can extract the forward direction of this space (look at bookmarks). Make this a field
-    // of the class and make it publicly accessible, so you can move objects based on these directions.
-    viewMatrix = glm::lookAt(glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
-                                         glm::vec3(camera->direction.x, camera->direction.y, camera->direction.z),
-                                         glm::vec3(camera->up.x, camera->up.y, camera->up.z));
+    UpdateViewMatrix();
     
     for (auto& renderable : renderables) {
         renderable->verticies.clear();
@@ -181,12 +188,12 @@ void Renderer::Render()
     renderBuffer(renderer, surface);
 }
 
-float edgeFunctionArea(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 &c)
+inline float edgeFunctionArea(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 &c)
 {
     return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 }
 
-void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, unsigned char g, unsigned  char b)
+inline void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, unsigned char g, unsigned  char b)
 {
     auto* pixels = (unsigned char*)surface -> pixels;
     pixels[4 * (y * surface -> w + x) + 0] = b;
@@ -195,7 +202,7 @@ void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, unsigned 
     pixels[4 * (y * surface -> w + x) + 3] = 255;
 }
 
-void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints, 
+inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints, 
                          const Renderable& renderable, const std::vector<slib::vec4>& projectedPoints)
 {
     // Rasterize
@@ -270,6 +277,7 @@ void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, const std
                         }
 
                         // Texturing
+                        // TODO: Implement nearest neighbour, bilineal filtering and dithering.
                         auto at = (slib::vec3) { tx1.x, tx1.y, 1.0f } / viewW1;
                         auto bt = (slib::vec3) { tx2.x, tx2.y, 1.0f } / viewW2;
                         auto ct = (slib::vec3) { tx3.x, tx3.y, 1.0f } / viewW3;

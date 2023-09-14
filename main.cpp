@@ -7,22 +7,71 @@
 #include "utils.hpp"
 #include "Renderer.hpp"
 #include "Renderable.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 template <typename T>
-T customClamp(const T& value, const T& minValue, const T& maxValue) {
+void customClamp(T& value, const T& minValue, const T& maxValue) {
     if (value < minValue) {
-        return minValue;
+        value = minValue;
     } else if (value > maxValue) {
-        return maxValue;
+        value = maxValue;
     } else {
-        return value;
+        return;
     }
 }
 
-float totalYaw = 0.0f;
-float totalPitch = 0.0f;
-float rotationSpeed = 0.1f;
+void rotateY(slib::vec3& v, float angle)
+{
+    angle *= RAD;
+    float co = cos(angle);
+    float si = sin(angle);
 
+    const slib::mat rotationMatrix(
+        {
+            { co, 0, si },
+            { 0, 1, 0 },
+            { -si, 0, co }
+        });
+    v *= rotationMatrix;
+}
+
+void rotateX(slib::vec3& v, float angle)
+{
+    angle *= RAD;
+    float co = cos(angle);
+    float si = sin(angle);
+
+    const slib::mat rotationMatrix(
+        {
+            { 1, 0, 0 },
+            { 0, co, -si },
+            { 0, si, co }
+        });
+    v *= rotationMatrix;
+}
+
+void handleMouseMotion(SDL_MouseMotionEvent motion, slib::Camera& camera, Renderer& renderer) 
+{
+
+    const float sensitivity = 0.075f;
+    camera.rotation.y += motion.xrel * sensitivity;
+    camera.rotation.x += motion.yrel * sensitivity;
+    auto yaw = -camera.rotation.y;
+    auto pitch = -camera.rotation.x;
+//    if(pitch > 89.0f) pitch = 89.0f;
+//    if(pitch < -89.0f) pitch = -89.0f;
+    slib::vec3  dir = { 0, 0, 1 };
+    // TODO: Cannot rotate by pitch
+    //rotateX(dir, pitch);
+    std::cout << dir.x << ", " << dir.y << ", " << dir.z << std::endl;
+    rotateY(dir, yaw);
+    std::cout << dir.x << ", " << dir.y << ", " << dir.z << std::endl;
+    std::cout << "--------------" << std::endl;
+    camera.direction = dir;
+}
 
 int main()
 {
@@ -36,11 +85,14 @@ int main()
     //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-    slib::vec2 lastMousePos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2  };
-    bool mouseMotion = false;
 
     SDL_bool loop = SDL_TRUE;
     SDL_Event event;
+
+    slib::Frustum frustum(0, 0, 0, 0);
+    slib::Camera camera({ 0, 0, 2000 }, { 0, 0, 0 }, { 1, 0, -1 },
+                        { 0, 1, 0 }, zFar, zNear, &frustum);
+    Renderer sRenderer(renderer, &camera);
 
     slib::texture texture = slib::DecodePng("resources/spyrolevel.png");
     slib::texture skyboxTexture = slib::DecodePng("resources/clouds.png");
@@ -66,24 +118,13 @@ int main()
 //                                           suzanneMesh->verticies);
 
     auto* cubeInstance = new Renderable(*cubeMesh, {.2, 0, -1.5 },
-                                        {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 200 },
+                                        {0, 0, 0 }, {1,1,1}, { 200, 100, 200 },
                                         cubeMesh->verticies);
 
     auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
                                   {0, 0, 0 }, {5,5,5}, { 200, 100, 200 },
                                   skyboxMesh->verticies);
-
-    slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, -300, 200 }, { 0, 0, 0 }, { 0, 0, -1 },
-                        { 0, 1, 0 }, zFar, zNear, &frustum);
-
-    auto viewMatrix = glm::lookAt(glm::vec3(camera.pos.x,camera.pos.y,camera.pos.z),
-                                  glm::vec3(camera.direction.x, camera.direction.y, camera.direction.z),
-                                  glm::vec3(0,1,0));
-
-    auto perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
-
-    Renderer sRenderer(renderer, &camera, perspectiveMat, viewMatrix);
+    
 //    sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*suzanneInstance);
     sRenderer.AddRenderable(*cubeInstance);
@@ -91,9 +132,8 @@ int main()
 //    sRenderer.AddRenderable(*bunnyInstance2);
 //    sRenderer.AddRenderable(*bunnyInstance3);
     bool shouldRotate = true;
-    while (loop) {
-
-
+    while (loop) 
+    {
         clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {
@@ -102,35 +142,43 @@ int main()
             }
             else if (event.type == SDL_MOUSEMOTION)
             {
-                mouseMotion = true;
+                handleMouseMotion(event.motion, camera, sRenderer);
+                SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
             }
-            else if (event.type == SDL_KEYDOWN) {
-                slib::vec3 fwd = sMaths::normaliseVector(camera.direction - camera.pos);
-                slib::vec3 left = sMaths::getCrossProduct(fwd, camera.up);
-                slib::vec3 right = sMaths::getCrossProduct(camera.up, fwd);
+            else if (event.type == SDL_KEYDOWN) 
+            {
+
+                slib::vec3 left = sMaths::getCrossProduct(camera.direction, camera.up);
+                slib::vec3 right = sMaths::getCrossProduct(camera.up, camera.direction);
+                //std::cout << camera.pos.x << " , " << camera.pos.y << " , " << camera.pos.z << " , " << "\n";
+                
+                
 
                 //std::cout << fwd.x << ", " << fwd.y << ", " << fwd.z << std::endl;
+                
                 switch (event.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     loop = SDL_FALSE;
                     break;
                 case SDLK_w:
-                    camera.pos += fwd * 0.05f;
+                    camera.pos += camera.direction * 50.0f;
                     break;
                 case SDLK_s:
-                    camera.pos -= fwd * 0.05f;
+                    camera.pos -= camera.direction * 50.0f;
                     break;
                 case SDLK_a:
-                    camera.direction += left * 0.075f;
-                    camera.pos += left * 0.075f;
+                    camera.pos += left * 50.0f;
                     break;
                 case SDLK_d:
-                    camera.direction += right * 0.075f;
-                    camera.pos += right * 0.075f;
+                    camera.pos += right * 50.0f;
                     break;
-                case SDLK_UP:SDL_SetRelativeMouseMode(SDL_FALSE);
+                case SDLK_UP:
+                    //SDL_SetRelativeMouseMode(SDL_FALSE);
+                    camera.pos -= camera.up * 10.0f;
                     break;
-                case SDLK_DOWN:SDL_SetRelativeMouseMode(SDL_TRUE);
+                case SDLK_DOWN:
+                    //SDL_SetRelativeMouseMode(SDL_TRUE);
+                    camera.pos += camera.up * 10.0f;
                     break;
                 case SDLK_SPACE:
                     sRenderer.wireFrame = !sRenderer.wireFrame;
@@ -141,61 +189,9 @@ int main()
             }
         }
 
-        // Don't do this. Take the mouse coords as screen coords and go back to 3d space by inverting the transforms of the matrix and get the vector to rotate.
-
-
-        // Screen -> Proj -> View (Camera) -> World
-
-
-
-        // Update
-
-        // Scene tree/manager
-        // Update mesh positions etc.
-        // Scene graph
-        // If there could be a concept of a root node and all children are rotated relevant to their parents then
-        // that would be awesome. Then, implementing a camera is basically almost done; as it would just involve
-        // transforming the root node.
-
-//        bunnyInstance1->eulerAngles.y += 0.01f * clock.delta;
-//        bunnyInstance2->eulerAngles.y += 0.01f * clock.delta;
-//        bunnyInstance3->eulerAngles.y += 0.01f * clock.delta;
-
-        std::cout << fpsCounter.fps_current << std::endl;
-        //cubeInstance->eulerAngles.z += 0.5f;
-        //if (shouldRotate) cubeInstance->eulerAngles.y -= 0.2f;
-
-        if (mouseMotion) {
-            mouseMotion = false;
-
-            int mouseX, mouseY;
-            SDL_GetMouseState(&mouseX, &mouseY);
-            slib::vec2 currentMousePosition = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
-
-            slib::vec2 deltaMouse = currentMousePosition - lastMousePos;
-            float rotationSpeed = 0.1f;
-            deltaMouse *= rotationSpeed;
-
-            float yaw = deltaMouse.x;
-            float pitch = deltaMouse.y;
-            
-
-            sMaths::rotateVertex(camera.direction, {0, -yaw, 0}, camera.pos);
-            sMaths::rotateVertex(camera.direction, {pitch, 0, 0}, camera.pos);
-
-            // Correct the camera's up vector
-//            slib::vec3 worldUp = {0, 1, 0};
-//            slib::vec3 right = sMaths::getCrossProduct(camera.direction, worldUp);
-//            camera.up = sMaths::getCrossProduct(right, camera.direction);
-//            sMaths::normaliseVector(camera.up);
-
-            SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-            lastMousePos = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
-        }
-
         sRenderer.Render();
         fpsCounter.Update();
-
+        //std::cout << fpsCounter.fps_current << std::endl;
 
     }
 

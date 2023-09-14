@@ -33,7 +33,7 @@ namespace sMaths
     
     slib::vec3 getCentroid(const std::vector<slib::vec3>& points)
     {
-        slib::vec3 result = {0, 0, 0 };
+        slib::vec3 result({0, 0, 0});
         for (const auto& v: points) result += v;
         return result/points.size();
     }
@@ -45,7 +45,7 @@ namespace sMaths
     
     slib::vec3 getFaceNormal(const slib::tri& t, const std::vector<slib::vec3>& points)
     {
-        slib::vec3 n = {0, 0, 0 };
+        slib::vec3 n({0, 0, 0 });
         slib::vec3 a = points[t.v2] - points[t.v1];
         slib::vec3 b = points[t.v3] - points[t.v1];
 
@@ -95,11 +95,11 @@ namespace sMaths
 
     slib::vec3 getCrossProduct(const slib::vec3& v1, const slib::vec3& v2)
     {
-        return { 
+        return slib::vec3({ 
             v1.y * v2.z - v1.z * v2.y,
             v1.z * v2.x - v1.x * v2.y,
             v1.x * v2.y - v1.y * v2.x,
-                 };
+                 });
     }
 
     slib::mat getPerspectiveMatrix(
