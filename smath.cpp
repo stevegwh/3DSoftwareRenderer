@@ -2,7 +2,7 @@
 // Created by Steve Wheeler on 23/08/2023.
 //
 
-#include "sMaths.hpp"
+#include "smath.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -11,12 +11,12 @@
 
 bool compareTrianglesByDepth(const slib::tri& t1, const slib::tri& t2, const std::vector<slib::vec3>& points)
 {
-    auto c1 = sMaths::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
-    auto c2 = sMaths::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
-    return sMaths::getVectorDistance(c1) > sMaths::getVectorDistance(c2);
+    auto c1 = smath::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
+    auto c2 = smath::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
+    return smath::getVectorDistance(c1) > smath::getVectorDistance(c2);
 }
 
-namespace sMaths
+namespace smath
 {
     float getVectorDistance(const slib::vec3& vec)
     {
@@ -28,7 +28,7 @@ namespace sMaths
         auto t1 = points[t.v1];
         auto t2 = points[t.v2];
         auto t3 = points[t.v3];
-        return sMaths::getCentroid({t1, t2, t3 });
+        return smath::getCentroid({t1, t2, t3 });
     }
     
     slib::vec3 getCentroid(const std::vector<slib::vec3>& points)
@@ -38,7 +38,7 @@ namespace sMaths
         return result/points.size();
     }
     
-    slib::vec3 normaliseVector(slib::vec3 vec)
+    slib::vec3 normalize(slib::vec3 vec)
     {
         return vec / getVectorDistance(vec);
     }
@@ -53,7 +53,7 @@ namespace sMaths
         n.y = a.z * b.x - a.x * b.z;
         n.z = a.x * b.y - a.y * b.x;
         
-        return normaliseVector(n);
+        return normalize(n);
     }
     
 //    void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points) 
@@ -87,13 +87,35 @@ namespace sMaths
         v += origin;
     }
     
-    float getDotProduct(const slib::vec3& v1, const slib::vec3& v2)
+    float dot(const slib::vec3& v1, const slib::vec3& v2)
     {
         // Care: assumes both vectors have been normalised previously.
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
-    slib::vec3 getCrossProduct(const slib::vec3& v1, const slib::vec3& v2)
+    slib::vec3 axisRotate(const slib::vec3& v, const slib::vec3& u, float angle)
+    {
+        angle *= RAD;
+        float co = cos(angle);
+        float si = sin(angle);
+    
+        // Extract components of the normalized vector u
+        float ux = u.x;
+        float uy = u.y;
+        float uz = u.z;
+    
+        // Create the rotation matrix using the formula for arbitrary axis rotation
+        const slib::mat rotationMatrix(
+            {
+                { co + ux*ux*(1-co),        ux*uy*(1-co) - uz*si,    ux*uz*(1-co) + uy*si },
+                { uy*ux*(1-co) + uz*si,    co + uy*uy*(1-co),       uy*uz*(1-co) - ux*si },
+                { uz*ux*(1-co) - uy*si,    uz*uy*(1-co) + ux*si,    co + uz*uz*(1-co)    }
+            });
+    
+        return v * rotationMatrix;
+    }
+
+    slib::vec3 cross(const slib::vec3& v1, const slib::vec3& v2)
     {
         return slib::vec3({ 
             v1.y * v2.z - v1.z * v2.y,

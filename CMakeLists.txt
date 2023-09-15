@@ -15,8 +15,8 @@ add_executable(${PROJECT_NAME} main.cpp
         ObjParser.cpp
         ObjParser.hpp
         Mesh.hpp
-        sMaths.cpp
-        sMaths.hpp
+        smath.cpp
+        smath.hpp
         utils.hpp
         Renderer.cpp
         Renderer.hpp

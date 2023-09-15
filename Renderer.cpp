@@ -268,12 +268,12 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
 
                             // Gouraud shading
 //                                auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
-//                                interpolated_normal = sMaths::normaliseVector(interpolated_normal);
-//                                lum = sMaths::getDotProduct(interpolated_normal, lightingDirection);
+//                                interpolated_normal = smath::normalize(interpolated_normal);
+//                                lum = smath::dot(interpolated_normal, lightingDirection);
 
                             // Flat shading
                             auto normal = (n1 + n2 + n3)/3;
-                            lum = sMaths::getDotProduct(normal, lightingDirection);
+                            lum = smath::dot(normal, lightingDirection);
                         }
 
                         // Texturing

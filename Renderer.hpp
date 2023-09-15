@@ -4,7 +4,7 @@
 
 #pragma once
 #include "slib.h"
-#include "sMaths.hpp"
+#include "smath.hpp"
 #include "Renderable.hpp"
 #include "Mesh.hpp"
 #include "constants.h"

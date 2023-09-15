@@ -9,7 +9,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
-#include "sMaths.hpp"
+#include "smath.hpp"
 
 void removeExcessiveWhitespace(const std::string& input, std::string& output)
 {
