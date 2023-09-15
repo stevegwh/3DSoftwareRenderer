@@ -46,19 +46,12 @@ inline void Renderer::transformRenderable(Renderable& renderable)
     }
 }
 
-inline void createProjectedSpace(const Renderable& renderable, glm::mat4 perspectiveMat, std::vector<slib::vec4>& projectedPoints)
+inline void createProjectedSpace(const Renderable& renderable, const slib::mat& perspectiveMat, std::vector<slib::vec4>& projectedPoints)
 {
     // Make projected space
-    for (const auto &v : renderable.verticies) {
-        slib::vec4 vec4{v.x, v.y, v.z, 1};
-
-        // Projected Space
-        glm::vec4 v4{vec4.x, vec4.y, vec4.z, vec4.w};
-        auto result = v4 * perspectiveMat;
-        vec4 = {result.x, result.y, result.z, result.w};
-        //-----------------------------
-
-        projectedPoints.push_back(vec4);
+    for (const auto &v : renderable.verticies) 
+    {
+        projectedPoints.push_back((slib::vec4){v.x, v.y, v.z, 1} * perspectiveMat);
     }
 }
 
@@ -340,7 +333,7 @@ const glm::mat4x4& Renderer::GetView() const
     return viewMatrix;
 }
 
-glm::mat4x4 Renderer::GetPerspective() const
+const slib::mat& Renderer::GetPerspective() const
 {
     return perspectiveMat;
 }

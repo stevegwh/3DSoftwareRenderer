@@ -124,7 +124,7 @@ namespace smath
                  });
     }
 
-    slib::mat getPerspectiveMatrix(
+    slib::mat perspective(
         const float  zFar, const float zNear, const float aspect, const float fov)
     {
         const float yScale = 1 / tanf(fov / 2);
