@@ -45,7 +45,7 @@ public:
         SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
         perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
         viewMatrix = glm::lookAt(glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
-                                   glm::vec3(camera->direction.x, camera->direction.y, camera->direction.z),
+                                   glm::vec3(camera->pos.x+camera->direction.x, camera->pos.y+camera->direction.y, camera->pos.z+camera->direction.z),
                                    glm::vec3(0,1,0));
     }
     

@@ -23,7 +23,7 @@ void customClamp(T& value, const T& minValue, const T& maxValue) {
     }
 }
 
-void rotateY(slib::vec3& v, float angle)
+slib::vec3 rotateY(const slib::vec3& v, float angle)
 {
     angle *= RAD;
     float co = cos(angle);
@@ -35,10 +35,25 @@ void rotateY(slib::vec3& v, float angle)
             { 0, 1, 0 },
             { -si, 0, co }
         });
-    v *= rotationMatrix;
+    return v * rotationMatrix;
 }
 
-void rotateX(slib::vec3& v, float angle)
+slib::vec3 rotateZ(const slib::vec3& v, float angle)
+{
+    angle *= RAD;
+    float co = cos(angle);
+    float si = sin(angle);
+
+    const slib::mat rotationMatrix(
+        {
+            { co, -si, 0 },
+            { si, co, 0 },
+            { 0, 0, 1 }
+        });
+    return v * rotationMatrix;
+}
+
+slib::vec3 rotateX(const slib::vec3& v, float angle)
 {
     angle *= RAD;
     float co = cos(angle);
@@ -50,27 +65,58 @@ void rotateX(slib::vec3& v, float angle)
             { 0, co, -si },
             { 0, si, co }
         });
-    v *= rotationMatrix;
+    return v * rotationMatrix;
 }
+
+slib::vec3 rotateAroundVector(const slib::vec3& v, const slib::vec3& u, float angle)
+{
+    angle *= RAD;
+    float co = cos(angle);
+    float si = sin(angle);
+
+    // Extract components of the normalized vector u
+    float ux = u.x;
+    float uy = u.y;
+    float uz = u.z;
+
+    // Create the rotation matrix using the formula for arbitrary axis rotation
+    const slib::mat rotationMatrix(
+        {
+            { co + ux*ux*(1-co),        ux*uy*(1-co) - uz*si,    ux*uz*(1-co) + uy*si },
+            { uy*ux*(1-co) + uz*si,    co + uy*uy*(1-co),       uy*uz*(1-co) - ux*si },
+            { uz*ux*(1-co) - uy*si,    uz*uy*(1-co) + ux*si,    co + uz*uz*(1-co)    }
+        });
+
+    return v * rotationMatrix;
+}
+
+void rotateCam(slib::Camera& camera)
+{
+    auto pitch = camera.rotation.x;
+    auto yaw = camera.rotation.y;
+    glm::vec3 direction = { 0, 0, -1 };
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    camera.direction = { direction.x, direction.y, direction.z };
+}
+
 
 void handleMouseMotion(SDL_MouseMotionEvent motion, slib::Camera& camera, Renderer& renderer) 
 {
-
     const float sensitivity = 0.075f;
     camera.rotation.y += motion.xrel * sensitivity;
     camera.rotation.x += motion.yrel * sensitivity;
+    auto pitch = camera.rotation.x;
     auto yaw = -camera.rotation.y;
-    auto pitch = -camera.rotation.x;
-//    if(pitch > 89.0f) pitch = 89.0f;
-//    if(pitch < -89.0f) pitch = -89.0f;
-    slib::vec3  dir = { 0, 0, 1 };
-    // TODO: Cannot rotate by pitch
-    //rotateX(dir, pitch);
-    std::cout << dir.x << ", " << dir.y << ", " << dir.z << std::endl;
-    rotateY(dir, yaw);
-    std::cout << dir.x << ", " << dir.y << ", " << dir.z << std::endl;
-    std::cout << "--------------" << std::endl;
-    camera.direction = dir;
+    if(pitch > 89.0f) pitch = 89.0f;
+    if(pitch < -89.0f) pitch = -89.0f;
+    glm::vec3 direction = { 0, 0, -1 };
+    direction = glm::rotate(direction, glm::radians(pitch), { 1, 0, 0 });
+    auto up = glm::normalize(glm::cross(direction, {1,0,0}));
+    camera.up = { -up.x, -up.y, -up.z };
+    direction = glm::rotate(direction, glm::radians(yaw), up);
+    camera.direction = { direction.x, direction.y, direction.z};
 }
 
 int main()
@@ -90,7 +136,7 @@ int main()
     SDL_Event event;
 
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 0, 2000 }, { 0, 0, 0 }, { 1, 0, -1 },
+    slib::Camera camera({ 0, 0, 2000 }, { 0, 0, 0 }, { 0, 0, -1 },
                         { 0, 1, 0 }, zFar, zNear, &frustum);
     Renderer sRenderer(renderer, &camera);
 
@@ -147,15 +193,8 @@ int main()
             }
             else if (event.type == SDL_KEYDOWN) 
             {
-
                 slib::vec3 left = sMaths::getCrossProduct(camera.direction, camera.up);
-                slib::vec3 right = sMaths::getCrossProduct(camera.up, camera.direction);
-                //std::cout << camera.pos.x << " , " << camera.pos.y << " , " << camera.pos.z << " , " << "\n";
-                
-                
-
-                //std::cout << fwd.x << ", " << fwd.y << ", " << fwd.z << std::endl;
-                
+                slib::vec3 right = sMaths::getCrossProduct(camera.up, camera.direction);                
                 switch (event.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     loop = SDL_FALSE;
@@ -174,11 +213,15 @@ int main()
                     break;
                 case SDLK_UP:
                     //SDL_SetRelativeMouseMode(SDL_FALSE);
-                    camera.pos -= camera.up * 10.0f;
+                    //camera.pos -= camera.up * 10.0f;
+                    camera.rotation.x += 10.0f;
+                    rotateCam(camera);
                     break;
                 case SDLK_DOWN:
                     //SDL_SetRelativeMouseMode(SDL_TRUE);
-                    camera.pos += camera.up * 10.0f;
+                    //camera.pos += camera.up * 10.0f;
+                    camera.rotation.x -= 10.0f;
+                    rotateCam(camera);
                     break;
                 case SDLK_SPACE:
                     sRenderer.wireFrame = !sRenderer.wireFrame;
@@ -188,7 +231,6 @@ int main()
                 }
             }
         }
-
         sRenderer.Render();
         fpsCounter.Update();
         //std::cout << fpsCounter.fps_current << std::endl;
