@@ -3,25 +3,9 @@
 #include "slib.h"
 #include "constants.h"
 #include "ObjParser.hpp"
-#include "smath.hpp"
 #include "utils.hpp"
 #include "Renderer.hpp"
 #include "Renderable.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
-template <typename T>
-void customClamp(T& value, const T& minValue, const T& maxValue) {
-    if (value < minValue) {
-        value = minValue;
-    } else if (value > maxValue) {
-        value = maxValue;
-    } else {
-        return;
-    }
-}
 
 int main()
 {
@@ -133,7 +117,7 @@ int main()
         }
         sRenderer.Render();
         fpsCounter.Update();
-        //std::cout << fpsCounter.fps_current << std::endl;
+        std::cout << fpsCounter.fps_current << std::endl;
 
     }
 

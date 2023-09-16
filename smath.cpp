@@ -3,8 +3,6 @@
 //
 
 #include "smath.hpp"
-
-#include <algorithm>
 #include <cmath>
 #include "constants.h"
 

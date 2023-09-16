@@ -21,7 +21,6 @@ add_executable(${PROJECT_NAME} main.cpp
         Renderer.cpp
         Renderer.hpp
         slib.cpp
-        Renderable.cpp
         Renderable.hpp
         lodepng.cpp
         lodepng.h)

@@ -88,8 +88,6 @@ slib::tri getFace(const std::string& line)
         token.substr(0, token.find(delim));
         normals.push_back(std::stoi(token) - 1);
         token.erase(0, token.find(delim) + delim.length());
-        
-
     }
     
     return { 
@@ -114,7 +112,6 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
     std::vector<slib::vec3> normals;
     std::vector<slib::tri> faces;
     
-    
     std::string  line;
     while (getline(obj, line))
     {
@@ -134,19 +131,6 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
         {
             normals.push_back(getNormal(line));
         }
-//        else if (line[0] == '#')
-//        {
-//            if (line.find("vertex count") != std::string::npos)
-//            {
-//                auto c = std::stoi(line.substr(line.find('=') + 1));
-//                verticies.reserve(c);
-//            }
-//            else if (line.find("face count") != std::string::npos)
-//            {
-//                auto c = std::stoi(line.substr(line.find('=') + 1));
-//                faces.reserve(c);
-//            }
-//        }
         
     }
     

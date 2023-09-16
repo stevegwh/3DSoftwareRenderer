@@ -12,9 +12,6 @@
 #include <vector>
 #include <array>
 #include <SDL2/SDL.h>
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 // Can't use doubles for size_t for zBuffer array
 constexpr unsigned long screenSize = SCREEN_WIDTH*SCREEN_HEIGHT;
@@ -24,12 +21,10 @@ class Renderer
     void rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints,
                              const Renderable& renderable, const std::vector<slib::vec4>& projectedPoints);
     void transformRenderable(Renderable& renderable);
-    
+    void updateViewMatrix();
     SDL_Renderer* renderer;
     slib::Camera* camera;
-    //const slib::mat perspectiveMat;
     slib::mat perspectiveMat;
-//    glm::mat4 viewMatrix{};
     slib::mat viewMatrix;
     std::vector<Renderable*> renderables;
     std::array<float, screenSize> zBuffer{};
@@ -37,11 +32,10 @@ class Renderer
 public:
     bool wireFrame = false;
     void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
-    void UpdateViewMatrix();
     Renderer(SDL_Renderer* _renderer, slib::Camera* _camera) : 
     renderer(_renderer), camera(_camera), perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
     viewMatrix(smath::fpsview(camera->pos, camera->rotation.x, camera->rotation.y)),
-   surface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0,0,0,0))
+    surface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0,0,0,0))
     {
         SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
     }

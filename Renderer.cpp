@@ -131,10 +131,8 @@ inline void renderBuffer(SDL_Renderer* const renderer, SDL_Surface* const surfac
     clearBuffer(surface);
 }
 
-void Renderer::UpdateViewMatrix()
+inline void Renderer::updateViewMatrix()
 {
-    // This is a "View Matrix". You can extract the forward direction of this space (look at bookmarks). Make this a field
-    // of the class and make it publicly accessible, so you can move objects based on these directions.
     viewMatrix = smath::fpsview(camera->pos, camera->rotation.x, camera->rotation.y);
 }
 
@@ -143,9 +141,10 @@ void Renderer::Render()
     // Clear zBuffer
     std::fill_n(zBuffer.begin(), screenSize, 0);
     
-    UpdateViewMatrix();
+    updateViewMatrix();
     
-    for (auto& renderable : renderables) {
+    for (auto& renderable : renderables) 
+    {
         renderable->verticies.clear();
         renderable->verticies = renderable->mesh.verticies;
 
@@ -323,11 +322,6 @@ void Renderer::AddRenderable(Renderable& renderable)
 {
     renderables.push_back(&renderable);
 }
-
-//const glm::mat4x4& Renderer::GetView() const
-//{
-//    return viewMatrix;
-//}
 
 const slib::mat& Renderer::GetView() const
 {

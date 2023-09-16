@@ -5,7 +5,6 @@
 #pragma once
 #include <cstdint>
 #include <SDL2/SDL.h>
-#include "lodepng.h"
 
 #define FPS_INTERVAL 1.0
 
