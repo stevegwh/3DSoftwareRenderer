@@ -1,5 +1,6 @@
 #include "slib.h"
 #include "lodepng.h"
+#include "smath.hpp"
 
 namespace slib
 {
@@ -271,5 +272,22 @@ mat &mat::operator+=(const mat &rhs)
         lhs *= rhs;
         *this = {lhs.data[0][0], lhs.data[0][1], lhs.data[0][2], lhs.data[0][3]};
         return *this;
+    }
+    
+    void Camera::Rotate(float x, float y)
+    {
+        const float sensitivity = 0.075f;
+        rotation.y -= x * sensitivity;
+        rotation.x -= y * sensitivity;
+        auto pitch = rotation.x;
+        auto yaw = rotation.y;
+        if (pitch > 89.0f) pitch = 89.0f;
+        if (pitch < -89.0f) pitch = -89.0f;
+        slib::vec3 newDir = {0, 0, -1};
+//        newDir = smath::axisRotate(newDir, {1, 0, 0}, pitch);
+//        auto newUp = smath::normalize(smath::cross(newDir, {1, 0, 0}));
+//        up = {-newUp.x, -newUp.y, -newUp.z};
+        //newDir = smath::axisRotate(newDir, {0, 1, 0}, yaw);
+        direction = newDir;
     }
 }

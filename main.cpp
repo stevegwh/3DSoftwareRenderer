@@ -23,23 +23,6 @@ void customClamp(T& value, const T& minValue, const T& maxValue) {
     }
 }
 
-void rotateCam(SDL_MouseMotionEvent motion, slib::Camera& camera)
-{
-    const float sensitivity = 0.075f;
-    camera.rotation.y += motion.xrel * sensitivity;
-    camera.rotation.x -= motion.yrel * sensitivity;
-    auto pitch = camera.rotation.x;
-    auto yaw = camera.rotation.y;
-    if(pitch > 89.0f) pitch = 89.0f;
-    if(pitch < -89.0f) pitch = -89.0f;
-    slib::vec3 direction = { 0, 0, -1 };
-    direction = smath::axisRotate(direction, {1, 0, 0 }, pitch);
-    auto up = smath::normalize(smath::cross(direction, {1, 0, 0}));
-    camera.up = { -up.x, -up.y, -up.z };
-    direction = smath::axisRotate(direction, up, yaw);
-    camera.direction = direction;
-}
-
 int main()
 {
     FPSCounter fpsCounter;
@@ -48,8 +31,6 @@ int main()
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     
     SDL_Init(SDL_INIT_EVERYTHING);
-    //SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
-    //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
@@ -89,9 +70,9 @@ int main()
                                         cubeMesh->verticies);
 
     auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
-                                  {0, 0, 0 }, {5,5,5}, { 200, 100, 200 },
+                                  {0, 0, 0 }, {5000,5000,5000}, { 200, 100, 200 },
                                   skyboxMesh->verticies);
-    
+    skybox->ignoreLighting = true;
 //    sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*suzanneInstance);
     sRenderer.AddRenderable(*cubeInstance);
@@ -110,30 +91,31 @@ int main()
             else if (event.type == SDL_MOUSEMOTION)
             {
                 //handleMouseMotion(event.motion, camera, sRenderer);
-                rotateCam(event.motion, camera);
+                camera.Rotate(event.motion.xrel, event.motion.yrel);
                 SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
             }
             else if (event.type == SDL_KEYDOWN) 
             {
                 auto view = sRenderer.GetView();
                 
-                const glm::vec3 glmfwd = normalize(glm::vec3(view[2]));
-                slib::vec3 fwd = { glmfwd.x, glmfwd.y, -glmfwd.z };
+                const slib::vec3 viewfwd = slib::vec3({view.data[0][2], view.data[1][2], view.data[2][2]});
+                const slib::vec3 right = slib::vec3({view.data[0][0], view.data[0][2], view.data[0][2]});
+                slib::vec3 fwd = { viewfwd.x, viewfwd.y, -viewfwd.z };
                 switch (event.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     loop = SDL_FALSE;
                     break;
                 case SDLK_w:
-                    camera.pos += fwd * 50.0f;
-                    break;
-                case SDLK_s:
                     camera.pos -= fwd * 50.0f;
                     break;
+                case SDLK_s:
+                    camera.pos += fwd * 50.0f;
+                    break;
                 case SDLK_a:
-                    //camera.pos += test * 50.0f;
+                    camera.pos -= right * 50.0f;
                     break;
                 case SDLK_d:
-                    //camera.pos -= left * 50.0f;
+                    camera.pos += right * 50.0f;
                     break;
                 case SDLK_UP:
                     //SDL_SetRelativeMouseMode(SDL_FALSE);

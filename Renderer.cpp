@@ -19,22 +19,22 @@ void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, con
     const float ays = -std::sin(yrad);
     const float azc = std::cos(zrad);
     const float azs = -std::sin(zrad);
-    const float transx = translation.x + camera->pos.x;
-    const float transy = translation.y + camera->pos.y;
-    const float transz = translation.z - camera->pos.z;
+    const float transx = translation.x;
+    const float transy = translation.y;
+    const float transz = translation.z;
     
     // TODO: This works with glm but not my own matrix/vector4 classes.
     
-    glm::mat4x4  transformMatrix({
+    slib::mat  transformMatrix({
                                 { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, transx },
                                 { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, transy },
                                 { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, transz },
                                 { 0, 0, 0, 1.0f } // Homogeneous coordinate
                                 });
 
-    glm::vec4 v4({v.x, v.y, v.z, 1 });
+    slib::vec4 v4({v.x, v.y, v.z, 1 });
     // Local -> World -> View
-    auto transformedVector = v4  * transformMatrix * viewMatrix;
+    auto transformedVector = v4  * viewMatrix * transformMatrix;
     v = { transformedVector.x, transformedVector.y, transformedVector.z };
 }
 
@@ -135,11 +135,7 @@ void Renderer::UpdateViewMatrix()
 {
     // This is a "View Matrix". You can extract the forward direction of this space (look at bookmarks). Make this a field
     // of the class and make it publicly accessible, so you can move objects based on these directions.
-    viewMatrix = glm::lookAt(
-        glm::vec3(camera->pos.x, camera->pos.y, camera->pos.z),
-        glm::vec3(camera->pos.x + camera->direction.x, camera->pos.y + camera->direction.y, camera->pos.z + camera->direction.z),
-        glm::vec3(camera->up.x, camera->up.y, camera->up.z)
-    );
+    viewMatrix = smath::fpsview(camera->pos, camera->rotation.x, camera->rotation.y);
 }
 
 void Renderer::Render()
@@ -328,7 +324,12 @@ void Renderer::AddRenderable(Renderable& renderable)
     renderables.push_back(&renderable);
 }
 
-const glm::mat4x4& Renderer::GetView() const
+//const glm::mat4x4& Renderer::GetView() const
+//{
+//    return viewMatrix;
+//}
+
+const slib::mat& Renderer::GetView() const
 {
     return viewMatrix;
 }

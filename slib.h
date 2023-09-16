@@ -99,11 +99,11 @@ namespace slib
         const float zFar;
         const float zNear;
         Frustum *frustum;
-        glm::quat orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         Camera(vec3 _pos, vec3 _rotation, vec3 _direction, vec3 _up, float _zFar, float _zNear, Frustum *_frustum)
             :
             pos(_pos), rotation(_rotation), direction(_direction), up(_up), zFar(_zFar), zNear(_zNear), frustum(_frustum)
         {};
+        void Rotate(float x, float y);
     };
     
     struct Frustum

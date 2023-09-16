@@ -29,7 +29,8 @@ class Renderer
     slib::Camera* camera;
     //const slib::mat perspectiveMat;
     slib::mat perspectiveMat;
-    glm::mat4 viewMatrix{};
+//    glm::mat4 viewMatrix{};
+    slib::mat viewMatrix;
     std::vector<Renderable*> renderables;
     std::array<float, screenSize> zBuffer{};
     SDL_Surface* surface;
@@ -39,10 +40,7 @@ public:
     void UpdateViewMatrix();
     Renderer(SDL_Renderer* _renderer, slib::Camera* _camera) : 
     renderer(_renderer), camera(_camera), perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
-    viewMatrix(glm::lookAt(
-            glm::vec3(camera->pos.x,camera->pos.y,camera->pos.z),
-        glm::vec3(camera->pos.x+camera->direction.x, camera->pos.y+camera->direction.y, camera->pos.z+camera->direction.z),
-           glm::vec3(0,1,0))),
+    viewMatrix(smath::fpsview(camera->pos, camera->rotation.x, camera->rotation.y)),
    surface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0,0,0,0))
     {
         SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
@@ -55,7 +53,7 @@ public:
     
     void AddRenderable(Renderable& renderable);
     void Render();
-    [[nodiscard]] const glm::mat4& GetView() const;
+    [[nodiscard]] const slib::mat& GetView() const;
     [[nodiscard]] const slib::mat& GetPerspective() const;
     
 };

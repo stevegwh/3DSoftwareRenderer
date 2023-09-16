@@ -62,30 +62,6 @@ namespace smath
 //            return compareTrianglesByDepth(t1, t2, points);
 //        });
 //    }
-
-    void rotateVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin)
-    {
-        v -= origin;
-        const float xrad = eulerAngles.x * RAD;
-        const float yrad = eulerAngles.y * RAD;
-        const float zrad = eulerAngles.z * RAD;
-        const float axc = std::cos(xrad);
-        const float axs = std::sin(xrad);
-        const float ayc = std::cos(yrad);
-        const float ays = -std::sin(yrad);
-        const float azc = std::cos(zrad);
-        const float azs = -std::sin(zrad);
-    
-        // Combined rotation matrix
-        slib::mat combinedRotationMatrix({
-                                          { ayc * azc, ayc * azs, -ays },
-                                          { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc },
-                                          { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc }
-                                      });
-    
-        v *= combinedRotationMatrix;
-        v += origin;
-    }
     
     float dot(const slib::vec3& v1, const slib::vec3& v2)
     {
@@ -140,4 +116,72 @@ namespace smath
             });
         return mat;
     }
+    
+    slib::mat view(const slib::vec3& eye, const slib::vec3& target, const slib::vec3& up)
+    {
+        slib::vec3 zaxis = normalize(eye - target);    // The "forward" vector.
+        slib::vec3 xaxis = normalize(cross(up, zaxis));// The "right" vector.
+        slib::vec3 yaxis = cross(zaxis, xaxis);     // The "up" vector.
+
+        // Create a 4x4 view matrix from the right, up, forward and eye position vectors
+        slib::mat viewMatrix({
+            {      xaxis.x,            yaxis.x,            zaxis.x,       0 },
+            {      xaxis.y,            yaxis.y,            zaxis.y,       0 },
+            {      xaxis.z,            yaxis.z,            zaxis.z,       0 },
+            { -dot( xaxis, eye ), -dot( yaxis, eye ), -dot( zaxis, eye ),  1 }
+        });
+
+        return viewMatrix;
+    }
+
+// Pitch must be in the range of [-90 ... 90] degrees and 
+// yaw must be in the range of [0 ... 360] degrees.
+// Pitch and yaw variables must be expressed in radians.
+slib::mat fpsview( const slib::vec3& eye, float pitch, float yaw )
+{
+    pitch *= RAD;
+    yaw *= RAD;
+    float cosPitch = cos(pitch);
+    float sinPitch = sin(pitch);
+    float cosYaw = cos(yaw);
+    float sinYaw = sin(yaw);
+
+    slib::vec3 xaxis = { cosYaw, 0, -sinYaw };
+    slib::vec3 yaxis = { sinYaw * sinPitch, cosPitch, cosYaw * sinPitch };
+    slib::vec3 zaxis = { sinYaw * cosPitch, -sinPitch, cosPitch * cosYaw };
+
+    // Create a 4x4 view matrix from the right, up, forward and eye position vectors
+    slib::mat viewMatrix({
+                             {       xaxis.x,            yaxis.x,            zaxis.x,      0 },
+                             {       xaxis.y,            yaxis.y,            zaxis.y,      0 },
+                             {       xaxis.z,            yaxis.z,            zaxis.z,      0 },
+                             { -dot( xaxis, eye ), -dot( yaxis, eye ), -dot( zaxis, eye ), 1 }
+    });
+
+    return viewMatrix;
+}
+
+void rotateVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin)
+{
+    v -= origin;
+    const float xrad = eulerAngles.x * RAD;
+    const float yrad = eulerAngles.y * RAD;
+    const float zrad = eulerAngles.z * RAD;
+    const float axc = std::cos(xrad);
+    const float axs = std::sin(xrad);
+    const float ayc = std::cos(yrad);
+    const float ays = -std::sin(yrad);
+    const float azc = std::cos(zrad);
+    const float azs = -std::sin(zrad);
+
+    // Combined rotation matrix
+    slib::mat combinedRotationMatrix({
+                                         { ayc * azc, ayc * azs, -ays },
+                                         { axs * ays * azc - axc * azs, axs * ays * azs + axc * azc, axs * ayc },
+                                         { axc * ays * azc + axs * azs, axc * ays * azs - axs * azc, axc * ayc }
+                                     });
+
+    v *= combinedRotationMatrix;
+    v += origin;
+}
 }
