@@ -97,10 +97,8 @@ int main()
             else if (event.type == SDL_KEYDOWN) 
             {
                 auto view = sRenderer.GetView();
-                
-                const slib::vec3 viewfwd = slib::vec3({view.data[0][2], view.data[1][2], view.data[2][2]});
-                const slib::vec3 right = slib::vec3({view.data[0][0], view.data[0][2], view.data[0][2]});
-                slib::vec3 fwd = { viewfwd.x, viewfwd.y, -viewfwd.z };
+                const slib::vec3 fwd = slib::vec3({view.data[0][2], view.data[1][2], view.data[2][2]});
+                const slib::vec3 right = slib::vec3({view.data[0][0], view.data[1][0], view.data[2][0]});
                 switch (event.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     loop = SDL_FALSE;
