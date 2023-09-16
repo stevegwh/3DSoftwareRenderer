@@ -190,6 +190,80 @@ inline void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, un
     pixels[4 * (y * surface -> w + x) + 3] = 255;
 }
 
+inline void texNearestNeighbour(const Renderable& renderable, float lum, float uvx, float uvy, int& r, int& g, int& b)
+{
+    // Equivalent of "% width/height" when converting to texture space below.
+    uvx = std::max(0.0f, std::min(uvx, 1.0f));
+    uvy = std::max(0.0f, std::min(uvy, 1.0f));
+    // convert to texture space
+    auto tx = static_cast<int>(uvx * renderable.mesh.texture.w);
+    auto ty = static_cast<int>(uvy * renderable.mesh.texture.h);
+    //-------------------
+
+    // grab the corresponding pixel color on the texture
+    int index = ty * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
+        tx * renderable.mesh.texture.bpp;
+    
+    if (lum > 1)
+    {
+        r = std::max(0.0f, std::min(renderable.mesh.texture.data[index] * lum, 255.0f));
+        g = std::max(0.0f, std::min(renderable.mesh.texture.data[index + 1] * lum, 255.0f));
+        b = std::max(0.0f, std::min(renderable.mesh.texture.data[index + 2] * lum, 255.0f));
+    }
+    else
+    {
+        r = renderable.mesh.texture.data[index];
+        g = renderable.mesh.texture.data[index + 1];
+        b = renderable.mesh.texture.data[index + 2];
+    }
+}
+
+inline void texBilinear(const Renderable& renderable, float lum, float uvx, float uvy, int& r, int& g, int& b)
+{
+    // Billinear filtering
+    // Four pixel samples
+    auto right = static_cast<int>(std::ceil(uvx * renderable.mesh.texture.w));
+    auto left = static_cast<int>(std::floor(uvx * renderable.mesh.texture.w));
+    auto bottom = static_cast<int>(std::ceil(uvy * renderable.mesh.texture.h));
+    auto top = static_cast<int>(std::floor(uvy * renderable.mesh.texture.h));
+    right %= renderable.mesh.texture.w;
+    left %= renderable.mesh.texture.w;
+    bottom %= renderable.mesh.texture.h;
+    top %= renderable.mesh.texture.h;
+    // Texture index of above pixel samples
+    int topLeft = top * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
+        left * renderable.mesh.texture.bpp;
+    int topRight = top * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
+        right * renderable.mesh.texture.bpp;
+    int bottomLeft = bottom * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
+        left * renderable.mesh.texture.bpp;
+    int bottomRight = bottom * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
+        right * renderable.mesh.texture.bpp;
+    // Weight to average by
+    int weightx = uvx * renderable.mesh.texture.w;
+    int weighty = uvy * renderable.mesh.texture.h;
+    weightx -= left;
+    weighty -= top;
+
+    std::array<int, 3> rgb{};
+    for (int i = 0; i < 3; ++i)
+    {
+        auto colorTopLeft = renderable.mesh.texture.data[topLeft + i];
+        colorTopLeft *= (1.0f - weightx) * (1.0f - weighty);
+        auto colorTopRight = renderable.mesh.texture.data[topRight + i];
+        colorTopRight *= (weightx * 1.0f - weighty);
+        auto colorBottomLeft = renderable.mesh.texture.data[bottomLeft + i];
+        colorBottomLeft *= (1.0f - weightx) * weighty;
+        auto colorBottomRight = renderable.mesh.texture.data[bottomRight + i];
+        colorBottomRight *= weighty * weightx;
+        rgb[i] = (colorTopLeft + colorTopRight + colorBottomLeft + colorBottomRight);
+    }
+
+    r = std::max(0.0f, std::min(rgb[0] * lum, 255.0f));
+    g = std::max(0.0f, std::min(rgb[1] * lum, 255.0f));
+    b = std::max(0.0f, std::min(rgb[2] * lum, 255.0f));
+}
+
 inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints, 
                          const Renderable& renderable, const std::vector<slib::vec4>& projectedPoints)
 {
@@ -218,8 +292,6 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
         int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
         int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
         int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
-        
-
         
         // Edge finding for triangle rasterization
         for (int x = xmin; x <= xmax; ++x)
@@ -265,7 +337,6 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
                         }
 
                         // Texturing
-                        // TODO: Implement nearest neighbour, bilineal filtering and dithering.
                         auto at = (slib::vec3) { tx1.x, tx1.y, 1.0f } / viewW1;
                         auto bt = (slib::vec3) { tx2.x, tx2.y, 1.0f } / viewW2;
                         auto ct = (slib::vec3) { tx3.x, tx3.y, 1.0f } / viewW3;
@@ -277,32 +348,9 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
 
                         // Flip Y texture coordinate to account for NDC vs screen difference.
                         uvy = 1 - uvy;
-                        uvx = std::max(0.0f, std::min(uvx, 1.0f));
-                        uvy = std::max(0.0f, std::min(uvy, 1.0f));
-
-                        // convert to texture space
-                        auto tx = static_cast<int>(uvx * renderable.mesh.texture.w);
-                        auto ty = static_cast<int>(uvy * renderable.mesh.texture.h);
-
-                        // grab the corresponding pixel color on the texture
-                        int index = ty * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
-                            tx * renderable.mesh.texture.bpp;
-
                         int r, g, b;
-                        if (lum > 1)
-                        {
-                            r = std::max(0.0f, std::min(renderable.mesh.texture.data[index] * lum, 255.0f));
-                            g = std::max(0.0f, std::min(renderable.mesh.texture.data[index + 1] * lum, 255.0f));
-                            b = std::max(0.0f, std::min(renderable.mesh.texture.data[index + 2] * lum, 255.0f));
-                        }
-                        else
-                        {
-                            r = renderable.mesh.texture.data[index];
-                            g = renderable.mesh.texture.data[index + 1];
-                            b = renderable.mesh.texture.data[index + 2];
-                        }
-
-                        //--------------------
+                        //texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
+                        texBilinear(renderable, lum, uvx, uvy, r, g, b);
                         bufferPixels(surface, x, y, r, g, b);
                     }
                 }

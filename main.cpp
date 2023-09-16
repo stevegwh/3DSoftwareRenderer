@@ -27,12 +27,12 @@ int main()
     Renderer sRenderer(renderer, &camera);
 
     slib::texture texture = slib::DecodePng("resources/spyrolevel.png");
-    slib::texture skyboxTexture = slib::DecodePng("resources/clouds.png");
+    //slib::texture skyboxTexture = slib::DecodePng("resources/clouds.png");
     //Mesh* utahMesh = ObjParser::ParseObj("resources/utah.obj");
     //Mesh* bunnyMesh = ObjParser::ParseObj("resources/bunny.obj", texture);
     //Mesh* suzanneMesh = ObjParser::ParseObj("resources/suzanne.obj", texture);
     Mesh* cubeMesh = ObjParser::ParseObj("resources/spyrolevel.obj", texture);
-    Mesh* skyboxMesh = ObjParser::ParseObj("resources/skybox.obj", skyboxTexture);
+    //Mesh* skyboxMesh = ObjParser::ParseObj("resources/skybox.obj", skyboxTexture);
 //    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
 //                                         {0, 20, 0 }, {1,1,1}, {200, 200, 200},
 //                                          bunnyMesh->verticies);
@@ -53,10 +53,10 @@ int main()
                                         {0, 0, 0 }, {1,1,1}, { 200, 100, 200 },
                                         cubeMesh->verticies);
 
-    auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
-                                  {0, 0, 0 }, {5000,5000,5000}, { 200, 100, 200 },
-                                  skyboxMesh->verticies);
-    skybox->ignoreLighting = true;
+//    auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
+//                                  {0, 0, 0 }, {5000,5000,5000}, { 200, 100, 200 },
+//                                  skyboxMesh->verticies);
+    //skybox->ignoreLighting = true;
 //    sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*suzanneInstance);
     sRenderer.AddRenderable(*cubeInstance);
@@ -74,7 +74,6 @@ int main()
             }
             else if (event.type == SDL_MOUSEMOTION)
             {
-                //handleMouseMotion(event.motion, camera, sRenderer);
                 camera.Rotate(event.motion.xrel, event.motion.yrel);
                 SDL_WarpMouseInWindow(window, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
             }
@@ -130,8 +129,8 @@ int main()
     //delete suzanneInstance;
     delete cubeMesh;
     delete cubeInstance;
-    delete skybox;
-    delete skyboxMesh;
+    //delete skybox;
+   // delete skyboxMesh;
 //    delete bunnyInstance2;
 //    delete bunnyInstance3;
 
