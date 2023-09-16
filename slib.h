@@ -84,7 +84,7 @@ namespace slib
         mat &operator+=(const mat &rhs);
         mat &operator*=(const mat &rhs);
         mat operator*(const mat &rhs) const;
-        mat operator*(const vec4 &rhs) const;
+        vec4 operator*(const vec4 &rhs) const;
     
     };
     

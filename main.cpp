@@ -66,7 +66,7 @@ int main()
     bool shouldRotate = true;
     while (loop) 
     {
-        //cubeInstance->eulerAngles.y += 1.0f;
+        cubeInstance->eulerAngles.y += 1.0f;
         clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {

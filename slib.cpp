@@ -199,7 +199,7 @@ namespace slib
         return x >= rhs.x && y >= rhs.y && z >= rhs.z;
     }
 
-mat &mat::operator+=(const mat &rhs)
+    mat &mat::operator+=(const mat &rhs)
     {
         const auto rhsrows = rhs.data.size();
         const auto rhscols = rhs.data.at(0).size();
@@ -211,14 +211,14 @@ mat &mat::operator+=(const mat &rhs)
             exit(1);
         }
         auto maxCols = lhscols >= rhscols ? lhscols : rhscols;
-        for (int row = 0; row < static_cast<int>(lhsrows); ++row) {
-            for (auto col = 0; col < static_cast<int>(maxCols); ++col) {
-                data[row][col] += rhs.data[row][col];
+        for (int col = 0; col < static_cast<int>(maxCols); ++col) {
+            for (int row = 0; row < static_cast<int>(lhsrows); ++row) {
+                data[col][row] += rhs.data[col][row];
             }
         }
         return *this;
     }
-    
+
     mat &mat::operator*=(const mat &rhs)
     {
         const auto rhsrows = rhs.data.size();
@@ -231,13 +231,13 @@ mat &mat::operator+=(const mat &rhs)
             exit(1);
         }
     
-        std::vector<std::vector<float>> result(lhsrows, std::vector<float>(rhscols, 0));
+        std::vector<std::vector<float>> result(lhscols, std::vector<float>(rhsrows, 0));
     
-        for (size_t i = 0; i < lhsrows; ++i) {
-            for (size_t j = 0; j < rhscols; ++j) {
+        for (size_t i = 0; i < lhscols; ++i) {
+            for (size_t j = 0; j < rhsrows; ++j) {
                 float cellValue = 0;
-                for (size_t k = 0; k < lhscols; ++k) {
-                    cellValue += data[i][k] * rhs.data[k][j];
+                for (size_t k = 0; k < lhsrows; ++k) {
+                    cellValue += data[k][i] * rhs.data[j][k];
                 }
                 result[i][j] = cellValue;
             }
@@ -252,29 +252,29 @@ mat &mat::operator+=(const mat &rhs)
         mat toReturn(data);
         return toReturn *= rhs;
     }
-    
-    mat mat::operator*(const vec4 &rhs) const
+
+    vec4 mat::operator*(const vec4 &v) const 
     {
-        mat rmatrix({{rhs.x, rhs.y, rhs.z, rhs.w}});
-        return *this * rmatrix;
+        float res_x = data[0][0] * v.x + data[0][1] * v.y + data[0][2] * v.z + data[0][3] * v.w;
+        float res_y = data[1][0] * v.x + data[1][1] * v.y + data[1][2] * v.z + data[1][3] * v.w;
+        float res_z = data[2][0] * v.x + data[2][1] * v.y + data[2][2] * v.z + data[2][3] * v.w;
+        float res_w = data[3][0] * v.x + data[3][1] * v.y + data[3][2] * v.z + data[3][3] * v.w;
+        return vec4{res_x, res_y, res_z, res_w};
     }
-    
-    vec4 vec4::operator*(const mat &rhs) const
+
+    vec4 vec4::operator*(const mat &m) const 
     {
-        mat lhs({{this->x, this->y, this->z, this->w}});
-        lhs *= rhs;
-        return {lhs.data[0][0], lhs.data[0][1], lhs.data[0][2], lhs.data[0][3]};
+        return m * (*this);
     }
     
     vec4 vec4::operator*=(const mat &rhs)
     {
-        mat lhs({{this->x, this->y, this->z, this->w}});
-        lhs *= rhs;
-        *this = {lhs.data[0][0], lhs.data[0][1], lhs.data[0][2], lhs.data[0][3]};
+        *this = *this * rhs;
         return *this;
     }
-    
-    void Camera::Rotate(float x, float y)
+
+
+void Camera::Rotate(float x, float y)
     {
         const float sensitivity = 0.075f;
         rotation.y -= x * sensitivity;

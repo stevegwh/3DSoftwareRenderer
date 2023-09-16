@@ -22,32 +22,17 @@ void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, con
     const float transx = translation.x;
     const float transy = translation.y;
     const float transz = translation.z;
-    // Try glm to see if the matrix multiplication is the cause.
-    
-    glm::mat4  transformMatrix({ scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, transx },
-                               { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, transy },
-                               { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, transz },
-                               { 0, 0, 0, 1.0f });
-//    slib::mat  transformMatrix({
-//                                { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, transx },
-//                                { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, transy },
-//                                { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, transz },
-//                                { 0, 0, 0, 1.0f } // Homogeneous coordinate
-//                                });
 
-    //slib::vec4 v4({v.x, v.y, v.z, 1 });
-    glm::vec4 v4({v.x, v.y, v.z, 1 });
-    
-    glm::mat4 view {
-        {viewMatrix.data[0][0], viewMatrix.data[0][1], viewMatrix.data[0][2], viewMatrix.data[0][3]},
-        {viewMatrix.data[1][0], viewMatrix.data[1][1], viewMatrix.data[1][2], viewMatrix.data[1][3]},
-        {viewMatrix.data[2][0], viewMatrix.data[2][1], viewMatrix.data[2][2], viewMatrix.data[2][3]},
-        {viewMatrix.data[3][0], viewMatrix.data[3][1], viewMatrix.data[3][2], viewMatrix.data[3][3]},
-    };
-    
-    // Local -> World -> View
-    //auto transformedVector =  v4 * transformMatrix * viewMatrix;
-    auto transformedVector =   view * transformMatrix * v4;
+    slib::mat  transformMatrix({
+                                { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, transx },
+                                { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, transy },
+                                { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, transz },
+                                { 0, 0, 0, 1.0f } // Homogeneous coordinate
+                                });
+
+    slib::vec4 v4({v.x, v.y, v.z, 1 });
+
+    auto transformedVector =  viewMatrix * transformMatrix * v4;
     
     v = { transformedVector.x, transformedVector.y, transformedVector.z };
 }
@@ -65,7 +50,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
     // Make projected space
     for (const auto &v : renderable.verticies) 
     {
-        projectedPoints.push_back((slib::vec4){v.x, v.y, v.z, 1} * perspectiveMat);
+        projectedPoints.push_back(perspectiveMat * (slib::vec4){v.x, v.y, v.z, 1});
     }
 }
 
