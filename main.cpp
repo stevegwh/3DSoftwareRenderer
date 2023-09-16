@@ -22,7 +22,7 @@ int main()
     SDL_Event event;
 
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 0, 2000 }, { 0, 0, 0 }, { 0, 0, -1 },
+    slib::Camera camera({ 0, 2000, 2000 }, { 0, 0, 0 }, { 0, 0, -1 },
                         { 0, 1, 0 }, zFar, zNear, &frustum);
     Renderer sRenderer(renderer, &camera);
 
@@ -49,8 +49,8 @@ int main()
 //                                           {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 100 },
 //                                           suzanneMesh->verticies);
 
-    auto* cubeInstance = new Renderable(*cubeMesh, {.2, 0, -1.5 },
-                                        {0, 0, 0 }, {1,1,1}, { 200, 100, 200 },
+    auto* cubeInstance = new Renderable(*cubeMesh, {0, 0, 0 },
+                                        {0, 180, 0 }, {1,1,1}, { 200, 100, 200 },
                                         cubeMesh->verticies);
 
 //    auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
@@ -66,6 +66,7 @@ int main()
     bool shouldRotate = true;
     while (loop) 
     {
+        //cubeInstance->eulerAngles.y += 1.0f;
         clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {
