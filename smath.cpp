@@ -41,7 +41,10 @@ namespace smath
         return vec / getVectorDistance(vec);
     }
     
-    slib::vec3 getFaceNormal(const slib::tri& t, const std::vector<slib::vec3>& points)
+    /*
+     * Returns the central normal of the triangle's face.
+     */
+    slib::vec3 facenormal(const slib::tri& t, const std::vector<slib::vec3>& points)
     {
         slib::vec3 n({0, 0, 0 });
         slib::vec3 a = points[t.v2] - points[t.v1];
@@ -53,7 +56,6 @@ namespace smath
         
         return normalize(n);
     }
-    
 //    void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points) 
 //    {
 //        std::sort(triangles.begin(), triangles.end(), [&](const slib::tri& t1, const slib::tri& t2) {

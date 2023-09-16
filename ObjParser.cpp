@@ -108,8 +108,9 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
     }
 
     std::vector<slib::vec3> verticies;
+    std::vector<slib::vec3> vertexNormals; // Normals stored at same index as the corresponding vertex
     std::vector<slib::vec2> textureCoords;
-    std::vector<slib::vec3> normals;
+    std::vector<slib::vec3> normals; // The normals as listed in the obj
     std::vector<slib::tri> faces;
     
     std::string  line;
@@ -133,9 +134,44 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
         }
         
     }
+
+    vertexNormals.reserve(verticies.size());
+    for (const slib::tri& tri : faces) 
+    {
+        auto n1 = normals.at(tri.vn1);
+        auto n2 = normals.at(tri.vn2);
+        auto n3 = normals.at(tri.vn3);
+
+        try
+        {
+            vertexNormals.at(tri.v1) = n1;
+        }
+        catch (const std::out_of_range& oor) {
+            vertexNormals.resize(tri.v1 + 1);
+            vertexNormals[tri.v1] = n1;
+        }
+        try
+        {
+            vertexNormals.at(tri.v2) = n2;
+        }
+        catch (const std::out_of_range& oor) {
+            vertexNormals.resize(tri.v2 + 1);
+            vertexNormals[tri.v2] = n2;
+        }
+        try
+        {
+            vertexNormals.at(tri.v3) = n3;
+        }
+        catch (const std::out_of_range& oor) {
+            vertexNormals.resize(tri.v3 + 1);
+            vertexNormals[tri.v3] = n3;
+        }
+    }
     
     
-    Mesh* mesh = new Mesh(verticies, faces, textureCoords, normals, texture);
+    
+    Mesh* mesh = new Mesh(verticies, faces, textureCoords, vertexNormals, texture);
+    
     //SDL_free(obj);
     obj.close();
     return mesh;

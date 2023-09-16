@@ -22,7 +22,7 @@ int main()
     SDL_Event event;
 
     slib::Frustum frustum(0, 0, 0, 0);
-    slib::Camera camera({ 0, 2000, 2000 }, { 0, 0, 0 }, { 0, 0, -1 },
+    slib::Camera camera({ 0, 100, 450 }, { 0, 0, 0 }, { 0, 0, -1 },
                         { 0, 1, 0 }, zFar, zNear, &frustum);
     Renderer sRenderer(renderer, &camera);
 
@@ -35,27 +35,27 @@ int main()
     //Mesh* skyboxMesh = ObjParser::ParseObj("resources/skybox.obj", skyboxTexture);
 //    auto* bunnyInstance1 = new Renderable(*bunnyMesh, {0, -0.32, -1.5 }, 
 //                                         {0, 20, 0 }, {1,1,1}, {200, 200, 200},
-//                                          bunnyMesh->verticies);
+//                                          bunnyMesh->vertices);
 //    auto* bunnyInstance2 = new Renderable(*suzanneMesh, {0, -0.1, -15 },
 //                                          {0, 20, 0 }, {1,1,1},
-//                                          suzanneMesh->verticies);
+//                                          suzanneMesh->vertices);
 //    auto* bunnyInstance3 = new Renderable(*suzanneMesh, {3, -0.1, -15 },
 //                                          {0, 20, 0 }, {1,1,1},
-//                                          suzanneMesh->verticies);
+//                                          suzanneMesh->vertices);
 //    auto* utahInstance = new Renderable(*utahMesh, {0, -0.1, -2 }, 
 //                                        {0, 90, 0 }, {0.2,0.2,0.2},
-//                                        utahMesh->verticies);
+//                                        utahMesh->vertices);
 //    auto* suzanneInstance = new Renderable(*suzanneMesh, {.2, 0.1, -1.5 }, 
 //                                           {0, 0, 0 }, {.1,.1,.1}, { 200, 100, 100 },
-//                                           suzanneMesh->verticies);
+//                                           suzanneMesh->vertices);
 
     auto* cubeInstance = new Renderable(*cubeMesh, {0, 0, 0 },
-                                        {0, 180, 0 }, {1,1,1}, { 200, 100, 200 },
-                                        cubeMesh->verticies);
+                                        {0, 180, 0 }, {.1,.1,.1}, { 200, 100, 200 },
+                                        cubeMesh->vertices, cubeMesh->normals);
 
 //    auto* skybox = new Renderable(*skyboxMesh, {0, 0, 0 },
 //                                  {0, 0, 0 }, {5000,5000,5000}, { 200, 100, 200 },
-//                                  skyboxMesh->verticies);
+//                                  skyboxMesh->vertices);
     //skybox->ignoreLighting = true;
 //    sRenderer.AddRenderable(*bunnyInstance1);
 //    sRenderer.AddRenderable(*suzanneInstance);
@@ -66,7 +66,7 @@ int main()
     bool shouldRotate = true;
     while (loop) 
     {
-        cubeInstance->eulerAngles.y += 1.0f;
+        //cubeInstance->eulerAngles.y += 1.0f;
         clock.tick();
         // Allow quiting with escape key by polling for pending events
         while (SDL_PollEvent(&event)) {
@@ -88,16 +88,16 @@ int main()
                     loop = SDL_FALSE;
                     break;
                 case SDLK_w:
-                    camera.pos -= fwd * 50.0f;
+                    camera.pos -= fwd * 5.0f;
                     break;
                 case SDLK_s:
-                    camera.pos += fwd * 50.0f;
+                    camera.pos += fwd * 5.0f;
                     break;
                 case SDLK_a:
-                    camera.pos -= right * 50.0f;
+                    camera.pos -= right * 5.0f;
                     break;
                 case SDLK_d:
-                    camera.pos += right * 50.0f;
+                    camera.pos += right * 5.0f;
                     break;
                 case SDLK_UP:
                     //SDL_SetRelativeMouseMode(SDL_FALSE);

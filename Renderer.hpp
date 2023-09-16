@@ -21,6 +21,8 @@ class Renderer
     void rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints,
                              const Renderable& renderable, const std::vector<slib::vec4>& projectedPoints);
     void transformRenderable(Renderable& renderable);
+    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
+    void transformNormal(slib::vec3& n, const slib::vec3& eulerAngles, const slib::vec3& scale);
     void updateViewMatrix();
     SDL_Renderer* renderer;
     slib::Camera* camera;
@@ -31,7 +33,7 @@ class Renderer
     SDL_Surface* surface;
 public:
     bool wireFrame = false;
-    void transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation, const slib::vec3& scale);
+    
     Renderer(SDL_Renderer* _renderer, slib::Camera* _camera) : 
     renderer(_renderer), camera(_camera), perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
     viewMatrix(smath::fpsview(camera->pos, camera->rotation.x, camera->rotation.y)),

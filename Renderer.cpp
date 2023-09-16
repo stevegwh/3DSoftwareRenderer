@@ -7,6 +7,41 @@
 #include <algorithm>
 #include "constants.h"
 
+// Essentially the same as transformNormal but no translation, doesnt multiply by viewMatrix and homog coord is 0.
+void Renderer::transformNormal(slib::vec3& n, const slib::vec3& eulerAngles, const slib::vec3& scale)
+{
+    const float xrad = eulerAngles.x * RAD;
+    const float yrad = eulerAngles.y * RAD;
+    const float zrad = eulerAngles.z * RAD;
+    const float axc = std::cos(xrad);
+    const float axs = std::sin(xrad);
+    const float ayc = std::cos(yrad);
+    const float ays = -std::sin(yrad);
+    const float azc = std::cos(zrad);
+    const float azs = -std::sin(zrad);
+
+    // Only rotation and scaling, no translation for normals
+    slib::mat  transformMatrix({
+                                   { scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, 0 },
+                                   { scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc), scale.z * axs * ayc, 0 },
+                                   { scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc), scale.z * axc * ayc, 0 },
+                                   { 0, 0, 0, 1.0f } // Homogeneous coordinate
+                               });
+
+    // If you have non-uniform scaling, get the inverse transpose matrix
+    //slib::mat normalTransformMatrix = inverseTranspose(transformMatrix);
+
+    // Convert the normal to a homogeneous coordinate (vec4)
+    slib::vec4 n4({n.x, n.y, n.z, 0 }); // w is 0 for direction vectors
+
+    // Apply transformation
+    //auto transformedNormal = normalTransformMatrix * n4;
+    auto transformedNormal = transformMatrix * n4;
+
+    n = { transformedNormal.x, transformedNormal.y, transformedNormal.z };
+}
+
+
 void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& translation,
                                const slib::vec3& scale)
 {
@@ -39,16 +74,17 @@ void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, con
 
 inline void Renderer::transformRenderable(Renderable& renderable)
 {
-    for (auto& p : renderable.verticies)
+    for (int i = 0; i < renderable.vertices.size(); i++)
     {
-        transformVertex(p, renderable.eulerAngles, renderable.position, renderable.scale);
+        transformVertex(renderable.vertices[i], renderable.eulerAngles, renderable.position, renderable.scale);
+        transformNormal(renderable.normals[i], renderable.eulerAngles, renderable.scale);
     }
 }
 
 inline void createProjectedSpace(const Renderable& renderable, const slib::mat& perspectiveMat, std::vector<slib::vec4>& projectedPoints)
 {
     // Make projected space
-    for (const auto &v : renderable.verticies) 
+    for (const auto &v : renderable.vertices) 
     {
         projectedPoints.push_back(perspectiveMat * (slib::vec4){v.x, v.y, v.z, 1});
     }
@@ -143,9 +179,10 @@ void Renderer::Render()
     
     for (auto& renderable : renderables) 
     {
-        renderable->verticies.clear();
-        renderable->verticies = renderable->mesh.verticies;
-
+        renderable->vertices.clear();
+        renderable->normals.clear();
+        renderable->vertices = renderable->mesh.vertices;
+        renderable->normals = renderable->mesh.normals;
         // World space
         transformRenderable(*renderable);
         //-----------------------------
@@ -278,9 +315,17 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
         const auto& tx1 = renderable.mesh.textureCoords[t.vt1];
         const auto& tx2 = renderable.mesh.textureCoords[t.vt2];
         const auto& tx3 = renderable.mesh.textureCoords[t.vt3];
-        const auto& n1 = renderable.mesh.normals[t.vn1];
-        const auto& n2 = renderable.mesh.normals[t.vn2];
-        const auto& n3 = renderable.mesh.normals[t.vn3];
+        
+        // Normals from model data (transformed)
+        const auto& n1 = renderable.normals[t.v1];
+        const auto& n2 = renderable.normals[t.v2];
+        const auto& n3 = renderable.normals[t.v3];
+
+        slib::vec3 lightingDirection = {1, 1, 1.5 };
+        // Dynamic face normal for flat shading if no normal data in obj
+        //auto normal = smath::facenormal(t, renderable.vertices);
+        //auto normal = smath::normalize((n1 + n2 + n3)/3);
+        
         const auto& viewW1 = projectedPoints[t.v1].w;
         const auto& viewW2 = projectedPoints[t.v2].w;
         const auto& viewW3 = projectedPoints[t.v3].w;
@@ -322,16 +367,14 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
                         float lum = 1;
                         if (!renderable.ignoreLighting)
                         {
-                            slib::vec3 lightingDirection = {1, 1, 1.5 };
-
+                            
                             // Gouraud shading
-//                                auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
-//                                interpolated_normal = smath::normalize(interpolated_normal);
-//                                lum = smath::dot(interpolated_normal, lightingDirection);
-
+                            auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
+                            interpolated_normal = smath::normalize(interpolated_normal);
+                            lum = smath::dot(interpolated_normal, lightingDirection);
+                            
                             // Flat shading
-                            auto normal = (n1 + n2 + n3)/3;
-                            lum = smath::dot(normal, lightingDirection);
+                            //lum = smath::dot(normal, lightingDirection);
                         }
 
                         // Texturing

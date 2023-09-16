@@ -133,7 +133,7 @@ namespace slib
     {
         const int v1, v2, v3;
         const int vt1, vt2, vt3;
-        const int vn1, vn2, vn3;
+        const int vn1, vn2, vn3; // these should be ignored now
     };
     
     struct Color

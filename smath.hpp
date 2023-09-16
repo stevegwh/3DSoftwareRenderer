@@ -12,7 +12,8 @@ namespace smath
     slib::vec3 normalize(slib::vec3 vec);
     slib::vec3 getCentroid(const std::vector<slib::vec3>& points);
     slib::vec3 getCentroid(const slib::tri& t, const std::vector<slib::vec3>& points);
-    slib::vec3 getFaceNormal(const slib::tri& t, const std::vector<slib::vec3>& points);
+    slib::vec3 facenormal(const slib::tri& t, const std::vector<slib::vec3>& points);
+    slib::vec3 normal(const slib::vec3& v1, const slib::vec3& v2, const slib::vec3& v3);
     float dot(const slib::vec3& v1, const slib::vec3& v2);
     slib::vec3 cross(const slib::vec3& v1, const slib::vec3& v2);
     slib::vec3 axisRotate(const slib::vec3& v, const slib::vec3& u, float angle);
