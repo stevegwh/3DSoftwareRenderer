@@ -10,9 +10,9 @@
 struct Mesh
 {
     const std::vector<slib::vec3> vertices;
-    const std::vector<slib::tri> faces;
+    const std::vector<slib::tri> faces; // Contains the indices of the vertices and texture data
     const std::vector<slib::vec2> textureCoords;
-    const std::vector<slib::vec3> normals; // Store these as 1:1 with the vertices array
+    const std::vector<slib::vec3> normals; // The normal shares the same index as the associated vertex in 'vertices'
     const slib::texture texture;
     const slib::vec3 centroid;
     Mesh(const std::vector<slib::vec3>& _vertices, const std::vector<slib::tri>& _faces,

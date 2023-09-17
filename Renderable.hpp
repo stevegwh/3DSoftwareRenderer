@@ -7,6 +7,19 @@
 #include <utility>
 #include "Mesh.hpp"
 
+enum FragmentShader
+{
+    FLAT,
+    GOURAUD,
+    PHONG
+};
+
+enum TextureFilter
+{
+    NEIGHBOUR,
+    BILINEAR
+};
+
 struct Renderable
 {
     Mesh& mesh;
@@ -16,12 +29,16 @@ struct Renderable
     slib::Color col;
     std::vector<slib::vec3> vertices;
     std::vector<slib::vec3> normals;
+    FragmentShader fragmentShader;
+    TextureFilter textureFilter;
     slib::vec3 centroid{};
     bool ignoreLighting = false;
     Renderable(Mesh& _mesh, slib::vec3 _position, slib::vec3 _eulerAngles, slib::vec3 _scale,
-               slib::Color _col, std::vector<slib::vec3> _verticies, std::vector<slib::vec3> _normals)
+               slib::Color _col, std::vector<slib::vec3> _verticies, std::vector<slib::vec3> _normals,
+               FragmentShader _fragmentShader, TextureFilter _textureFilter)
     : mesh(_mesh), position(_position), eulerAngles(_eulerAngles), scale(_scale), col(_col),
-      vertices(std::move(_verticies)), normals(std::move(_normals)) 
+      vertices(std::move(_verticies)), normals(std::move(_normals)),
+      fragmentShader(_fragmentShader), textureFilter(_textureFilter)
     {};
 
 };

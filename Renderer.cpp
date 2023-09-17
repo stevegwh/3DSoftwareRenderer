@@ -322,9 +322,20 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
         const auto& n3 = renderable.normals[t.v3];
 
         slib::vec3 lightingDirection = {1, 1, 1.5 };
-        // Dynamic face normal for flat shading if no normal data in obj
-        //auto normal = smath::facenormal(t, renderable.vertices);
-        //auto normal = smath::normalize((n1 + n2 + n3)/3);
+        
+        slib::vec3 normal{};
+        if (renderable.fragmentShader == FLAT)
+        {
+            if (renderable.normals.size() > 0)
+            {
+                normal = smath::normalize((n1 + n2 + n3)/3);
+            }
+            else
+            {
+                // Dynamic face normal for flat shading if no normal data in obj
+                normal = smath::facenormal(t, renderable.vertices);
+            }
+        }
         
         const auto& viewW1 = projectedPoints[t.v1].w;
         const auto& viewW2 = projectedPoints[t.v2].w;
@@ -367,14 +378,18 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
                         float lum = 1;
                         if (!renderable.ignoreLighting)
                         {
-                            
-                            // Gouraud shading
-                            auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
-                            interpolated_normal = smath::normalize(interpolated_normal);
-                            lum = smath::dot(interpolated_normal, lightingDirection);
-                            
-                            // Flat shading
-                            //lum = smath::dot(normal, lightingDirection);
+                            if (renderable.fragmentShader == GOURAUD)
+                            {
+                                // Gouraud shading
+                                auto interpolated_normal = n1 * coords.x + n2  * coords.y + n3 * coords.z;
+                                interpolated_normal = smath::normalize(interpolated_normal);
+                                lum = smath::dot(interpolated_normal, lightingDirection);
+                            }
+                            else if (renderable.fragmentShader == FLAT)
+                            {
+                                // Flat shading
+                                lum = smath::dot(normal, lightingDirection);
+                            }
                         }
 
                         // Texturing
@@ -389,9 +404,18 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
 
                         // Flip Y texture coordinate to account for NDC vs screen difference.
                         uvy = 1 - uvy;
-                        int r, g, b;
-                        texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
-                        //texBilinear(renderable, lum, uvx, uvy, r, g, b);
+                        
+                        int r = 1, g = 1, b = 1;
+                        
+                        if (renderable.textureFilter == NEIGHBOUR)
+                        {
+                            texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
+                        }
+                        else if (renderable.textureFilter == BILINEAR)
+                        {
+                            texBilinear(renderable, lum, uvx, uvy, r, g, b);
+                        }
+                        
                         bufferPixels(surface, x, y, r, g, b);
                     }
                 }

@@ -135,6 +135,8 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
         
     }
 
+    // TODO: The problem with this approach is it leaves 'vn1, vn2, vn3' in the triangle, which will no longer be
+    // necessary.
     vertexNormals.reserve(verticies.size());
     for (const slib::tri& tri : faces) 
     {
