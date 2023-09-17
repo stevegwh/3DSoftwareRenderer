@@ -74,9 +74,11 @@ void Renderer::transformVertex(slib::vec3& v, const slib::vec3& eulerAngles, con
 
 inline void Renderer::transformRenderable(Renderable& renderable)
 {
+    bool hasNormalData = !renderable.mesh.normals.empty();
     for (int i = 0; i < renderable.vertices.size(); i++)
     {
         transformVertex(renderable.vertices[i], renderable.eulerAngles, renderable.position, renderable.scale);
+        if (!hasNormalData) continue;
         transformNormal(renderable.normals[i], renderable.eulerAngles, renderable.scale);
     }
 }
@@ -179,10 +181,14 @@ void Renderer::Render()
     
     for (auto& renderable : renderables) 
     {
+        if (!renderable->mesh.normals.empty())
+        {
+            renderable->normals.clear();
+            renderable->normals = renderable->mesh.normals;
+        }
         renderable->vertices.clear();
-        renderable->normals.clear();
         renderable->vertices = renderable->mesh.vertices;
-        renderable->normals = renderable->mesh.normals;
+
         // World space
         transformRenderable(*renderable);
         //-----------------------------
@@ -326,7 +332,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
         slib::vec3 normal{};
         if (renderable.fragmentShader == FLAT)
         {
-            if (renderable.normals.size() > 0)
+            if (!renderable.normals.empty())
             {
                 normal = smath::normalize((n1 + n2 + n3)/3);
             }

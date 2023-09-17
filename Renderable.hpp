@@ -39,6 +39,12 @@ struct Renderable
     : mesh(_mesh), position(_position), eulerAngles(_eulerAngles), scale(_scale), col(_col),
       vertices(std::move(_verticies)), normals(std::move(_normals)),
       fragmentShader(_fragmentShader), textureFilter(_textureFilter)
-    {};
+    {
+        if (normals.empty() && fragmentShader != FLAT)
+        {
+            std::cout << "No normal data found. Falling back to flat-shading." << std::endl;
+            fragmentShader = FLAT;
+        }
+    };
 
 };

@@ -32,7 +32,7 @@ int main()
                                       {0, 180, 0 }, {.1,.1,.1},
                                       { 200, 100, 200 },
                                       mesh->vertices, mesh->normals,
-                                      GOURAUD, NEIGHBOUR);
+                                      FLAT, NEIGHBOUR);
     sRenderer.AddRenderable(*renderable);
     bool shouldRotate = true;
     while (loop) 
