@@ -7,7 +7,7 @@ set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++20 -O3")
 find_package(SDL2 REQUIRED)
 #find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(glm REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+include_directories(${SDL2_INCLUDE_DIRS} imgui)
 
 add_executable(${PROJECT_NAME} main.cpp
         slib.h
@@ -23,7 +23,22 @@ add_executable(${PROJECT_NAME} main.cpp
         slib.cpp
         Renderable.hpp
         lodepng.cpp
-        lodepng.h)
+        lodepng.h
+        imgui/imgui.cpp
+        imgui/imgui.h
+        imgui/imgui_internal.h
+        imgui/imgui_draw.cpp
+        imgui/imgui_tables.cpp
+        imgui/imgui_tables.cpp
+        imgui/imgui_widgets.cpp
+        imgui/imstb_rectpack.h
+        imgui/imstb_textedit.h
+        imgui/imstb_truetype.h
+        imgui/backends/imgui_impl_sdlrenderer2.cpp
+        imgui/backends/imgui_impl_sdlrenderer2.h
+        imgui/backends/imgui_impl_sdl2.cpp
+        imgui/backends/imgui_impl_sdl2.h
+        imgui/imgui_demo.cpp)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} glm::glm)
 
 set (source "${CMAKE_SOURCE_DIR}/resources")

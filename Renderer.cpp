@@ -158,13 +158,17 @@ inline void clearBuffer(SDL_Surface* surface)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
 }
 
-inline void renderBuffer(SDL_Renderer* const renderer, SDL_Surface* const surface)
+void Renderer::RenderBuffer()
+{
+    SDL_RenderPresent(renderer);
+    clearBuffer(surface);
+}
+
+inline void pushBuffer(SDL_Renderer* renderer, SDL_Surface* surface)
 {
     SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_RenderCopy(renderer, tex, nullptr, nullptr);
-    SDL_RenderPresent(renderer);
     SDL_DestroyTexture(tex);
-    clearBuffer(surface);
 }
 
 inline void Renderer::updateViewMatrix()
@@ -214,7 +218,9 @@ void Renderer::Render()
         createScreenSpace(projectedPoints, screenPoints);
         rasterize(processedFaces, screenPoints, *renderable, projectedPoints);
     }
-    renderBuffer(renderer, surface);
+    
+    pushBuffer(renderer, surface);
+    //RenderBuffer();
 }
 
 inline float edgeFunctionArea(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 &c)
@@ -233,7 +239,7 @@ inline void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, un
 
 inline void texNearestNeighbour(const Renderable& renderable, float lum, float uvx, float uvy, int& r, int& g, int& b)
 {
-    // Equivalent of "% width/height" when converting to texture space below.
+    // Clamp uv coords
     uvx = std::max(0.0f, std::min(uvx, 1.0f));
     uvy = std::max(0.0f, std::min(uvy, 1.0f));
     // convert to texture space
@@ -267,10 +273,10 @@ inline void texBilinear(const Renderable& renderable, float lum, float uvx, floa
     auto left = static_cast<int>(std::floor(uvx * renderable.mesh.texture.w));
     auto bottom = static_cast<int>(std::ceil(uvy * renderable.mesh.texture.h));
     auto top = static_cast<int>(std::floor(uvy * renderable.mesh.texture.h));
-    right %= renderable.mesh.texture.w;
-    left %= renderable.mesh.texture.w;
-    bottom %= renderable.mesh.texture.h;
-    top %= renderable.mesh.texture.h;
+    right = std::clamp(right, 0, renderable.mesh.texture.w - 1);
+    left = std::clamp(left, 0, renderable.mesh.texture.w - 1);
+    bottom = std::clamp(bottom, 0, renderable.mesh.texture.h - 1);
+    top = std::clamp(top, 0, renderable.mesh.texture.h - 1);
     // Texture index of above pixel samples
     int topLeft = top * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
         left * renderable.mesh.texture.bpp;
@@ -412,6 +418,9 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces, co
                         uvy = 1 - uvy;
                         
                         int r = 1, g = 1, b = 1;
+
+                        // TODO: Currently, all textures are clamped between 0-1. 
+                        // Instead, this could be a texture option where "REPEAT" uses modulo, STRETCH clamps it, etc.
                         
                         if (renderable.textureFilter == NEIGHBOUR)
                         {

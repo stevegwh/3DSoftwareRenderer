@@ -47,6 +47,7 @@ public:
         SDL_FreeSurface(surface);
     }
     
+    void RenderBuffer();
     void AddRenderable(Renderable& renderable);
     void Render();
     [[nodiscard]] const slib::mat& GetView() const;
