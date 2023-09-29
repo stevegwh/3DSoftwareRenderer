@@ -10,8 +10,8 @@ find_package(glm REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} imgui)
 
 add_executable(${PROJECT_NAME} main.cpp
-        slib.h
-        constants.h
+        slib.hpp
+        constants.hpp
         ObjParser.cpp
         ObjParser.hpp
         Mesh.hpp

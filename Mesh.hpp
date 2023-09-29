@@ -4,7 +4,7 @@
 #pragma once
 #include <utility>
 #include <vector>
-#include "slib.h"
+#include "slib.hpp"
 #include "smath.hpp"
 
 namespace soft3d

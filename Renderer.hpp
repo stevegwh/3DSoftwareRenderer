@@ -3,11 +3,11 @@
 //
 
 #pragma once
-#include "slib.h"
+#include "slib.hpp"
 #include "smath.hpp"
 #include "Renderable.hpp"
 #include "Mesh.hpp"
-#include "constants.h"
+#include "constants.hpp"
 #include "Camera.hpp"
 #include <utility>
 #include <vector>

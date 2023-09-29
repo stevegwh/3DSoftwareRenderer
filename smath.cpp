@@ -4,7 +4,7 @@
 
 #include "smath.hpp"
 #include <cmath>
-#include "constants.h"
+#include "constants.hpp"
 
 
 bool compareTrianglesByDepth(const slib::tri& t1, const slib::tri& t2, const std::vector<slib::vec3>& points)

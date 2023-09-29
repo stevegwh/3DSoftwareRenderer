@@ -4,7 +4,7 @@
 
 #pragma once
 #include <vector>
-#include "slib.h"
+#include "slib.hpp"
 
 namespace smath
 {

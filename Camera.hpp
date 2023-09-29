@@ -4,7 +4,7 @@
 
 #pragma once
 #include <SDL2/SDL.h>
-#include "slib.h"
+#include "slib.hpp"
 
 namespace soft3d
 {

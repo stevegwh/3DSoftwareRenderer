@@ -5,13 +5,11 @@
 #pragma once
 #include <vector>
 #include <array>
-#include "slib.h"
+#include "slib.hpp"
 #include "Mesh.hpp"
 
 
-class ObjParser
+namespace ObjParser
 {
-    ObjParser() = default;
-public:
-    static soft3d::Mesh ParseObj(const char* path, const slib::texture& texture);
+    soft3d::Mesh ParseObj(const char* path, const slib::texture& texture);
 };

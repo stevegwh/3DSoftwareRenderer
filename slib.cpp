@@ -1,4 +1,4 @@
-#include "slib.h"
+#include "slib.hpp"
 #include "lodepng.h"
 #include "smath.hpp"
 

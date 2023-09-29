@@ -5,7 +5,7 @@
 #include "Renderer.hpp"
 #include <cmath>
 #include <algorithm>
-#include "constants.h"
+#include "constants.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

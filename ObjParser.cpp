@@ -97,12 +97,12 @@ slib::tri getFace(const std::string& line)
          };
 }
 
-
-soft3d::Mesh ObjParser::ParseObj(const char* path, const slib::texture& texture)
+namespace ObjParser
+{
+soft3d::Mesh ParseObj(const char *path, const slib::texture &texture)
 {
     std::ifstream obj(path);
-    if (!obj.is_open())
-    {
+    if (!obj.is_open()) {
         std::cout << "Failed to open file" << std::endl;
         exit(1);
     }
@@ -112,64 +112,56 @@ soft3d::Mesh ObjParser::ParseObj(const char* path, const slib::texture& texture)
     std::vector<slib::vec2> textureCoords;
     std::vector<slib::vec3> normals; // The normals as listed in the obj
     std::vector<slib::tri> faces;
-    
-    std::string  line;
-    while (getline(obj, line))
-    {
-        if (line[0] == 'v' && line[1] == ' ')
-        {
+
+    std::string line;
+    while (getline(obj, line)) {
+        if (line[0] == 'v' && line[1] == ' ') {
             verticies.push_back(getVector(line));
         }
-        else if (line[0] == 'f' && line[1] == ' ')
-        {
+        else if (line[0] == 'f' && line[1] == ' ') {
             faces.push_back(getFace(line));
         }
-        else if (line[0] == 'v' && line[1] == 't')
-        {
+        else if (line[0] == 'v' && line[1] == 't') {
             textureCoords.push_back(getTextureVector(line));
         }
-        else if (line[0] == 'v' && line[1] == 'n')
-        {
+        else if (line[0] == 'v' && line[1] == 'n') {
             normals.push_back(getNormal(line));
         }
-        
+
     }
 
     // TODO: The problem with this approach is it leaves 'vn1, vn2, vn3' in the triangle, which will no longer be
     // necessary.
     vertexNormals.reserve(verticies.size());
-    for (const slib::tri& tri : faces) 
-    {
+    for (const slib::tri &tri : faces) {
         auto n1 = normals.at(tri.vn1);
         auto n2 = normals.at(tri.vn2);
         auto n3 = normals.at(tri.vn3);
 
-        try
-        {
+        try {
             vertexNormals.at(tri.v1) = n1;
         }
-        catch (const std::out_of_range& oor) {
+        catch (const std::out_of_range &oor) {
             vertexNormals.resize(tri.v1 + 1);
             vertexNormals[tri.v1] = n1;
         }
-        try
-        {
+        try {
             vertexNormals.at(tri.v2) = n2;
         }
-        catch (const std::out_of_range& oor) {
+        catch (const std::out_of_range &oor) {
             vertexNormals.resize(tri.v2 + 1);
             vertexNormals[tri.v2] = n2;
         }
-        try
-        {
+        try {
             vertexNormals.at(tri.v3) = n3;
         }
-        catch (const std::out_of_range& oor) {
+        catch (const std::out_of_range &oor) {
             vertexNormals.resize(tri.v3 + 1);
             vertexNormals[tri.v3] = n3;
         }
     }
-    
+
     obj.close();
     return {verticies, faces, textureCoords, vertexNormals, texture};
+}
 }

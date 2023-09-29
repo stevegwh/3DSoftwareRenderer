@@ -3,7 +3,7 @@
 //
 
 #include "GUI.hpp"
-#include "constants.h"
+#include "constants.hpp"
 #include <string>
 
 namespace soft3d
@@ -71,5 +71,8 @@ namespace soft3d
         delete scene1ButtonDown;
         delete scene2ButtonDown;
         delete scene3ButtonDown;
+        ImGui_ImplSDLRenderer2_Shutdown();
+        ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext();
     }
 }

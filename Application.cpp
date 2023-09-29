@@ -5,8 +5,8 @@
 #include "Application.hpp"
 #include <array>
 #include <SDL2/SDL.h>
-#include "slib.h"
-#include "constants.h"
+#include "slib.hpp"
+#include "constants.hpp"
 #include "ObjParser.hpp"
 #include "utils.hpp"
 #include "Renderer.hpp"
@@ -175,9 +175,6 @@ namespace soft3d
         delete renderer;
         delete fpsCounter;
         delete clock;
-        ImGui_ImplSDLRenderer2_Shutdown();
-        ImGui_ImplSDL2_Shutdown();
-        ImGui::DestroyContext();
         SDL_DestroyWindow(sdlWindow);
         SDL_DestroyRenderer(sdlRenderer);
         SDL_Quit();
