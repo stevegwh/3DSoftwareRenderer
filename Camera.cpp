@@ -35,6 +35,5 @@ namespace soft3d
     {
         forward = slib::vec3({viewMatrix.data[0][2], viewMatrix.data[1][2], viewMatrix.data[2][2]});
         right = slib::vec3({viewMatrix.data[0][0], viewMatrix.data[1][0], viewMatrix.data[2][0]});
-        // TODO up?
     }
 }

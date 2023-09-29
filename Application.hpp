@@ -27,6 +27,7 @@ class Application
     void changeScene(int newScene);
     void quit();
     void init();
+    void initGui();
     void initSDL();
     void draw();
     void update();

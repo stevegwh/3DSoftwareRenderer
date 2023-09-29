@@ -44,7 +44,7 @@ soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
 
 namespace soft3d
 {
-    void Application::initSDL()
+    inline void Application::initSDL()
     {
         sdlWindow = SDL_CreateWindow("3D Software Renderer", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
         if (sdlWindow == nullptr) 
@@ -67,15 +67,8 @@ namespace soft3d
         loop = SDL_TRUE;
     }
     
-    void Application::init()
+    inline void Application::initGui()
     {
-        fpsCounter = new FPSCounter;
-        clock = new Clock;
-        initSDL();
-        renderer = new soft3d::Renderer(sdlRenderer);
-        gui = new soft3d::GUI(sdlWindow, sdlRenderer);
-        menuMouseEnabled = false;
-        
         Scene* scene1 = spyroSceneInit(renderer);
         Scene* scene2 = spyroModelSceneInit(renderer);
         scenes.push_back(scene1);
@@ -106,9 +99,17 @@ namespace soft3d
         const std::function<void()> m4 = [p = this] { p->disableMouse(); };
         gui->bilinearButtonDown->Subscribe(new Observer(f8));
         gui->bilinearButtonDown->Subscribe(new Observer(m4));
-        
-        // TODO: Make frag shader/texture filtering a render property, not per renderable.
-        // Allow user to select shading technique and texture filtering.
+    }
+    
+    void Application::init()
+    {
+        fpsCounter = new FPSCounter;
+        clock = new Clock;
+        initSDL();
+        renderer = new soft3d::Renderer(sdlRenderer);
+        gui = new soft3d::GUI(sdlWindow, sdlRenderer);
+        menuMouseEnabled = false;
+        initGui();
     }
     
     void Application::changeScene(int newScene)

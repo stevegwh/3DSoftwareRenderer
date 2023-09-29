@@ -65,7 +65,8 @@ void Renderer::transformVertex(slib::vec3 &v, const slib::vec3 &eulerAngles, con
 inline void Renderer::transformRenderable(Renderable &renderable)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
-    for (int i = 0; i < renderable.vertices.size(); i++) {
+    for (int i = 0; i < renderable.vertices.size(); i++) 
+    {
         transformVertex(renderable.vertices[i], renderable.eulerAngles, renderable.position, renderable.scale);
         if (!hasNormalData) continue;
         transformNormal(renderable.normals[i], renderable.eulerAngles, renderable.scale);
@@ -77,7 +78,8 @@ inline void createProjectedSpace(const Renderable &renderable,
                                  std::vector<slib::vec4> &projectedPoints)
 {
     // Make projected space
-    for (const auto &v : renderable.vertices) {
+    for (const auto &v : renderable.vertices) 
+    {
         projectedPoints.push_back(perspectiveMat * (slib::vec4) {v.x, v.y, v.z, 1});
     }
 }
@@ -85,9 +87,11 @@ inline void createProjectedSpace(const Renderable &renderable,
 inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
 {
     // Convert to screen
-    for (auto &v : projectedPoints) {
+    for (auto &v : projectedPoints) 
+    {
         // NDC Space
-        if (v.w != 0) {
+        if (v.w != 0) 
+        {
             // Perspective divide
             v.x /= v.w;
             v.y /= v.w;
@@ -177,7 +181,8 @@ void Renderer::Render()
 
     updateViewMatrix();
 
-    for (auto &renderable : renderables) {
+    for (auto &renderable : renderables) 
+    {
         if (!renderable->mesh.normals.empty()) 
         {
             renderable->normals.clear();
@@ -243,12 +248,14 @@ inline void texNearestNeighbour(const Renderable &renderable, float lum, float u
     int index = ty * renderable.mesh.texture.w * renderable.mesh.texture.bpp +
         tx * renderable.mesh.texture.bpp;
 
-    if (lum > 1) {
+    if (lum > 1) 
+    {
         r = std::max(0.0f, std::min(renderable.mesh.texture.data[index] * lum, 255.0f));
         g = std::max(0.0f, std::min(renderable.mesh.texture.data[index + 1] * lum, 255.0f));
         b = std::max(0.0f, std::min(renderable.mesh.texture.data[index + 2] * lum, 255.0f));
     }
-    else {
+    else 
+    {
         r = renderable.mesh.texture.data[index];
         g = renderable.mesh.texture.data[index + 1];
         b = renderable.mesh.texture.data[index + 2];
@@ -283,7 +290,8 @@ inline void texBilinear(const Renderable &renderable, float lum, float uvx, floa
     weighty -= top;
 
     std::array<int, 3> rgb{};
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) 
+    {
         auto colorTopLeft = renderable.mesh.texture.data[topLeft + i];
         colorTopLeft *= (1.0f - weightx) * (1.0f - weighty);
         auto colorTopRight = renderable.mesh.texture.data[topRight + i];
@@ -306,7 +314,8 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
                                 const std::vector<slib::vec4> &projectedPoints)
 {
     // Rasterize
-    for (const auto &t : processedFaces) {
+    for (const auto &t : processedFaces) 
+    {
         const auto &p1 = screenPoints[t.v1];
         const auto &p2 = screenPoints[t.v2];
         const auto &p3 = screenPoints[t.v3];
@@ -326,11 +335,14 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
         slib::vec3 lightingDirection = {1, 1, 1.5};
 
         slib::vec3 normal{};
-        if (fragmentShader == FLAT) {
-            if (!renderable.normals.empty()) {
+        if (fragmentShader == FLAT) 
+        {
+            if (!renderable.normals.empty()) 
+            {
                 normal = smath::normalize((n1 + n2 + n3) / 3);
             }
-            else {
+            else 
+            {
                 // Dynamic face normal for flat shading if no normal data in obj
                 normal = smath::facenormal(t, renderable.vertices);
             }
@@ -349,8 +361,10 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
             std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
 
         // Edge finding for triangle rasterization
-        for (int x = xmin; x <= xmax; ++x) {
-            for (int y = ymin; y <= ymax; ++y) {
+        for (int x = xmin; x <= xmax; ++x) 
+        {
+            for (int y = ymin; y <= ymax; ++y) 
+            {
                 slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 1};
 
                 // Barycentric coords using an edge function
@@ -359,7 +373,8 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
                 float w2 = edgeFunctionArea(p1, p2, p); // signed area of the triangle v0v1p multiplied by 2
                 slib::vec3 coords{w0, w1, w2};
 
-                if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0) {
+                if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0) 
+                {
                     coords.x /= area;
                     coords.y /= area;
                     coords.z /= area;
@@ -406,10 +421,12 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
                         // TODO: Currently, all textures are clamped between 0-1. 
                         // Instead, this could be a texture option where "REPEAT" uses modulo, STRETCH clamps it, etc.
 
-                        if (textureFilter == NEIGHBOUR) {
+                        if (textureFilter == NEIGHBOUR) 
+                        {
                             texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
                         }
-                        else if (textureFilter == BILINEAR) {
+                        else if (textureFilter == BILINEAR) 
+                        {
                             texBilinear(renderable, lum, uvx, uvy, r, g, b);
                         }
 

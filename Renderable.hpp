@@ -21,9 +21,9 @@ struct Renderable
     slib::vec3 centroid{};
     bool ignoreLighting = false;
     Renderable(Mesh  _mesh, slib::vec3 _position, slib::vec3 _eulerAngles, slib::vec3 _scale,
-               slib::Color _col, std::vector<slib::vec3> _verticies, std::vector<slib::vec3> _normals)
+               slib::Color _col, std::vector<slib::vec3> _vertices, std::vector<slib::vec3> _normals)
         : mesh(std::move(_mesh)), position(_position), eulerAngles(_eulerAngles), scale(_scale), col(_col),
-          vertices(std::move(_verticies)), normals(std::move(_normals))
+          vertices(std::move(_vertices)), normals(std::move(_normals))
     {};
 
 };
