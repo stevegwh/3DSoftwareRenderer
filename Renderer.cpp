@@ -7,40 +7,28 @@
 #include <algorithm>
 #include "constants.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace soft3d
 {
 
 // Essentially the same as transformNormal but no translation, doesnt multiply by viewMatrix and homog coord is 0.
 void Renderer::transformNormal(slib::vec3 &n, const slib::vec3 &eulerAngles, const slib::vec3 &scale)
 {
-    const float xrad = eulerAngles.x * RAD;
-    const float yrad = eulerAngles.y * RAD;
-    const float zrad = eulerAngles.z * RAD;
-    const float axc = std::cos(xrad);
-    const float axs = std::sin(xrad);
-    const float ayc = std::cos(yrad);
-    const float ays = -std::sin(yrad);
-    const float azc = std::cos(zrad);
-    const float azs = -std::sin(zrad);
+    slib::mat rotationMatrix = smath::rotationMatrix(eulerAngles);
 
-    // Only rotation and scaling, no translation for normals
-    slib::mat transformMatrix({
-                                  {scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, 0},
-                                  {scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc),
-                                   scale.z * axs * ayc, 0},
-                                  {scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc),
-                                   scale.z * axc * ayc, 0},
-                                  {0, 0, 0, 1.0f} // Homogeneous coordinate
-                              });
+    slib::mat scaleMatrix({
+                              {scale.x, 0, 0, 0},
+                              {0, scale.y, 0, 0},
+                              {0, 0, scale.z, 0},
+                              {0, 0, 0, 1}
+                          });
 
-    // If you have non-uniform scaling, get the inverse transpose matrix
-    //slib::mat normalTransformMatrix = inverseTranspose(transformMatrix);
-
-    // Convert the normal to a homogeneous coordinate (vec4)
+    slib::mat transformMatrix = scaleMatrix * rotationMatrix;
+    
     slib::vec4 n4({n.x, n.y, n.z, 0}); // w is 0 for direction vectors
-
-    // Apply transformation
-    //auto transformedNormal = normalTransformMatrix * n4;
+    
     auto transformedNormal = transformMatrix * n4;
 
     n = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
@@ -49,32 +37,29 @@ void Renderer::transformNormal(slib::vec3 &n, const slib::vec3 &eulerAngles, con
 void Renderer::transformVertex(slib::vec3 &v, const slib::vec3 &eulerAngles, const slib::vec3 &translation,
                                const slib::vec3 &scale)
 {
-    const float xrad = eulerAngles.x * RAD;
-    const float yrad = eulerAngles.y * RAD;
-    const float zrad = eulerAngles.z * RAD;
-    const float axc = std::cos(xrad);
-    const float axs = std::sin(xrad);
-    const float ayc = std::cos(yrad);
-    const float ays = -std::sin(yrad);
-    const float azc = std::cos(zrad);
-    const float azs = -std::sin(zrad);
-    const float transx = translation.x;
-    const float transy = translation.y;
-    const float transz = translation.z;
 
-    slib::mat transformMatrix({
-                                  {scale.x * (ayc * azc), scale.y * (ayc * azs), -scale.z * ays, transx},
-                                  {scale.x * (axs * ays * azc - axc * azs), scale.y * (axs * ays * azs + axc * azc),
-                                   scale.z * axs * ayc, transy},
-                                  {scale.x * (axc * ays * azc + axs * azs), scale.y * (axc * ays * azs - axs * azc),
-                                   scale.z * axc * ayc, transz},
-                                  {0, 0, 0, 1.0f} // Homogeneous coordinate
-                              });
+    slib::mat rotationMatrix = smath::rotationMatrix(eulerAngles);
+    
+    slib::mat scaleMatrix({
+                              {scale.x, 0, 0, 0},
+                              {0, scale.y, 0, 0},
+                              {0, 0, scale.z, 0},
+                              {0, 0, 0, 1}
+                          });
+    
+    slib::mat translationMatrix({
+                                    {1, 0, 0, translation.x},
+                                    {0, 1, 0, translation.y},
+                                    {0, 0, 1, translation.z},
+                                    {0, 0, 0, 1}
+                                });
+    
+    slib::mat transformMatrix = scaleMatrix * rotationMatrix * translationMatrix;
 
     slib::vec4 v4({v.x, v.y, v.z, 1});
 
-    auto transformedVector = viewMatrix * transformMatrix * v4;
-
+    auto transformedVector =  viewMatrix * transformMatrix * v4;
+    
     v = {transformedVector.x, transformedVector.y, transformedVector.z};
 }
 

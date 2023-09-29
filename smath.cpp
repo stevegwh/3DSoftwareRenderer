@@ -184,4 +184,40 @@ void vertexRotate(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3
     v *= combinedRotationMatrix;
     v += origin;
 }
+
+slib::mat rotationMatrix(const slib::vec3& eulerAngles)
+{
+    const float xrad = eulerAngles.x * RAD;
+    const float yrad = eulerAngles.y * RAD;
+    const float zrad = eulerAngles.z * RAD;
+    const float axc = std::cos(xrad);
+    const float axs = std::sin(xrad);
+    const float ayc = std::cos(yrad);
+    const float ays = -std::sin(yrad);
+    const float azc = std::cos(zrad);
+    const float azs = -std::sin(zrad);
+
+    slib::mat rotateX({
+                          {1, 0, 0, 0},
+                          {0, axc, axs, 0},
+                          {0, -axs, axc, 0},
+                          {0, 0, 0, 1}
+                      });
+
+    slib::mat rotateY({
+                          {ayc, 0, -ays, 0},
+                          {0, 1, 0, 0},
+                          {ays, 0, ayc, 0},
+                          {0, 0, 0, 1}
+                      });
+
+    slib::mat rotateZ({
+                          {azc, azs, 0, 0},
+                          {-azs, azc, 0, 0},
+                          {0, 0, 1, 0},
+                          {0, 0, 0, 1}
+                      });
+
+    return rotateZ * rotateX * rotateY;
+}
 }

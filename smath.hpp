@@ -20,8 +20,10 @@ slib::vec3 axisRotate(const slib::vec3& v, const slib::vec3& u, float angle);
 //void sortVectorsByZ(std::vector<slib::tri>& triangles, const std::vector<slib::vec3>& points);
 slib::mat perspective(float  zFar, float zNear, float aspect, float fov);
 slib::mat view(const slib::vec3& eye, const slib::vec3& target, const slib::vec3& up);
+slib::mat rotationMatrix(const slib::vec3& eulerAngles);
 slib::mat fpsview( const slib::vec3& eye, float pitch, float yaw );
 void vertexRotate(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin);
+
 };
 
 
