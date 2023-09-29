@@ -12,77 +12,6 @@
 
 namespace soft3d
 {
-// Essentially the same as transformNormal but no translation, doesnt multiply by viewMatrix and homog coord is 0.
-void Renderer::transformNormal(slib::vec3 &n, const slib::vec3 &eulerAngles, const slib::vec3 &scale)
-{
-    slib::mat rotationMatrix = smath::rotationMatrix(eulerAngles);
-
-    slib::mat scaleMatrix({
-                              {scale.x, 0, 0, 0},
-                              {0, scale.y, 0, 0},
-                              {0, 0, scale.z, 0},
-                              {0, 0, 0, 1}
-                          });
-
-    slib::mat transformMatrix = scaleMatrix * rotationMatrix;
-    
-    slib::vec4 n4({n.x, n.y, n.z, 0}); // w is 0 for direction vectors
-    
-    auto transformedNormal = transformMatrix * n4;
-
-    n = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
-}
-
-void Renderer::transformVertex(slib::vec3 &v, const slib::vec3 &eulerAngles, const slib::vec3 &translation,
-                               const slib::vec3 &scale)
-{
-
-    slib::mat rotationMatrix = smath::rotationMatrix(eulerAngles);
-    
-    slib::mat scaleMatrix({
-                              {scale.x, 0, 0, 0},
-                              {0, scale.y, 0, 0},
-                              {0, 0, scale.z, 0},
-                              {0, 0, 0, 1}
-                          });
-    
-    slib::mat translationMatrix({
-                                    {1, 0, 0, translation.x},
-                                    {0, 1, 0, translation.y},
-                                    {0, 0, 1, translation.z},
-                                    {0, 0, 0, 1}
-                                });
-    
-    slib::mat transformMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-
-    slib::vec4 v4({v.x, v.y, v.z, 1});
-
-    auto transformedVector =  viewMatrix * transformMatrix * v4;
-    
-    v = {transformedVector.x, transformedVector.y, transformedVector.z};
-}
-
-inline void Renderer::transformRenderable(Renderable &renderable)
-{
-    bool hasNormalData = !renderable.mesh.normals.empty();
-    for (int i = 0; i < renderable.vertices.size(); i++) 
-    {
-        transformVertex(renderable.vertices[i], renderable.eulerAngles, renderable.position, renderable.scale);
-        if (!hasNormalData) continue;
-        transformNormal(renderable.normals[i], renderable.eulerAngles, renderable.scale);
-    }
-}
-
-inline void createProjectedSpace(const Renderable &renderable,
-                                 const slib::mat &perspectiveMat,
-                                 std::vector<slib::vec4> &projectedPoints)
-{
-    // Make projected space
-    for (const auto &v : renderable.vertices) 
-    {
-        projectedPoints.push_back(perspectiveMat * (slib::vec4) {v.x, v.y, v.z, 1});
-    }
-}
 
 inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
 {
@@ -105,18 +34,6 @@ inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vec
         screenPoints.push_back({x, y, v.z});
         //-----------------------------
     }
-}
-
-inline bool backfaceCulling(const slib::tri face, const std::vector<slib::vec4> &projectedPoints)
-{
-    auto v1 = projectedPoints[face.v1];
-    auto v2 = projectedPoints[face.v2];
-    auto v3 = projectedPoints[face.v3];
-
-    slib::vec3 a = slib::vec3({v2.x, v2.y, v2.z}) - slib::vec3({v1.x, v1.y, v1.z});
-    slib::vec3 b = slib::vec3({v3.x, v3.y, v3.z}) - slib::vec3({v1.x, v1.y, v1.z});
-
-    return (a.x * b.y - b.x * a.y) > 0;
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -174,6 +91,33 @@ inline void Renderer::updateViewMatrix()
     camera->UpdateDirectionVectors(viewMatrix);
 }
 
+inline void createProjectedSpace(const Renderable& renderable, const slib::mat& viewMatrix, const slib::mat& perspectiveMat,
+                                 std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
+{
+    bool hasNormalData = !renderable.mesh.normals.empty();
+    for (int i = 0; i < renderable.mesh.vertices.size(); i++)
+    {
+        slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
+        slib::mat rotationMatrix = smath::rotationMatrix(renderable.eulerAngles);
+        slib::mat translationMatrix = smath::translationMatrix(renderable.position);
+
+        // World Space Transform
+        slib::mat normalTransformMat = scaleMatrix * rotationMatrix; // Normal transforms do not need to be translated
+        slib::mat fullTransformMat = normalTransformMat * translationMatrix;
+        slib::vec4 v4({renderable.mesh.vertices[i].x, renderable.mesh.vertices[i].y, renderable.mesh.vertices[i].z, 1});
+        auto transformedVector =  viewMatrix * fullTransformMat * v4;
+
+        // Projection transform
+        projectedPoints.push_back(perspectiveMat * transformedVector);
+
+        // Transform normal data to world space
+        if (!hasNormalData) continue;
+        slib::vec4 n4({renderable.mesh.normals[i].x, renderable.mesh.normals[i].y, renderable.mesh.normals[i].z, 0});
+        auto transformedNormal = normalTransformMat * n4;
+        normals.push_back({transformedNormal.x, transformedNormal.y, transformedNormal.z});
+    }
+}
+
 void Renderer::Render()
 {
     // Clear zBuffer
@@ -182,39 +126,23 @@ void Renderer::Render()
     updateViewMatrix();
 
     for (auto &renderable : renderables) 
-    {
-        if (!renderable->mesh.normals.empty()) 
-        {
-            renderable->normals.clear();
-            renderable->normals = renderable->mesh.normals;
-        }
-        renderable->vertices.clear();
-        renderable->vertices = renderable->mesh.vertices;
-
-        // World space
-        transformRenderable(*renderable);
-        //-----------------------------
-
+    {        
+        std::vector<slib::vec3> normals;
+        normals.reserve(renderable->mesh.normals.size());
         std::vector<slib::vec4> projectedPoints;
+        projectedPoints.reserve(renderable->mesh.vertices.size());
         std::vector<slib::tri> processedFaces;
+        projectedPoints.reserve(renderable->mesh.faces.size());
         std::vector<slib::zvec2> screenPoints;
 
-        createProjectedSpace(*renderable, perspectiveMat, projectedPoints);
-
+        createProjectedSpace(*renderable, viewMatrix, perspectiveMat, projectedPoints, normals);
         // Culling and clipping
         for (const auto &f : renderable->mesh.faces) 
         {
             makeClipSpace(f, projectedPoints, processedFaces);
-            // Backface culling
-            //            if (backfaceCulling(f, projectedPoints)) {
-            //                // Clip space
-            //                if (!makeClipSpace(f, projectedPoints, processedFaces)) {
-            //                    //std::cout << "Culled." << std::endl;
-            //                }
-            //            }
         }
         createScreenSpace(projectedPoints, screenPoints);
-        rasterize(processedFaces, screenPoints, *renderable, projectedPoints);
+        rasterize(processedFaces, screenPoints, *renderable, projectedPoints, normals);
     }
 
     pushBuffer(renderer, surface);
@@ -308,10 +236,11 @@ inline void texBilinear(const Renderable &renderable, float lum, float uvx, floa
     b = std::max(0.0f, std::min(rgb[2] * lum, 255.0f));
 }
 
-inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
-                                const std::vector<slib::zvec2> &screenPoints,
-                                const Renderable &renderable,
-                                const std::vector<slib::vec4> &projectedPoints)
+inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
+                                const std::vector<slib::zvec2>& screenPoints,
+                                const Renderable& renderable,
+                                const std::vector<slib::vec4>& projectedPoints,
+                                const std::vector<slib::vec3>& normals)
 {
     // Rasterize
     for (const auto &t : processedFaces) 
@@ -328,23 +257,23 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
         const auto &tx3 = renderable.mesh.textureCoords[t.vt3];
 
         // Normals from model data (transformed)
-        const auto &n1 = renderable.normals[t.v1];
-        const auto &n2 = renderable.normals[t.v2];
-        const auto &n3 = renderable.normals[t.v3];
+        const auto &n1 = normals[t.v1];
+        const auto &n2 = normals[t.v2];
+        const auto &n3 = normals[t.v3];
 
         slib::vec3 lightingDirection = {1, 1, 1.5};
 
         slib::vec3 normal{};
         if (fragmentShader == FLAT) 
         {
-            if (!renderable.normals.empty()) 
+            if (!renderable.mesh.normals.empty()) 
             {
                 normal = smath::normalize((n1 + n2 + n3) / 3);
             }
             else 
             {
                 // Dynamic face normal for flat shading if no normal data in obj
-                normal = smath::facenormal(t, renderable.vertices);
+                normal = smath::facenormal(t, renderable.mesh.vertices);
             }
         }
 
@@ -404,9 +333,9 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
                         }
 
                         // Texturing
-                        auto at = (slib::vec3) {tx1.x, tx1.y, 1.0f} / viewW1;
-                        auto bt = (slib::vec3) {tx2.x, tx2.y, 1.0f} / viewW2;
-                        auto ct = (slib::vec3) {tx3.x, tx3.y, 1.0f} / viewW3;
+                        auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
+                        auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
+                        auto ct = slib::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
                         float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
                         // "coords" are the barycentric coordinates of the current pixel 
                         // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
@@ -445,7 +374,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
         //            }
     }
 }
-void Renderer::AddRenderable(Renderable &renderable)
+void Renderer::AddRenderable(Renderable& renderable)
 {
     renderables.push_back(&renderable);
 }
@@ -455,23 +384,13 @@ void Renderer::ClearRenderables()
     renderables.clear();
 }
 
-const slib::mat& Renderer::GetView() const
-{
-    return viewMatrix;
-}
-
-const slib::mat& Renderer::GetPerspective() const
-{
-    return perspectiveMat;
-}
-
 void Renderer::setShader(soft3d::FragmentShader shader)
 {
     if (shader == GOURAUD)
     {
         for (auto& renderable : renderables) 
         {
-            if (renderable->normals.empty())
+            if (renderable->mesh.normals.empty())
             {
                 std::cout << "Warning: renderable does not have vertex normals. Falling back to flat shading.";
                 fragmentShader = FLAT;

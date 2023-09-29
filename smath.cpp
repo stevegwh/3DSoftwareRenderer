@@ -220,4 +220,25 @@ slib::mat rotationMatrix(const slib::vec3& eulerAngles)
 
     return rotateZ * rotateX * rotateY;
 }
+
+slib::mat scaleMatrix(const slib::vec3& scale)
+{
+    return slib::mat({
+                          {scale.x, 0, 0, 0},
+                          {0, scale.y, 0, 0},
+                          {0, 0, scale.z, 0},
+                          {0, 0, 0, 1}
+                          });
+}
+
+slib::mat translationMatrix(const slib::vec3& translation)
+{
+    return slib::mat ({
+                            {1, 0, 0, translation.x},
+                            {0, 1, 0, translation.y},
+                            {0, 0, 1, translation.z},
+                            {0, 0, 0, 1}
+                            });
+}
+
 }

@@ -18,8 +18,7 @@ soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyrolevel.obj", texture);
     auto *renderable = new soft3d::Renderable(mesh, {0, 0, -10},
                                       {0, 250, 0}, {.01, .01, .01},
-                                      {200, 100, 200},
-                                      mesh.vertices, mesh.normals);
+                                      {200, 100, 200});
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 10, 20};
@@ -33,8 +32,7 @@ soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj", texture);
     auto *renderable = new soft3d::Renderable(mesh, {0, -2, -1},
                                               {0, -45, 0}, {1, 1, 1},
-                                              {200, 100, 200},
-                                              mesh.vertices, mesh.normals);
+                                              {200, 100, 200});
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 0, 10};

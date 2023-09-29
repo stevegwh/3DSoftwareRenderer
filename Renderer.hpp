@@ -36,21 +36,16 @@ class Renderer
     static constexpr float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
     static constexpr float fov = 90;
 
-    void rasterize(const std::vector<slib::tri> &processedFaces, const std::vector<slib::zvec2> &screenPoints,
-                   const Renderable &renderable, const std::vector<slib::vec4> &projectedPoints);
-    void transformRenderable(Renderable &renderable);
-    void transformVertex(slib::vec3 &v,
-                         const slib::vec3 &eulerAngles,
-                         const slib::vec3 &translation,
-                         const slib::vec3 &scale);
-    void transformNormal(slib::vec3 &n, const slib::vec3 &eulerAngles, const slib::vec3 &scale);
+    void rasterize(const std::vector<slib::tri>& processedFaces, const std::vector<slib::zvec2>& screenPoints,
+                   const Renderable& renderable, const std::vector<slib::vec4>& projectedPoints,
+                   const std::vector<slib::vec3>& normals);
     void updateViewMatrix();
     void clearBuffer();
     SDL_Renderer *renderer;
     slib::mat perspectiveMat;
     slib::mat viewMatrix;
     SDL_Surface *surface;
-    std::vector<Renderable *> renderables;
+    std::vector<Renderable*> renderables;
     std::array<float, screenSize> zBuffer{};
     FragmentShader fragmentShader = FLAT;
     TextureFilter textureFilter = NEIGHBOUR;
@@ -58,8 +53,8 @@ public:
     void setShader(FragmentShader shader);
     void setTextureFilter(TextureFilter filter);
     bool wireFrame = false;
-    soft3d::Camera *const camera;
-    explicit Renderer(SDL_Renderer *_renderer)
+    soft3d::Camera* const camera;
+    explicit Renderer(SDL_Renderer* _renderer)
         :
         renderer(_renderer), perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
         viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
@@ -79,8 +74,6 @@ public:
     void AddRenderable(Renderable &renderable);
     void ClearRenderables();
     void Render();
-    [[nodiscard]] const slib::mat &GetView() const;
-    [[nodiscard]] const slib::mat &GetPerspective() const;
 }
 ;
 }
