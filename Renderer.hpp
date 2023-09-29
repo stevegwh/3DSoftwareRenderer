@@ -48,7 +48,7 @@ public:
         renderer(_renderer), perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
         viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
         surface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0)),
-        camera(new soft3d::Camera({0, 100, 450}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
+        camera(new soft3d::Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
     {
         SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
     }

@@ -194,7 +194,8 @@ void Renderer::Render()
     updateViewMatrix();
 
     for (auto &renderable : renderables) {
-        if (!renderable->mesh.normals.empty()) {
+        if (!renderable->mesh.normals.empty()) 
+        {
             renderable->normals.clear();
             renderable->normals = renderable->mesh.normals;
         }
@@ -212,7 +213,8 @@ void Renderer::Render()
         createProjectedSpace(*renderable, perspectiveMat, projectedPoints);
 
         // Culling and clipping
-        for (const auto &f : renderable->mesh.faces) {
+        for (const auto &f : renderable->mesh.faces) 
+        {
             makeClipSpace(f, projectedPoints, processedFaces);
             // Backface culling
             //            if (backfaceCulling(f, projectedPoints)) {

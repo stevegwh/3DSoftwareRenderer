@@ -20,9 +20,25 @@ soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
                                       {0, 180, 0}, {.1, .1, .1},
                                       {200, 100, 200},
                                       mesh.vertices, mesh.normals,
-                                      soft3d::FLAT, soft3d::NEIGHBOUR);
+                                      soft3d::GOURAUD, soft3d::NEIGHBOUR);
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
+    sceneData.cameraStartPosition = {0, 100, 400};
+    return new soft3d::Scene(renderer, sceneData);
+}
+
+soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
+{
+    slib::texture texture = slib::DecodePng("resources/spyro.png");
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj", texture);
+    auto *renderable = new soft3d::Renderable(mesh, {0, 0, 10},
+                                              {0, 0, 0}, {1, 1, 1},
+                                              {200, 100, 200},
+                                              mesh.vertices, mesh.normals,
+                                              soft3d::GOURAUD, soft3d::NEIGHBOUR);
+    soft3d::SceneData sceneData;
+    sceneData.renderables.push_back(renderable);
+    sceneData.cameraStartPosition = {0, 0, 200};
     return new soft3d::Scene(renderer, sceneData);
 }
 
@@ -61,7 +77,7 @@ namespace soft3d
         menuOpen = false;
 
         // TODO: Have multiple scenes and change between them with the GUI.
-        Scene* spyroScene = spyroSceneInit(renderer);
+        Scene* spyroScene = spyroModelSceneInit(renderer);
         scenes.push_back(spyroScene);
         ChangeScene(spyroScene);
     }
