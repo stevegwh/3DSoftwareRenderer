@@ -23,15 +23,18 @@ class Application
     Clock* clock{};
     SDL_bool loop;
     SDL_Event event{};
-    bool menuOpen;
+    bool menuMouseEnabled;
+    void changeScene(int newScene);
+    void quit();
     void init();
     void initSDL();
     void draw();
     void update();
     void cleanup();
+    void disableMouse();
 public:
     void Run();
     Application();
-    void ChangeScene(int newScene);
+
 };
 }

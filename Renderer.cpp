@@ -12,7 +12,6 @@
 
 namespace soft3d
 {
-
 // Essentially the same as transformNormal but no translation, doesnt multiply by viewMatrix and homog coord is 0.
 void Renderer::transformNormal(slib::vec3 &n, const slib::vec3 &eulerAngles, const slib::vec3 &scale)
 {
@@ -327,7 +326,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
         slib::vec3 lightingDirection = {1, 1, 1.5};
 
         slib::vec3 normal{};
-        if (renderable.fragmentShader == FLAT) {
+        if (fragmentShader == FLAT) {
             if (!renderable.normals.empty()) {
                 normal = smath::normalize((n1 + n2 + n3) / 3);
             }
@@ -377,13 +376,13 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
                         // Lighting
                         float lum = 1;
                         if (!renderable.ignoreLighting) {
-                            if (renderable.fragmentShader == GOURAUD) {
+                            if (fragmentShader == GOURAUD) {
                                 // Gouraud shading
                                 auto interpolated_normal = n1 * coords.x + n2 * coords.y + n3 * coords.z;
                                 interpolated_normal = smath::normalize(interpolated_normal);
                                 lum = smath::dot(interpolated_normal, lightingDirection);
                             }
-                            else if (renderable.fragmentShader == FLAT) {
+                            else if (fragmentShader == FLAT) {
                                 // Flat shading
                                 lum = smath::dot(normal, lightingDirection);
                             }
@@ -407,10 +406,10 @@ inline void Renderer::rasterize(const std::vector<slib::tri> &processedFaces,
                         // TODO: Currently, all textures are clamped between 0-1. 
                         // Instead, this could be a texture option where "REPEAT" uses modulo, STRETCH clamps it, etc.
 
-                        if (renderable.textureFilter == NEIGHBOUR) {
+                        if (textureFilter == NEIGHBOUR) {
                             texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
                         }
-                        else if (renderable.textureFilter == BILINEAR) {
+                        else if (textureFilter == BILINEAR) {
                             texBilinear(renderable, lum, uvx, uvy, r, g, b);
                         }
 
@@ -439,13 +438,35 @@ void Renderer::ClearRenderables()
     renderables.clear();
 }
 
-const slib::mat &Renderer::GetView() const
+const slib::mat& Renderer::GetView() const
 {
     return viewMatrix;
 }
 
-const slib::mat &Renderer::GetPerspective() const
+const slib::mat& Renderer::GetPerspective() const
 {
     return perspectiveMat;
+}
+
+void Renderer::setShader(soft3d::FragmentShader shader)
+{
+    if (shader == GOURAUD)
+    {
+        for (auto& renderable : renderables) 
+        {
+            if (renderable->normals.empty())
+            {
+                std::cout << "Warning: renderable does not have vertex normals. Falling back to flat shading.";
+                fragmentShader = FLAT;
+                return;
+            }
+        }
+    }
+    fragmentShader = shader;
+}
+
+void Renderer::setTextureFilter(soft3d::TextureFilter filter)
+{
+    textureFilter = filter;
 }
 }

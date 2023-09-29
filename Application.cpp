@@ -19,8 +19,7 @@ soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
     auto *renderable = new soft3d::Renderable(mesh, {0, 0, -10},
                                       {0, 250, 0}, {.01, .01, .01},
                                       {200, 100, 200},
-                                      mesh.vertices, mesh.normals,
-                                      soft3d::GOURAUD, soft3d::NEIGHBOUR);
+                                      mesh.vertices, mesh.normals);
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 10, 20};
@@ -35,8 +34,7 @@ soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
     auto *renderable = new soft3d::Renderable(mesh, {0, -2, -1},
                                               {0, -45, 0}, {1, 1, 1},
                                               {200, 100, 200},
-                                              mesh.vertices, mesh.normals,
-                                              soft3d::GOURAUD, soft3d::NEIGHBOUR);
+                                              mesh.vertices, mesh.normals);
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 0, 10};
@@ -76,34 +74,64 @@ namespace soft3d
         initSDL();
         renderer = new soft3d::Renderer(sdlRenderer);
         gui = new soft3d::GUI(sdlWindow, sdlRenderer);
-        menuOpen = false;
+        menuMouseEnabled = false;
         
         Scene* scene1 = spyroSceneInit(renderer);
         Scene* scene2 = spyroModelSceneInit(renderer);
         scenes.push_back(scene1);
         scenes.push_back(scene2);
-        ChangeScene(0);
+        changeScene(0);
 
-        const std::function<void()> f1 = [p = this] { p->ChangeScene(0); };
+        const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(new Observer(f1));
-        const std::function<void()> f2 = [p = this] { p->ChangeScene(1); };
+        const std::function<void()> f2 = [p = this] { p->changeScene(1); };
         gui->scene2ButtonDown->Subscribe(new Observer(f2));
-        const std::function<void()> f3 = [p = this] { p->ChangeScene(1); };
+        const std::function<void()> f3 = [p = this] { p->changeScene(1); };
         gui->scene3ButtonDown->Subscribe(new Observer(f3));
+        const std::function<void()> f4 = [p = this] { p->quit(); };
+        gui->quitButtonDown->Subscribe(new Observer(f4));
+        const std::function<void()> f5 = [p = renderer] { p->setShader(soft3d::FLAT); };
+        const std::function<void()> m1 = [p = this] { p->disableMouse(); };
+        gui->flatShaderButtonDown->Subscribe(new Observer(f5));
+        gui->flatShaderButtonDown->Subscribe(new Observer(m1));
+        const std::function<void()> f6 = [p = renderer] { p->setShader(soft3d::GOURAUD); };
+        const std::function<void()> m2 = [p = this] { p->disableMouse(); };
+        gui->gouraudShaderButtonDown->Subscribe(new Observer(f6));
+        gui->gouraudShaderButtonDown->Subscribe(new Observer(m2));
+        const std::function<void()> f7 = [p = renderer] { p->setTextureFilter(soft3d::NEIGHBOUR); };
+        const std::function<void()> m3 = [p = this] { p->disableMouse(); };
+        gui->neighbourButtonDown->Subscribe(new Observer(f7));
+        gui->neighbourButtonDown->Subscribe(new Observer(m3));
+        const std::function<void()> f8 = [p = renderer] { p->setTextureFilter(soft3d::BILINEAR); };
+        const std::function<void()> m4 = [p = this] { p->disableMouse(); };
+        gui->bilinearButtonDown->Subscribe(new Observer(f8));
+        gui->bilinearButtonDown->Subscribe(new Observer(m4));
+        
+        // TODO: Make frag shader/texture filtering a render property, not per renderable.
+        // Allow user to select shading technique and texture filtering.
     }
     
-    void Application::ChangeScene(int newScene)
+    void Application::changeScene(int newScene)
     {
         scenes.at(newScene)->LoadScene();
+        disableMouse();
+    }
+    
+    void Application::disableMouse()
+    {
+        menuMouseEnabled = false;
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+    }
+    
+    void Application::quit()
+    {
+        loop = SDL_FALSE;
     }
     
     void Application::draw()
     {
         renderer->Render();
-        if (menuOpen) 
-        {
-            gui->Draw();
-        }
+        gui->Draw();
         renderer->RenderBuffer();
     }
     
@@ -115,7 +143,7 @@ namespace soft3d
         
         while (SDL_PollEvent(&event)) 
         {
-            if (menuOpen) 
+            if (menuMouseEnabled) 
             {
                 gui->Update(&event);
             }
@@ -129,7 +157,7 @@ namespace soft3d
             }
             else if (event.type == SDL_MOUSEMOTION) 
             {
-                if (!menuOpen) 
+                if (!menuMouseEnabled) 
                 {
                     SDL_WarpMouseInWindow(sdlWindow, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
                 }
@@ -138,15 +166,9 @@ namespace soft3d
             {
                 switch (event.key.keysym.sym) 
                 {
-                case SDLK_RIGHT:
-                    ChangeScene(1);
-                    break;
                 case SDLK_ESCAPE:
-                    loop = SDL_FALSE;
-                    break;
-                case SDLK_F1:
-                    menuOpen = !menuOpen;
-                    if (!menuOpen) {
+                    menuMouseEnabled = !menuMouseEnabled;
+                    if (!menuMouseEnabled) {
                         SDL_SetRelativeMouseMode(SDL_TRUE);
                     }
                     else 

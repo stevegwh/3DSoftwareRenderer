@@ -16,6 +16,18 @@
 
 namespace soft3d
 {
+enum FragmentShader
+{
+    FLAT,
+    GOURAUD,
+    PHONG
+};
+
+enum TextureFilter
+{
+    NEIGHBOUR,
+    BILINEAR
+};
 class Renderer
 {
     static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
@@ -40,7 +52,11 @@ class Renderer
     SDL_Surface *surface;
     std::vector<Renderable *> renderables;
     std::array<float, screenSize> zBuffer{};
+    FragmentShader fragmentShader = FLAT;
+    TextureFilter textureFilter = NEIGHBOUR;
 public:
+    void setShader(FragmentShader shader);
+    void setTextureFilter(TextureFilter filter);
     bool wireFrame = false;
     soft3d::Camera *const camera;
     explicit Renderer(SDL_Renderer *_renderer)

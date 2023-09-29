@@ -26,6 +26,11 @@ namespace soft3d
         soft3d::Event* const scene1ButtonDown;
         soft3d::Event* const scene2ButtonDown;
         soft3d::Event* const scene3ButtonDown;
+        soft3d::Event* const quitButtonDown;
+        soft3d::Event* const flatShaderButtonDown;
+        soft3d::Event* const gouraudShaderButtonDown;
+        soft3d::Event* const bilinearButtonDown;
+        soft3d::Event* const neighbourButtonDown;
         int fpsCounter = 0;
     };
 }
