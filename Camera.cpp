@@ -12,13 +12,13 @@ namespace soft3d
         }
         else if (event->type == SDL_KEYDOWN) {
             switch (event->key.keysym.sym) {
-            case SDLK_w:pos -= forward * 5.0f;
+            case SDLK_w:pos -= forward * 1.0f;
                 break;
-            case SDLK_s:pos += forward * 5.0f;
+            case SDLK_s:pos += forward * 1.0f;
                 break;
-            case SDLK_a:pos -= right * 5.0f;
+            case SDLK_a:pos -= right * 1.0f;
                 break;
-            case SDLK_d:pos += right * 5.0f;
+            case SDLK_d:pos += right * 1.0f;
                 break;
             }
         }

@@ -47,7 +47,10 @@ add_executable(${PROJECT_NAME} main.cpp
         Camera.hpp
         Scene.cpp
         Scene.hpp
-        SceneData.hpp)
+        SceneData.hpp
+        Event.cpp
+        Event.hpp
+        Observer.hpp)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} glm::glm)
 
 set (source "${CMAKE_SOURCE_DIR}/resources")

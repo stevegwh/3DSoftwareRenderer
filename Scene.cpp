@@ -17,6 +17,7 @@ Scene::~Scene()
 void Scene::LoadScene()
 {
     renderer->camera->pos = data.cameraStartPosition;
+    renderer->camera->rotation = data.cameraStartRotation;
     renderer->ClearRenderables();
     for (const auto& renderable : data.renderables)
     {

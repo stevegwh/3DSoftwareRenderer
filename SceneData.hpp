@@ -12,6 +12,7 @@ namespace soft3d
 struct SceneData
 {
     slib::vec3 cameraStartPosition{};
+    slib::vec3 cameraStartRotation{};
     std::vector<Renderable*> renderables;
 };
 }

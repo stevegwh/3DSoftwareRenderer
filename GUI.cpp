@@ -4,6 +4,7 @@
 
 #include "GUI.hpp"
 #include "constants.h"
+#include <string>
 
 namespace soft3d
 {
@@ -27,8 +28,20 @@ namespace soft3d
         ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
-        ImGui::Begin("Demo window");
-        ImGui::Button("Hello!");
+        ImGui::Begin(std::to_string(fpsCounter).c_str());
+        if (ImGui::Button("Scene 1"))
+        {
+            scene1ButtonDown->InvokeAllEvents();
+        }
+        if (ImGui::Button("Scene 2"))
+        {
+            scene2ButtonDown->InvokeAllEvents();
+        }
+        if (ImGui::Button("Scene 3"))
+        {
+            scene3ButtonDown->InvokeAllEvents();
+        }
+        
         ImGui::End();
         ImGui::Render();
         ImGuiIO& io = ImGui::GetIO();
@@ -47,8 +60,16 @@ namespace soft3d
     }
     
     GUI::GUI(SDL_Window* _sdlWindow, SDL_Renderer* _sdlRenderer)
-    : sdlRenderer(_sdlRenderer), sdlWindow(_sdlWindow)
+    : sdlRenderer(_sdlRenderer), sdlWindow(_sdlWindow),
+    scene1ButtonDown(new Event()), scene2ButtonDown(new Event()), scene3ButtonDown(new Event())
     {
         init();
+    }
+    
+    GUI::~GUI()
+    {
+        delete scene1ButtonDown;
+        delete scene2ButtonDown;
+        delete scene3ButtonDown;
     }
 }

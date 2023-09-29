@@ -32,6 +32,6 @@ class Application
 public:
     void Run();
     Application();
-    static void ChangeScene(Scene* newScene);
+    void ChangeScene(int newScene);
 };
 }

@@ -24,6 +24,7 @@ soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 10, 20};
+    sceneData.cameraStartRotation = { 0, 0, 0 };
     return new soft3d::Scene(renderer, sceneData);
 }
 
@@ -39,6 +40,7 @@ soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 0, 10};
+    sceneData.cameraStartRotation = { 0, 0, 0 };
     return new soft3d::Scene(renderer, sceneData);
 }
 
@@ -75,16 +77,24 @@ namespace soft3d
         renderer = new soft3d::Renderer(sdlRenderer);
         gui = new soft3d::GUI(sdlWindow, sdlRenderer);
         menuOpen = false;
+        
+        Scene* scene1 = spyroSceneInit(renderer);
+        Scene* scene2 = spyroModelSceneInit(renderer);
+        scenes.push_back(scene1);
+        scenes.push_back(scene2);
+        ChangeScene(0);
 
-        // TODO: Have multiple scenes and change between them with the GUI.
-        Scene* spyroScene = spyroSceneInit(renderer);
-        scenes.push_back(spyroScene);
-        ChangeScene(spyroScene);
+        const std::function<void()> f1 = [p = this] { p->ChangeScene(0); };
+        gui->scene1ButtonDown->Subscribe(new Observer(f1));
+        const std::function<void()> f2 = [p = this] { p->ChangeScene(1); };
+        gui->scene2ButtonDown->Subscribe(new Observer(f2));
+        const std::function<void()> f3 = [p = this] { p->ChangeScene(1); };
+        gui->scene3ButtonDown->Subscribe(new Observer(f3));
     }
     
-    void Application::ChangeScene(Scene* newScene)
+    void Application::ChangeScene(int newScene)
     {
-        newScene->LoadScene();
+        scenes.at(newScene)->LoadScene();
     }
     
     void Application::draw()
@@ -101,7 +111,7 @@ namespace soft3d
     {
         clock->tick();
         fpsCounter->Update();
-        std::cout << fpsCounter->fps_current << std::endl;
+        gui->fpsCounter = fpsCounter->fps_current;
         
         while (SDL_PollEvent(&event)) 
         {
@@ -128,10 +138,13 @@ namespace soft3d
             {
                 switch (event.key.keysym.sym) 
                 {
+                case SDLK_RIGHT:
+                    ChangeScene(1);
+                    break;
                 case SDLK_ESCAPE:
                     loop = SDL_FALSE;
                     break;
-                case SDLK_BACKSLASH:
+                case SDLK_F1:
                     menuOpen = !menuOpen;
                     if (!menuOpen) {
                         SDL_SetRelativeMouseMode(SDL_TRUE);
