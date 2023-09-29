@@ -9,27 +9,27 @@
 
 bool compareTrianglesByDepth(const slib::tri& t1, const slib::tri& t2, const std::vector<slib::vec3>& points)
 {
-    auto c1 = smath::getCentroid({points[t1.v1], points[t1.v2], points[t1.v3]});
-    auto c2 = smath::getCentroid({points[t2.v1], points[t2.v2], points[t2.v3]});
-    return smath::getVectorDistance(c1) > smath::getVectorDistance(c2);
+    auto c1 = smath::centroid({points[t1.v1], points[t1.v2], points[t1.v3]});
+    auto c2 = smath::centroid({points[t2.v1], points[t2.v2], points[t2.v3]});
+    return smath::distance(c1) > smath::distance(c2);
 }
 
 namespace smath
 {
-    float getVectorDistance(const slib::vec3& vec)
+    float distance(const slib::vec3& vec)
     {
         return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
     }
     
-    slib::vec3 getCentroid(const slib::tri& t, const std::vector<slib::vec3>& points)
+    slib::vec3 centroid(const slib::tri& t, const std::vector<slib::vec3>& points)
     {
         auto t1 = points[t.v1];
         auto t2 = points[t.v2];
         auto t3 = points[t.v3];
-        return smath::getCentroid({t1, t2, t3 });
+        return smath::centroid({t1, t2, t3});
     }
     
-    slib::vec3 getCentroid(const std::vector<slib::vec3>& points)
+    slib::vec3 centroid(const std::vector<slib::vec3>& points)
     {
         slib::vec3 result({0, 0, 0});
         for (const auto& v: points) result += v;
@@ -38,7 +38,7 @@ namespace smath
     
     slib::vec3 normalize(slib::vec3 vec)
     {
-        return vec / getVectorDistance(vec);
+        return vec / distance(vec);
     }
     
     /*
@@ -161,7 +161,7 @@ slib::mat fpsview( const slib::vec3& eye, float pitch, float yaw )
     return viewMatrix;
 }
 
-void rotateVertex(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin)
+void vertexRotate(slib::vec3& v, const slib::vec3& eulerAngles, const slib::vec3& origin)
 {
     v -= origin;
     const float xrad = eulerAngles.x * RAD;

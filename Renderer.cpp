@@ -220,7 +220,6 @@ void Renderer::Render()
     }
     
     pushBuffer(renderer, surface);
-    //RenderBuffer();
 }
 
 inline float edgeFunctionArea(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 &c)

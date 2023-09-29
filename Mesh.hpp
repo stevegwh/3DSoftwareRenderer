@@ -18,7 +18,7 @@ struct Mesh
     Mesh(const std::vector<slib::vec3>& _vertices, const std::vector<slib::tri>& _faces,
          const std::vector<slib::vec2>& _textureCoords, const std::vector<slib::vec3>& _normals, slib::texture  _texture) :
         vertices(_vertices), faces(_faces), textureCoords(_textureCoords), normals(_normals),
-        texture(std::move(_texture)), centroid(smath::getCentroid(vertices))
+        texture(std::move(_texture)), centroid(smath::centroid(vertices))
     {
     }
 };

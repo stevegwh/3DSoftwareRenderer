@@ -45,8 +45,8 @@ int main()
     ImGui::StyleColorsDark();
     ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer2_Init(renderer);
-    bool show_demo_window = true;
-    bool show_another_window = false;
+    io.DisplayFramebufferScale.x = SCREEN_WIDTH;
+    io.DisplayFramebufferScale.y = SCREEN_HEIGHT/10;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     bool menuOpen = false;
     
@@ -120,8 +120,9 @@ int main()
             ImGui_ImplSDLRenderer2_NewFrame();
             ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
-            if (show_demo_window)
-                ImGui::ShowDemoWindow(&show_demo_window);
+            ImGui::Begin("Demo window");
+            ImGui::Button("Hello!");
+            ImGui::End();
             ImGui::Render();
             SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
             SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
