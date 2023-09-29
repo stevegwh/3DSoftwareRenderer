@@ -7,6 +7,8 @@
 #include "slib.h"
 #include "smath.hpp"
 
+namespace soft3d
+{
 struct Mesh
 {
     const std::vector<slib::vec3> vertices;
@@ -22,3 +24,5 @@ struct Mesh
     {
     }
 };
+}
+

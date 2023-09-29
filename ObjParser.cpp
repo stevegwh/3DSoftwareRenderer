@@ -98,7 +98,7 @@ slib::tri getFace(const std::string& line)
 }
 
 
-Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
+soft3d::Mesh ObjParser::ParseObj(const char* path, const slib::texture& texture)
 {
     std::ifstream obj(path);
     if (!obj.is_open())
@@ -170,11 +170,6 @@ Mesh* ObjParser::ParseObj(const char *path, const slib::texture& texture)
         }
     }
     
-    
-    
-    Mesh* mesh = new Mesh(verticies, faces, textureCoords, vertexNormals, texture);
-    
-    //SDL_free(obj);
     obj.close();
-    return mesh;
+    return {verticies, faces, textureCoords, vertexNormals, texture};
 }

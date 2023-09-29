@@ -6,15 +6,32 @@
 
 
 #include "Renderer.hpp"
+#include "utils.hpp"
+#include "GUI.hpp"
+#include "Scene.hpp"
+
+namespace soft3d
+{
 class Application
 {
-    Renderer* renderer{};
+    soft3d::GUI* gui;
+    soft3d::Renderer* renderer{};
+    std::vector<soft3d::Scene*> scenes;
+    SDL_Window* sdlWindow{};
+    SDL_Renderer* sdlRenderer{};
+    FPSCounter* fpsCounter{};
+    Clock* clock{};
+    SDL_bool loop;
+    SDL_Event event{};
+    bool menuOpen;
     void init();
+    void initSDL();
     void draw();
     void update();
     void cleanup();
 public:
     void Run();
     Application();
-    ~Application();
+    static void ChangeScene(Scene* newScene);
 };
+}

@@ -13,5 +13,5 @@ class ObjParser
 {
     ObjParser() = default;
 public:
-    static Mesh* ParseObj(const char* path, const slib::texture& texture);
+    static soft3d::Mesh ParseObj(const char* path, const slib::texture& texture);
 };

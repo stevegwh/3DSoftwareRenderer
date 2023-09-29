@@ -7,6 +7,8 @@
 #include <utility>
 #include "Mesh.hpp"
 
+namespace soft3d
+{
 enum FragmentShader
 {
     FLAT,
@@ -19,10 +21,9 @@ enum TextureFilter
     NEIGHBOUR,
     BILINEAR
 };
-
 struct Renderable
 {
-    Mesh& mesh;
+    const Mesh mesh;
     slib::vec3 position;
     slib::vec3 eulerAngles;
     slib::vec3 scale;
@@ -33,18 +34,18 @@ struct Renderable
     TextureFilter textureFilter;
     slib::vec3 centroid{};
     bool ignoreLighting = false;
-    Renderable(Mesh& _mesh, slib::vec3 _position, slib::vec3 _eulerAngles, slib::vec3 _scale,
+    Renderable(Mesh  _mesh, slib::vec3 _position, slib::vec3 _eulerAngles, slib::vec3 _scale,
                slib::Color _col, std::vector<slib::vec3> _verticies, std::vector<slib::vec3> _normals,
                FragmentShader _fragmentShader, TextureFilter _textureFilter)
-    : mesh(_mesh), position(_position), eulerAngles(_eulerAngles), scale(_scale), col(_col),
-      vertices(std::move(_verticies)), normals(std::move(_normals)),
-      fragmentShader(_fragmentShader), textureFilter(_textureFilter)
+        : mesh(std::move(_mesh)), position(_position), eulerAngles(_eulerAngles), scale(_scale), col(_col),
+          vertices(std::move(_verticies)), normals(std::move(_normals)),
+          fragmentShader(_fragmentShader), textureFilter(_textureFilter)
     {
-        if (normals.empty() && fragmentShader != FLAT)
-        {
+        if (normals.empty() && fragmentShader != FLAT) {
             std::cout << "No normal data found. Falling back to flat-shading." << std::endl;
             fragmentShader = FLAT;
         }
     };
 
 };
+}

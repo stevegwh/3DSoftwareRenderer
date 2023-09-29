@@ -40,7 +40,14 @@ add_executable(${PROJECT_NAME} main.cpp
         imgui/backends/imgui_impl_sdl2.h
         imgui/imgui_demo.cpp
         Application.cpp
-        Application.hpp)
+        Application.hpp
+        GUI.cpp
+        GUI.hpp
+        Camera.cpp
+        Camera.hpp
+        Scene.cpp
+        Scene.hpp
+        SceneData.hpp)
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} glm::glm)
 
 set (source "${CMAKE_SOURCE_DIR}/resources")
