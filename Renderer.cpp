@@ -332,31 +332,41 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                             }
                         }
 
-                        // Texturing
-                        auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
-                        auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
-                        auto ct = slib::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
-                        float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
-                        // "coords" are the barycentric coordinates of the current pixel 
-                        // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
-                        float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x) / wt;
-                        float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y) / wt;
-
-                        // Flip Y texture coordinate to account for NDC vs screen difference.
-                        uvy = 1 - uvy;
-
                         int r = 1, g = 1, b = 1;
 
-                        // TODO: Currently, all textures are clamped between 0-1. 
-                        // Instead, this could be a texture option where "REPEAT" uses modulo, STRETCH clamps it, etc.
+                        // Texturing
+                        if (!renderable.mesh.texture.data.empty())
+                        {
+                            auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
+                            auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
+                            auto ct = slib::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
+                            float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
+                            // "coords" are the barycentric coordinates of the current pixel 
+                            // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
+                            float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x) / wt;
+                            float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y) / wt;
 
-                        if (textureFilter == NEIGHBOUR) 
-                        {
-                            texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
+                            // Flip Y texture coordinate to account for NDC vs screen difference.
+                            uvy = 1 - uvy;
+
+                            // TODO: Currently, all textures are clamped between 0-1. 
+                            // Instead, this could be a texture option where "REPEAT" uses modulo, STRETCH clamps it, etc.
+
+                            if (textureFilter == NEIGHBOUR)
+                            {
+                                texNearestNeighbour(renderable, lum, uvx, uvy, r, g, b);
+                            }
+                            else if (textureFilter == BILINEAR)
+                            {
+                                texBilinear(renderable, lum, uvx, uvy, r, g, b);
+                            }
                         }
-                        else if (textureFilter == BILINEAR) 
+                        else
                         {
-                            texBilinear(renderable, lum, uvx, uvy, r, g, b);
+                            slib::Color color = renderable.col;
+                            r = color.r;
+                            g = color.g;
+                            b = color.b;
                         }
 
                         bufferPixels(surface, x, y, r, g, b);

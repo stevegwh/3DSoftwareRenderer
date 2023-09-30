@@ -40,6 +40,20 @@ soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
     return new soft3d::Scene(renderer, sceneData);
 }
 
+soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
+{
+    slib::texture texture = slib::DecodePng("resources/viking_room.png");
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/viking_room.obj", texture);
+    auto *renderable = new soft3d::Renderable(mesh, {0, -1, -1},
+                                              {0, -135, 0}, {2, 2, 2},
+                                              {200, 100, 200});
+    soft3d::SceneData sceneData;
+    sceneData.renderables.push_back(renderable);
+    sceneData.cameraStartPosition = {0, 0, 6};
+    sceneData.cameraStartRotation = { 0, 0, 0 };
+    return new soft3d::Scene(renderer, sceneData);
+}
+
 namespace soft3d
 {
     inline void Application::initSDL()
@@ -51,7 +65,8 @@ namespace soft3d
             exit(1);
         }
     
-        sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
+        // Force SDL to use the CPU.
+        sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_SOFTWARE);
         if (sdlRenderer == nullptr) 
         {
             std::cout << "Could not initialise SDL renderer. Exiting..." << std::endl;
@@ -69,15 +84,17 @@ namespace soft3d
     {
         Scene* scene1 = spyroSceneInit(renderer);
         Scene* scene2 = spyroModelSceneInit(renderer);
+        Scene* scene3 = vikingRoomSceneInit(renderer);
         scenes.push_back(scene1);
         scenes.push_back(scene2);
-        changeScene(0);
+        scenes.push_back(scene3);
+        changeScene(2);
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(new Observer(f1));
         const std::function<void()> f2 = [p = this] { p->changeScene(1); };
         gui->scene2ButtonDown->Subscribe(new Observer(f2));
-        const std::function<void()> f3 = [p = this] { p->changeScene(1); };
+        const std::function<void()> f3 = [p = this] { p->changeScene(2); };
         gui->scene3ButtonDown->Subscribe(new Observer(f3));
         const std::function<void()> f4 = [p = this] { p->quit(); };
         gui->quitButtonDown->Subscribe(new Observer(f4));
