@@ -1,5 +1,5 @@
 #include "slib.hpp"
-#include "lodepng.h"
+#include "vendor/lodepng.h"
 #include "smath.hpp"
 
 namespace slib

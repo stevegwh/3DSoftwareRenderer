@@ -11,7 +11,9 @@
 #include "utils.hpp"
 #include "Renderer.hpp"
 #include "Renderable.hpp"
-#include <omp.h>
+#ifndef __EMSCRIPTEN__
+    #include <omp.h>
+#endif
 
 soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
 {
@@ -89,7 +91,7 @@ namespace soft3d
         scenes.push_back(scene1);
         scenes.push_back(scene2);
         scenes.push_back(scene3);
-        changeScene(2);
+        changeScene(1);
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(new Observer(f1));
@@ -119,7 +121,9 @@ namespace soft3d
     
     void Application::init()
     {
+#ifndef __EMSCRIPTEN__
         omp_set_num_threads(omp_get_max_threads());
+#endif
         fpsCounter = new FPSCounter;
         clock = new Clock;
         initSDL();
