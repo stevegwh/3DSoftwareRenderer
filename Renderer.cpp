@@ -7,17 +7,16 @@
 #include <algorithm>
 #include "constants.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 namespace soft3d
 {
 
 inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
 {
     // Convert to screen
-    for (auto &v : projectedPoints) 
+#pragma omp parallel for
+    for (int i = 0; i < projectedPoints.size(); ++i) 
     {
+        auto& v = projectedPoints[i];
         // NDC Space
         if (v.w != 0) 
         {
@@ -31,9 +30,10 @@ inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vec
         // Screen space
         const auto x = static_cast<float>(SCREEN_WIDTH / 2 + v.x * SCREEN_WIDTH / 2);
         const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - v.y * SCREEN_HEIGHT / 2);
-        screenPoints.push_back({x, y, v.z});
+        screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
+#pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -68,7 +68,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) surface->pixels;
+#pragma omp parallel for
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
+#pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -95,6 +97,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
                                  std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
+#pragma omp parallel for
     for (int i = 0; i < renderable.mesh.vertices.size(); i++)
     {
         slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
@@ -108,33 +111,32 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
         auto transformedVector =  viewMatrix * fullTransformMat * v4;
 
         // Projection transform
-        projectedPoints.push_back(perspectiveMat * transformedVector);
+        projectedPoints[i] = perspectiveMat * transformedVector;
 
         // Transform normal data to world space
         if (!hasNormalData) continue;
         slib::vec4 n4({renderable.mesh.normals[i].x, renderable.mesh.normals[i].y, renderable.mesh.normals[i].z, 0});
         auto transformedNormal = normalTransformMat * n4;
-        normals.push_back({transformedNormal.x, transformedNormal.y, transformedNormal.z});
+        normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
     }
+#pragma omp barrier
 }
 
 void Renderer::Render()
 {
     // Clear zBuffer
     std::fill_n(zBuffer.begin(), screenSize, 0);
-
     updateViewMatrix();
-
     for (auto &renderable : renderables) 
     {        
         std::vector<slib::vec3> normals;
-        normals.reserve(renderable->mesh.normals.size());
+        normals.resize(renderable->mesh.normals.size());
         std::vector<slib::vec4> projectedPoints;
-        projectedPoints.reserve(renderable->mesh.vertices.size());
+        projectedPoints.resize(renderable->mesh.vertices.size());
         std::vector<slib::tri> processedFaces;
-        projectedPoints.reserve(renderable->mesh.faces.size());
+        processedFaces.reserve(renderable->mesh.faces.size());
         std::vector<slib::zvec2> screenPoints;
-
+        screenPoints.resize(renderable->mesh.vertices.size());
         createProjectedSpace(*renderable, viewMatrix, perspectiveMat, projectedPoints, normals);
         // Culling and clipping
         for (const auto &f : renderable->mesh.faces) 
@@ -243,6 +245,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                                 const std::vector<slib::vec3>& normals)
 {
     // Rasterize
+#pragma omp parallel for
     for (const auto &t : processedFaces) 
     {
         const auto &p1 = screenPoints[t.v1];

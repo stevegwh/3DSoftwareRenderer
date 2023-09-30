@@ -144,41 +144,19 @@ soft3d::Mesh ParseObj(const char *path, const slib::texture &texture)
     
     // Get the vertex normals of each triangle and store them in the 'normals' vector at the same index as in the 
     // 'vertices' vector.
-    vertexNormals.reserve(vertices.size());
+    vertexNormals.resize(vertices.size());
+    // Safe to do in parallel as we are assigning to specific indices.
+#pragma omp parallel for
     for (const tri_tmp &tri : rawfaces) 
     {
-        auto n1 = normals.at(tri.vn1);
-        auto n2 = normals.at(tri.vn2);
-        auto n3 = normals.at(tri.vn3);
-
-        try 
-        {
-            vertexNormals.at(tri.v1) = n1;
-        }
-        catch (const std::out_of_range &oor) 
-        {
-            vertexNormals.resize(tri.v1 + 1);
-            vertexNormals[tri.v1] = n1;
-        }
-        try 
-        {
-            vertexNormals.at(tri.v2) = n2;
-        }
-        catch (const std::out_of_range &oor) 
-        {
-            vertexNormals.resize(tri.v2 + 1);
-            vertexNormals[tri.v2] = n2;
-        }
-        try 
-        {
-            vertexNormals.at(tri.v3) = n3;
-        }
-        catch (const std::out_of_range &oor) 
-        {
-            vertexNormals.resize(tri.v3 + 1);
-            vertexNormals[tri.v3] = n3;
-        }
+        auto n1 = normals[tri.vn1];
+        auto n2 = normals[tri.vn2];
+        auto n3 = normals[tri.vn3];
+        vertexNormals[tri.v1] = n1;
+        vertexNormals[tri.v2] = n2;
+        vertexNormals[tri.v3] = n3;
     }
+#pragma omp barrier
 
     // Strip normal indices from faces (should now be accessed using the 'v1' (etc.) index with the normals vector)
     std::vector<slib::tri> faces;

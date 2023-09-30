@@ -11,6 +11,7 @@
 #include "utils.hpp"
 #include "Renderer.hpp"
 #include "Renderable.hpp"
+#include <omp.h>
 
 soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
 {
@@ -118,6 +119,7 @@ namespace soft3d
     
     void Application::init()
     {
+        omp_set_num_threads(omp_get_max_threads());
         fpsCounter = new FPSCounter;
         clock = new Clock;
         initSDL();
