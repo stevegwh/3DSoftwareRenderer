@@ -1,4 +1,3 @@
-/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles/3DSoftwareRenderer.dir
 /Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles/3DSoftwareRenderer_web.dir
 /Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles/edit_cache.dir
 /Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles/rebuild_cache.dir

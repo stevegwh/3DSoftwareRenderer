@@ -215,9 +215,6 @@ EMSCRIPTEN_FORCE_COMPILERS:BOOL=ON
 // If disabled (default), UNIX ar archives (.a) are generated.
 EMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES:BOOL=OFF
 
-//The directory containing a CMake configuration file for SDL2.
-SDL2_DIR:PATH=/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/cache/sysroot/lib/cmake/SDL2
-
 
 ########################
 # INTERNAL cache entries

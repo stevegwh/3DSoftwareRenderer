@@ -146,7 +146,7 @@ soft3d::Mesh ParseObj(const char *path, const slib::texture &texture)
     // 'vertices' vector.
     vertexNormals.resize(vertices.size());
     // Safe to do in parallel as we are assigning to specific indices.
-#pragma omp parallel for
+#pragma omp parallel for default(none) shared(rawfaces, vertexNormals, normals)
     for (const tri_tmp &tri : rawfaces) 
     {
         auto n1 = normals[tri.vn1];

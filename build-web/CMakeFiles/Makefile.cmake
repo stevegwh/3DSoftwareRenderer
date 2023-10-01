@@ -11,7 +11,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.27.6/CMakeCCompiler.cmake"
   "CMakeFiles/3.27.6/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.6/CMakeSystem.cmake"
-  "/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/cache/sysroot/lib/cmake/SDL2/sdl2-config.cmake"
   "/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/CMakeCInformation.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/CMakeCXXInformation.cmake"
@@ -41,6 +40,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/3DSoftwareRenderer.dir/DependInfo.cmake"
   "CMakeFiles/3DSoftwareRenderer_web.dir/DependInfo.cmake"
   )

@@ -117,19 +117,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named 3DSoftwareRenderer
-
-# Build rule for target.
-3DSoftwareRenderer: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 3DSoftwareRenderer
-.PHONY : 3DSoftwareRenderer
-
-# fast build rule for target.
-3DSoftwareRenderer/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/build
-.PHONY : 3DSoftwareRenderer/fast
-
-#=============================================================================
 # Target rules for targets named 3DSoftwareRenderer_web
 
 # Build rule for target.
@@ -147,7 +134,6 @@ Application.o: Application.cpp.o
 
 # target to build an object file
 Application.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Application.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o
 .PHONY : Application.cpp.o
 
@@ -156,7 +142,6 @@ Application.i: Application.cpp.i
 
 # target to preprocess a source file
 Application.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Application.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.i
 .PHONY : Application.cpp.i
 
@@ -165,7 +150,6 @@ Application.s: Application.cpp.s
 
 # target to generate assembly for a file
 Application.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Application.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.s
 .PHONY : Application.cpp.s
 
@@ -174,7 +158,6 @@ Camera.o: Camera.cpp.o
 
 # target to build an object file
 Camera.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Camera.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o
 .PHONY : Camera.cpp.o
 
@@ -183,7 +166,6 @@ Camera.i: Camera.cpp.i
 
 # target to preprocess a source file
 Camera.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Camera.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.i
 .PHONY : Camera.cpp.i
 
@@ -192,7 +174,6 @@ Camera.s: Camera.cpp.s
 
 # target to generate assembly for a file
 Camera.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Camera.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.s
 .PHONY : Camera.cpp.s
 
@@ -201,7 +182,6 @@ Event.o: Event.cpp.o
 
 # target to build an object file
 Event.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Event.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o
 .PHONY : Event.cpp.o
 
@@ -210,7 +190,6 @@ Event.i: Event.cpp.i
 
 # target to preprocess a source file
 Event.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Event.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.i
 .PHONY : Event.cpp.i
 
@@ -219,7 +198,6 @@ Event.s: Event.cpp.s
 
 # target to generate assembly for a file
 Event.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Event.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.s
 .PHONY : Event.cpp.s
 
@@ -228,7 +206,6 @@ GUI.o: GUI.cpp.o
 
 # target to build an object file
 GUI.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/GUI.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o
 .PHONY : GUI.cpp.o
 
@@ -237,7 +214,6 @@ GUI.i: GUI.cpp.i
 
 # target to preprocess a source file
 GUI.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/GUI.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.i
 .PHONY : GUI.cpp.i
 
@@ -246,7 +222,6 @@ GUI.s: GUI.cpp.s
 
 # target to generate assembly for a file
 GUI.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/GUI.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.s
 .PHONY : GUI.cpp.s
 
@@ -255,7 +230,6 @@ ObjParser.o: ObjParser.cpp.o
 
 # target to build an object file
 ObjParser.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/ObjParser.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o
 .PHONY : ObjParser.cpp.o
 
@@ -264,7 +238,6 @@ ObjParser.i: ObjParser.cpp.i
 
 # target to preprocess a source file
 ObjParser.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/ObjParser.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.i
 .PHONY : ObjParser.cpp.i
 
@@ -273,7 +246,6 @@ ObjParser.s: ObjParser.cpp.s
 
 # target to generate assembly for a file
 ObjParser.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/ObjParser.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.s
 .PHONY : ObjParser.cpp.s
 
@@ -282,7 +254,6 @@ Renderer.o: Renderer.cpp.o
 
 # target to build an object file
 Renderer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Renderer.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o
 .PHONY : Renderer.cpp.o
 
@@ -291,7 +262,6 @@ Renderer.i: Renderer.cpp.i
 
 # target to preprocess a source file
 Renderer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Renderer.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.i
 .PHONY : Renderer.cpp.i
 
@@ -300,7 +270,6 @@ Renderer.s: Renderer.cpp.s
 
 # target to generate assembly for a file
 Renderer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Renderer.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.s
 .PHONY : Renderer.cpp.s
 
@@ -309,7 +278,6 @@ Scene.o: Scene.cpp.o
 
 # target to build an object file
 Scene.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Scene.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o
 .PHONY : Scene.cpp.o
 
@@ -318,7 +286,6 @@ Scene.i: Scene.cpp.i
 
 # target to preprocess a source file
 Scene.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Scene.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.i
 .PHONY : Scene.cpp.i
 
@@ -327,7 +294,6 @@ Scene.s: Scene.cpp.s
 
 # target to generate assembly for a file
 Scene.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/Scene.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.s
 .PHONY : Scene.cpp.s
 
@@ -336,7 +302,6 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/main.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o
 .PHONY : main.cpp.o
 
@@ -345,7 +310,6 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/main.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.i
 .PHONY : main.cpp.i
 
@@ -354,7 +318,6 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/main.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.s
 .PHONY : main.cpp.s
 
@@ -363,7 +326,6 @@ slib.o: slib.cpp.o
 
 # target to build an object file
 slib.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/slib.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o
 .PHONY : slib.cpp.o
 
@@ -372,7 +334,6 @@ slib.i: slib.cpp.i
 
 # target to preprocess a source file
 slib.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/slib.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.i
 .PHONY : slib.cpp.i
 
@@ -381,7 +342,6 @@ slib.s: slib.cpp.s
 
 # target to generate assembly for a file
 slib.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/slib.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.s
 .PHONY : slib.cpp.s
 
@@ -390,7 +350,6 @@ smath.o: smath.cpp.o
 
 # target to build an object file
 smath.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/smath.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o
 .PHONY : smath.cpp.o
 
@@ -399,7 +358,6 @@ smath.i: smath.cpp.i
 
 # target to preprocess a source file
 smath.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/smath.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.i
 .PHONY : smath.cpp.i
 
@@ -408,7 +366,6 @@ smath.s: smath.cpp.s
 
 # target to generate assembly for a file
 smath.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/smath.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.s
 .PHONY : smath.cpp.s
 
@@ -417,7 +374,6 @@ vendor/imgui/backends/imgui_impl_sdl2.o: vendor/imgui/backends/imgui_impl_sdl2.c
 
 # target to build an object file
 vendor/imgui/backends/imgui_impl_sdl2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o
 .PHONY : vendor/imgui/backends/imgui_impl_sdl2.cpp.o
 
@@ -426,7 +382,6 @@ vendor/imgui/backends/imgui_impl_sdl2.i: vendor/imgui/backends/imgui_impl_sdl2.c
 
 # target to preprocess a source file
 vendor/imgui/backends/imgui_impl_sdl2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.i
 .PHONY : vendor/imgui/backends/imgui_impl_sdl2.cpp.i
 
@@ -435,7 +390,6 @@ vendor/imgui/backends/imgui_impl_sdl2.s: vendor/imgui/backends/imgui_impl_sdl2.c
 
 # target to generate assembly for a file
 vendor/imgui/backends/imgui_impl_sdl2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.s
 .PHONY : vendor/imgui/backends/imgui_impl_sdl2.cpp.s
 
@@ -444,7 +398,6 @@ vendor/imgui/backends/imgui_impl_sdlrenderer2.o: vendor/imgui/backends/imgui_imp
 
 # target to build an object file
 vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o
 .PHONY : vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o
 
@@ -453,7 +406,6 @@ vendor/imgui/backends/imgui_impl_sdlrenderer2.i: vendor/imgui/backends/imgui_imp
 
 # target to preprocess a source file
 vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i
 .PHONY : vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i
 
@@ -462,7 +414,6 @@ vendor/imgui/backends/imgui_impl_sdlrenderer2.s: vendor/imgui/backends/imgui_imp
 
 # target to generate assembly for a file
 vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s
 .PHONY : vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s
 
@@ -471,7 +422,6 @@ vendor/imgui/imgui.o: vendor/imgui/imgui.cpp.o
 
 # target to build an object file
 vendor/imgui/imgui.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o
 .PHONY : vendor/imgui/imgui.cpp.o
 
@@ -480,7 +430,6 @@ vendor/imgui/imgui.i: vendor/imgui/imgui.cpp.i
 
 # target to preprocess a source file
 vendor/imgui/imgui.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.i
 .PHONY : vendor/imgui/imgui.cpp.i
 
@@ -489,7 +438,6 @@ vendor/imgui/imgui.s: vendor/imgui/imgui.cpp.s
 
 # target to generate assembly for a file
 vendor/imgui/imgui.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.s
 .PHONY : vendor/imgui/imgui.cpp.s
 
@@ -498,7 +446,6 @@ vendor/imgui/imgui_demo.o: vendor/imgui/imgui_demo.cpp.o
 
 # target to build an object file
 vendor/imgui/imgui_demo.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_demo.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o
 .PHONY : vendor/imgui/imgui_demo.cpp.o
 
@@ -507,7 +454,6 @@ vendor/imgui/imgui_demo.i: vendor/imgui/imgui_demo.cpp.i
 
 # target to preprocess a source file
 vendor/imgui/imgui_demo.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_demo.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.i
 .PHONY : vendor/imgui/imgui_demo.cpp.i
 
@@ -516,7 +462,6 @@ vendor/imgui/imgui_demo.s: vendor/imgui/imgui_demo.cpp.s
 
 # target to generate assembly for a file
 vendor/imgui/imgui_demo.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_demo.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.s
 .PHONY : vendor/imgui/imgui_demo.cpp.s
 
@@ -525,7 +470,6 @@ vendor/imgui/imgui_draw.o: vendor/imgui/imgui_draw.cpp.o
 
 # target to build an object file
 vendor/imgui/imgui_draw.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_draw.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o
 .PHONY : vendor/imgui/imgui_draw.cpp.o
 
@@ -534,7 +478,6 @@ vendor/imgui/imgui_draw.i: vendor/imgui/imgui_draw.cpp.i
 
 # target to preprocess a source file
 vendor/imgui/imgui_draw.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_draw.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.i
 .PHONY : vendor/imgui/imgui_draw.cpp.i
 
@@ -543,7 +486,6 @@ vendor/imgui/imgui_draw.s: vendor/imgui/imgui_draw.cpp.s
 
 # target to generate assembly for a file
 vendor/imgui/imgui_draw.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_draw.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.s
 .PHONY : vendor/imgui/imgui_draw.cpp.s
 
@@ -552,7 +494,6 @@ vendor/imgui/imgui_tables.o: vendor/imgui/imgui_tables.cpp.o
 
 # target to build an object file
 vendor/imgui/imgui_tables.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_tables.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o
 .PHONY : vendor/imgui/imgui_tables.cpp.o
 
@@ -561,7 +502,6 @@ vendor/imgui/imgui_tables.i: vendor/imgui/imgui_tables.cpp.i
 
 # target to preprocess a source file
 vendor/imgui/imgui_tables.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_tables.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.i
 .PHONY : vendor/imgui/imgui_tables.cpp.i
 
@@ -570,7 +510,6 @@ vendor/imgui/imgui_tables.s: vendor/imgui/imgui_tables.cpp.s
 
 # target to generate assembly for a file
 vendor/imgui/imgui_tables.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_tables.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.s
 .PHONY : vendor/imgui/imgui_tables.cpp.s
 
@@ -579,7 +518,6 @@ vendor/imgui/imgui_widgets.o: vendor/imgui/imgui_widgets.cpp.o
 
 # target to build an object file
 vendor/imgui/imgui_widgets.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_widgets.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o
 .PHONY : vendor/imgui/imgui_widgets.cpp.o
 
@@ -588,7 +526,6 @@ vendor/imgui/imgui_widgets.i: vendor/imgui/imgui_widgets.cpp.i
 
 # target to preprocess a source file
 vendor/imgui/imgui_widgets.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_widgets.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.i
 .PHONY : vendor/imgui/imgui_widgets.cpp.i
 
@@ -597,7 +534,6 @@ vendor/imgui/imgui_widgets.s: vendor/imgui/imgui_widgets.cpp.s
 
 # target to generate assembly for a file
 vendor/imgui/imgui_widgets.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/imgui/imgui_widgets.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.s
 .PHONY : vendor/imgui/imgui_widgets.cpp.s
 
@@ -606,7 +542,6 @@ vendor/lodepng.o: vendor/lodepng.cpp.o
 
 # target to build an object file
 vendor/lodepng.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/lodepng.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o
 .PHONY : vendor/lodepng.cpp.o
 
@@ -615,7 +550,6 @@ vendor/lodepng.i: vendor/lodepng.cpp.i
 
 # target to preprocess a source file
 vendor/lodepng.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/lodepng.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.i
 .PHONY : vendor/lodepng.cpp.i
 
@@ -624,7 +558,6 @@ vendor/lodepng.s: vendor/lodepng.cpp.s
 
 # target to generate assembly for a file
 vendor/lodepng.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer.dir/build.make CMakeFiles/3DSoftwareRenderer.dir/vendor/lodepng.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/3DSoftwareRenderer_web.dir/build.make CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.s
 .PHONY : vendor/lodepng.cpp.s
 
@@ -636,7 +569,6 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... 3DSoftwareRenderer"
 	@echo "... 3DSoftwareRenderer_web"
 	@echo "... Application.o"
 	@echo "... Application.i"

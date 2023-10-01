@@ -10,12 +10,10 @@
 #include "ObjParser.hpp"
 #include "utils.hpp"
 #include "Renderer.hpp"
-#include "Renderable.hpp"
-#ifndef __EMSCRIPTEN__
-    #include <omp.h>
-#endif
+#include "Renderable.hpp" 
+#include <omp.h>
 
-soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
+static soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
 {
     slib::texture texture = slib::DecodePng("resources/spyrolevel.png");
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyrolevel.obj", texture);
@@ -29,7 +27,7 @@ soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
     return new soft3d::Scene(renderer, sceneData);
 }
 
-soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
+static soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
 {
     slib::texture texture = slib::DecodePng("resources/spyro.png");
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj", texture);
@@ -43,7 +41,7 @@ soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
     return new soft3d::Scene(renderer, sceneData);
 }
 
-soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
+static soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
 {
     slib::texture texture = slib::DecodePng("resources/viking_room.png");
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/viking_room.obj", texture);
@@ -59,6 +57,7 @@ soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
 
 namespace soft3d
 {
+    
     inline void Application::initSDL()
     {
         sdlWindow = SDL_CreateWindow("3D Software Renderer", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
@@ -121,9 +120,6 @@ namespace soft3d
     
     void Application::init()
     {
-#ifndef __EMSCRIPTEN__
-        omp_set_num_threads(omp_get_max_threads());
-#endif
         fpsCounter = new FPSCounter;
         clock = new Clock;
         initSDL();
@@ -131,6 +127,7 @@ namespace soft3d
         gui = new soft3d::GUI(sdlWindow, sdlRenderer);
         menuMouseEnabled = false;
         initGui();
+        omp_set_num_threads(omp_get_max_threads());
     }
     
     void Application::changeScene(int newScene)

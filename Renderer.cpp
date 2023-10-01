@@ -291,7 +291,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
         int ymax =
             std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
-
+        
         // Edge finding for triangle rasterization
         for (int x = xmin; x <= xmax; ++x) 
         {

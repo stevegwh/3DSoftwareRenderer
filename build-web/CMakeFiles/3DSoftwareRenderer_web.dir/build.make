@@ -74,270 +74,270 @@ CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o: CMakeFiles/3DSoftwareRenderer_
 CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/main.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/main.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/ObjParser.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/ObjParser.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/smath.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/smath.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Renderer.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Renderer.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/slib.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/slib.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/lodepng.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/lodepng.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_draw.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_draw.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_tables.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_tables.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_widgets.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_widgets.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/backends/imgui_impl_sdl2.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/backends/imgui_impl_sdl2.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/vendor/imgui/imgui_demo.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/vendor/imgui/imgui_demo.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Application.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Application.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/GUI.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/GUI.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Camera.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Camera.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Scene.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Scene.cpp.s
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/flags.make
 CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/includes_CXX.rsp
 CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o: /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp
 CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o: CMakeFiles/3DSoftwareRenderer_web.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/steve/CLionProjects/3DSoftwareRenderer/build-web/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o -MF CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o.d -o CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.o -c /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.i"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.i
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp > CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.i
 
 CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.s"
-	/Users/steve/CLionProjects/3DSoftwareRenderer/emsdk/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.s
+	emcc $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/steve/CLionProjects/3DSoftwareRenderer/Event.cpp -o CMakeFiles/3DSoftwareRenderer_web.dir/Event.cpp.s
 
 # Object files for target 3DSoftwareRenderer_web
 3DSoftwareRenderer_web_OBJECTS = \
