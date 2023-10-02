@@ -18,6 +18,8 @@ void Scene::LoadScene()
 {
     renderer->camera->pos = data.cameraStartPosition;
     renderer->camera->rotation = data.cameraStartRotation;
+    renderer->setShader(data.fragmentShader);
+    renderer->setTextureFilter(data.textureFilter);
     renderer->ClearRenderables();
     for (const auto& renderable : data.renderables)
     {

@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <vector>
+#include <string>
 #include <iostream>
 
 
@@ -92,6 +93,7 @@ struct tri
 {
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
+    std::string textureName;
 };
 
 struct Color

@@ -2390,7 +2390,7 @@ Other Changes:
 - Style: Allow style.WindowMenuButtonPosition to be set to ImGuiDir_None to hide the collapse button. (#2634, #2639)
 - Font: Better ellipsis ("...") drawing implementation. Instead of drawing three pixel-ey dots (which was glaringly
   unfitting with many types of fonts) we first attempt to find a standard ellipsis glyphs within the loaded set.
-  Otherwise we render ellipsis using '.' from the font from where we trim excessive spacing to make it as narrow
+  Otherwise we render ellipsis using '.' from the font from where we removeExcessiveWhiteSpace excessive spacing to make it as narrow
   as possible. (#2775) [@rokups]
 - ImDrawList: Clarified the name of many parameters so reading the code is a little easier. (#2740)
 - ImDrawListSplitter: Fixed merging channels if the last submitted draw command used a different texture. (#2506)

@@ -1021,7 +1021,7 @@ unsigned lodepng_huffman_code_lengths(unsigned* lengths, const unsigned* frequen
 static unsigned HuffmanTree_makeFromFrequencies(HuffmanTree* tree, const unsigned* frequencies,
                                                 size_t mincodes, size_t numcodes, unsigned maxbitlen) {
   unsigned error = 0;
-  while(!frequencies[numcodes - 1] && numcodes > mincodes) --numcodes; /*trim zeroes*/
+  while(!frequencies[numcodes - 1] && numcodes > mincodes) --numcodes; /*removeExcessiveWhiteSpace zeroes*/
   tree->lengths = (unsigned*)lodepng_malloc(numcodes * sizeof(unsigned));
   if(!tree->lengths) return 83; /*alloc fail*/
   tree->maxbitlen = maxbitlen;
@@ -1949,7 +1949,7 @@ static unsigned deflateDynamic(LodePNGBitWriter* writer, Hash* hash,
 
     /*compute amount of code-length-code-lengths to output*/
     numcodes_cl = NUM_CODE_LENGTH_CODES;
-    /*trim zeros at the end (using CLCL_ORDER), but minimum size must be 4 (see HCLEN below)*/
+    /*removeExcessiveWhiteSpace zeros at the end (using CLCL_ORDER), but minimum size must be 4 (see HCLEN below)*/
     while(numcodes_cl > 4u && tree_cl.lengths[CLCL_ORDER[numcodes_cl - 1u]] == 0) {
       numcodes_cl--;
     }
