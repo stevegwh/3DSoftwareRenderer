@@ -29,6 +29,20 @@ static soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
 
 static soft3d::Scene* marioSceneInit(soft3d::Renderer* renderer)
 {
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/Peaches Castle.obj");
+    auto *renderable = new soft3d::Renderable(mesh, {0, 0, -2},
+                                              {0, 0, 0}, {1, 1, 1},
+                                              {200, 100, 200});
+    soft3d::SceneData sceneData;
+    sceneData.renderables.push_back(renderable);
+    sceneData.cameraStartPosition = {0, 10, 20};
+    sceneData.cameraStartRotation = { 0, 0, 0 };
+    sceneData.fragmentShader = soft3d::GOURAUD;
+    return new soft3d::Scene(renderer, sceneData);
+}
+
+static soft3d::Scene* majoraSceneInit(soft3d::Renderer* renderer)
+{
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/happy_mask_salesman.obj");
     auto *renderable = new soft3d::Renderable(mesh, {0, 0, -10},
                                               {0, 0, 0}, {0.2, 0.2, 0.2},
@@ -43,7 +57,7 @@ static soft3d::Scene* marioSceneInit(soft3d::Renderer* renderer)
 
 static soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
 {
-    soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj");
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/Lara.obj");
     auto *renderable = new soft3d::Renderable(mesh, {0, -2, -1},
                                               {0, -45, 0}, {1, 1, 1},
                                               {200, 100, 200});
@@ -100,17 +114,19 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-        Scene* scene1 = spyroSceneInit(renderer);
-        Scene* scene2 = spyroModelSceneInit(renderer);
+//        Scene* scene1 = spyroSceneInit(renderer);
+//        Scene* scene2 = spyroModelSceneInit(renderer);
         Scene* scene3 = vikingRoomSceneInit(renderer);
         Scene* scene4 = marioSceneInit(renderer);
-        scenes.push_back(scene1);
-        scenes.push_back(scene2);
+        Scene* scene5 = majoraSceneInit(renderer);
+//        scenes.push_back(scene1);
+//        scenes.push_back(scene2);
         scenes.push_back(scene3);
         scenes.push_back(scene4);
-        changeScene(3   ); // default scene
+        scenes.push_back(scene5);
+        changeScene(1   ); // default scene
 
-        const std::function<void()> f1 = [p = this] { p->changeScene(3); };
+        const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(new Observer(f1));
         const std::function<void()> f2 = [p = this] { p->changeScene(1); };
         gui->scene2ButtonDown->Subscribe(new Observer(f2));

@@ -9,8 +9,53 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <utility>
 #include "smath.hpp"
 #include "constants.hpp"
+#include "vendor/lodepng.h"
+
+//std::vector<unsigned char> flipVertically(const std::vector<unsigned char>& original, int width, int height)
+//{
+//    const int channels = 4; // RGBA
+//    std::vector<unsigned char> flipped(width * height * channels);
+//    int rowSize = width * channels;
+//
+//    for (int y = 0; y < height; ++y)
+//    {
+//        // Compute the source and destination rows
+//        const unsigned char* srcRow = &original[y * rowSize];
+//        unsigned char* dstRow = &flipped[(height - 1 - y) * rowSize];
+//
+//        // Copy the row
+//        std::copy(srcRow, srcRow + rowSize, dstRow);
+//    }
+//
+//    return flipped;
+//}
+
+slib::texture DecodePng(const char* filename)
+{
+    std::vector<unsigned char> buffer;
+    std::vector<unsigned char> image; //the raw pixels
+    lodepng::load_file(buffer, filename);
+    unsigned width, height;
+
+    lodepng::State state;
+
+    //decode
+    unsigned error = lodepng::decode(image, width, height, state, buffer);
+    const LodePNGColorMode& color = state.info_png.color;
+    auto bpp = lodepng_get_bpp(&color);
+    //if there's an error, display it
+    if(error)
+    {
+        std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+        exit(1);
+    }
+
+    //the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
+    return { static_cast<int>(width), static_cast<int>(height), image,  4 };
+}
 
 void removeExcessiveWhiteSpace(const std::string& input, std::string& output)
 {
@@ -36,7 +81,7 @@ struct tri_tmp
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
     const int vn1, vn2, vn3;
-    const char* textureName;
+    const std::string textureName;
 };
 
 std::map<std::string, slib::texture> parseMtlFile(const char* path)
@@ -60,7 +105,7 @@ std::map<std::string, slib::texture> parseMtlFile(const char* path)
         else if (line.find("map_Kd") != std::string::npos)
         {
             std::string mtlPath = line.substr(line.find("map_Kd") + std::string("map_Kd ").length());
-            auto texture = slib::DecodePng(std::string(RES_PATH + mtlPath).c_str());
+            auto texture = DecodePng(std::string(RES_PATH + mtlPath).c_str());
             toReturn.insert({ textureKey, texture });
         }
     }
@@ -116,7 +161,7 @@ slib::vec2 getTextureVector(const std::string& line)
 }
 
 
-tri_tmp getFace(const std::string& line, const std::string& materialName)
+tri_tmp getFace(const std::string& line, std::string textureName)
 {
     std::string output;
     removeExcessiveWhiteSpace(line, output);
@@ -145,7 +190,7 @@ tri_tmp getFace(const std::string& line, const std::string& materialName)
         vertices.at(0), vertices.at(1), vertices.at(2),
         textureCoords.at(0), textureCoords.at(1), textureCoords.at(2),
         normals.at(0), normals.at(1), normals.at(2),
-        materialName.c_str()
+        std::move(textureName)
          };
 }
 
@@ -171,7 +216,6 @@ soft3d::Mesh ParseObj(const char* objPath)
     std::vector<slib::vec3> normals; // The normals as listed in the obj file
     std::vector<tri_tmp> rawfaces; // faces with normal data
     std::vector<slib::tri> faces; // faces stripped of normal data
-
     std::string line;
     while (getline(obj, line))
     {
@@ -187,7 +231,8 @@ soft3d::Mesh ParseObj(const char* objPath)
         {
             if (line.find("//") == std::string::npos)
             {
-                rawfaces.push_back(getFace(line, currentTextureName));
+                auto tri = getFace(line, currentTextureName);
+                rawfaces.push_back(tri);
             }
         }
         else if (line.substr(0, 2) == "vt")
@@ -207,14 +252,16 @@ soft3d::Mesh ParseObj(const char* objPath)
             auto path = std::string (RES_PATH + line.substr(line.find("mtllib") + std::string("mtllib ").length()));
             textures = parseMtlFile(path.c_str());
         }
+        
     }
+    
     
     // Get the vertex normals of each triangle and store them in the 'normals' vector at the same index as in the 
     // 'vertices' vector.
     vertexNormals.resize(vertices.size());
     faces.reserve(rawfaces.size());
 
-#pragma omp parallel for default(none) shared(rawfaces, vertexNormals, normals, faces)
+//#pragma omp parallel for default(none) shared(rawfaces, vertexNormals, normals, faces)
     for (const tri_tmp &tri : rawfaces) 
     {
         auto n1 = normals[tri.vn1];
@@ -224,7 +271,7 @@ soft3d::Mesh ParseObj(const char* objPath)
         vertexNormals[tri.v2] = n2;
         vertexNormals[tri.v3] = n3;
     }
-#pragma omp barrier
+//#pragma omp barrier
 
     // Strip normal indices from faces (should now be accessed using the 'v1' (etc.) index with the normals vector)
     for (const tri_tmp& t : rawfaces) 

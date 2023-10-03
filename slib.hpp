@@ -21,8 +21,6 @@ struct texture
     unsigned int bpp;
 };
 
-texture DecodePng(const char* filename);
-
 struct zvec2
 {
     float x, y, w;
