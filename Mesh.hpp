@@ -15,8 +15,10 @@ struct Mesh
 {
     const std::vector<slib::vec3> vertices;
     const std::vector<slib::tri> faces; // Contains the indices of the vertices and texture data
+    // vertex attributes
     const std::vector<slib::vec2> textureCoords;
     const std::vector<slib::vec3> normals; // The normal shares the same index as the associated vertex in 'vertices'
+    // -----------------
     const std::map<std::string, slib::texture> textures;
     Mesh(const std::vector<slib::vec3>& _vertices, const std::vector<slib::tri>& _faces,
          const std::vector<slib::vec2>& _textureCoords, const std::vector<slib::vec3>& _normals, 

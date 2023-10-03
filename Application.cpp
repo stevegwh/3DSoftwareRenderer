@@ -16,12 +16,12 @@
 static soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyrolevel.obj");
-    auto *renderable = new soft3d::Renderable(mesh, {0, 0, -10},
-                                      {0, 250, 0}, {.01, .01, .01},
+    auto *renderable = new soft3d::Renderable(mesh, {0, 0, -25},
+                                      {0, 250, 0}, {.05, .05, .05},
                                       {200, 100, 200});
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
-    sceneData.cameraStartPosition = {0, 10, 20};
+    sceneData.cameraStartPosition = {50, 20, 150};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     return new soft3d::Scene(renderer, sceneData);
@@ -72,13 +72,13 @@ static soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
 static soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/viking_room.obj");
-    auto *renderable = new soft3d::Renderable(mesh, {0, -1, -1},
-                                              {0, -135, 0}, {2, 2, 2},
+    auto *renderable = new soft3d::Renderable(mesh, {0, -5, -1},
+                                              {0, -135, 0}, {10, 10, 10},
                                               {200, 100, 200});
     soft3d::SceneData sceneData;
     
     sceneData.renderables.push_back(renderable);
-    sceneData.cameraStartPosition = {0, 0, 6};
+    sceneData.cameraStartPosition = {0, 0, 30};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     sceneData.textureFilter = soft3d::BILINEAR;
@@ -114,17 +114,17 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-//        Scene* scene1 = spyroSceneInit(renderer);
+        Scene* scene1 = spyroSceneInit(renderer);
 //        Scene* scene2 = spyroModelSceneInit(renderer);
         Scene* scene3 = vikingRoomSceneInit(renderer);
-        Scene* scene4 = marioSceneInit(renderer);
+        //Scene* scene4 = marioSceneInit(renderer);
         Scene* scene5 = majoraSceneInit(renderer);
-//        scenes.push_back(scene1);
+       scenes.push_back(scene1);
 //        scenes.push_back(scene2);
         scenes.push_back(scene3);
-        scenes.push_back(scene4);
+        //scenes.push_back(scene4);
         scenes.push_back(scene5);
-        changeScene(1   ); // default scene
+        changeScene(0   ); // default scene
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(new Observer(f1));
@@ -193,6 +193,7 @@ namespace soft3d
         clock->tick();
         fpsCounter->Update();
         gui->fpsCounter = fpsCounter->fps_current;
+        renderer->camera->Update(clock->delta);
         
         while (SDL_PollEvent(&event)) 
         {
@@ -202,7 +203,7 @@ namespace soft3d
             }
             else
             {
-                renderer->camera->Update(&event);
+                renderer->camera->HandleEvent(&event);
             }
             if (event.type == SDL_QUIT) 
             {

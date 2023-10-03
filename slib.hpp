@@ -12,13 +12,36 @@ struct vec3;
 struct vec4;
 struct mat;
 
-
-
 struct texture
 {
     int w, h;
     std::vector<unsigned char> data;
     unsigned int bpp;
+};
+
+struct material
+{
+    float Ns{};
+    float Ka[3]{};
+    float Kd[3]{};
+    float Ks[3]{};
+    float Ke[3]{};
+    float Ni{};
+    float d{};
+    float illum{};
+    texture map_Kd;
+    texture map_Ks;
+    texture map_Ns;
+};
+
+/*
+ * Only contains indices/keys. Used to retrieve data from the vertex attributes stored in the mesh.
+ */
+struct tri
+{
+    const int v1, v2, v3;
+    const int vt1, vt2, vt3;
+    std::string textureName;
 };
 
 struct zvec2
@@ -82,16 +105,6 @@ struct mat
     mat operator*(const mat &rhs) const;
     vec4 operator*(const vec4 &rhs) const;
 
-};
-
-/*
- * Contains the relevant index in the vertices or textureCoordinates vectors of the mesh
- */
-struct tri
-{
-    const int v1, v2, v3;
-    const int vt1, vt2, vt3;
-    std::string textureName;
 };
 
 struct Color

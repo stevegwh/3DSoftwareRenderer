@@ -22,7 +22,8 @@ namespace soft3d
             :
             pos(_pos), rotation(_rotation), direction(_direction), up(_up), zFar(_zFar), zNear(_zNear)
         {};
-        void Update(SDL_Event* event);
+        void Update(float deltaTime);
+        void HandleEvent(SDL_Event *event);
         void UpdateDirectionVectors(const slib::mat& viewMatrix);
     private:
         void rotate(float x, float y);
