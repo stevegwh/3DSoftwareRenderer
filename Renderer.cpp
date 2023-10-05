@@ -200,8 +200,8 @@ inline void texBilinear(const slib::texture& texture,float lum, float uvx, float
     // Billinear filtering
     
     // Wrap texture coordinates
-    uvx = fmod(uvx, 1.0f);
-    uvy = fmod(uvy, 1.0f);
+    uvx = std::fmod(uvx, 1.0f);
+    uvy = std::fmod(uvy, 1.0f);
     // Ensure uvx and uvy are positive
     uvx = uvx < 0 ? 1.0f + uvx : uvx;
     uvy = uvy < 0 ? 1.0f + uvy : uvy;
@@ -271,10 +271,10 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         const auto &n1 = normals[t.v1];
         const auto &n2 = normals[t.v2];
         const auto &n3 = normals[t.v3];
-        slib::texture texture = renderable.mesh.materials.at(t.material).map_Kd;
-        std::array<float, 3> vertexCol = renderable.mesh.materials.at(t.material).Kd;
+        const slib::texture& texture = renderable.mesh.materials.at(t.material).map_Kd;
+        const std::array<float, 3>& vertexCol = renderable.mesh.materials.at(t.material).Kd;
 
-        slib::vec3 lightingDirection = {1, 1, 1.5};
+        const slib::vec3 lightingDirection = {1, 1, 1.5};
 
         slib::vec3 normal{};
         if (fragmentShader == FLAT) 
@@ -290,16 +290,16 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
             }
         }
 
-        const auto &viewW1 = projectedPoints[t.v1].w;
-        const auto &viewW2 = projectedPoints[t.v2].w;
-        const auto &viewW3 = projectedPoints[t.v3].w;
+        const auto& viewW1 = projectedPoints[t.v1].w;
+        const auto& viewW2 = projectedPoints[t.v2].w;
+        const auto& viewW3 = projectedPoints[t.v3].w;
 
         // Get bounding box.
-        int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
-        int xmax =
+        const int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
+        const int xmax =
             std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
-        int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
-        int ymax =
+        const int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
+        const int ymax =
             std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
         
         // Edge finding for triangle rasterization
@@ -307,12 +307,12 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         {
             for (int y = ymin; y <= ymax; ++y) 
             {
-                slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 1};
+                const slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 1};
 
                 // Barycentric coords using an edge function
-                float w0 = edgeFunctionArea(p2, p3, p); // signed area of the triangle v1v2p multiplied by 2
-                float w1 = edgeFunctionArea(p3, p1, p); // signed area of the triangle v2v0p multiplied by 2
-                float w2 = edgeFunctionArea(p1, p2, p); // signed area of the triangle v0v1p multiplied by 2
+                const float w0 = edgeFunctionArea(p2, p3, p); // signed area of the triangle v1v2p multiplied by 2
+                const float w1 = edgeFunctionArea(p3, p1, p); // signed area of the triangle v2v0p multiplied by 2
+                const float w2 = edgeFunctionArea(p1, p2, p); // signed area of the triangle v0v1p multiplied by 2
                 slib::vec3 coords{w0, w1, w2};
 
                 if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0) 
@@ -353,10 +353,10 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                         // Texturing
                         if (!texture.data.empty())
                         {
-                            auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
-                            auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
-                            auto ct = slib::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
-                            float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
+                            const auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
+                            const auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
+                            const auto ct = slib::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
+                            const float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
                             // "coords" are the barycentric coordinates of the current pixel 
                             // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
                             float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x) / wt;

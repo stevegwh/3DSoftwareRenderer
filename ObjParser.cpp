@@ -3,7 +3,6 @@
 //
 
 #include "ObjParser.hpp"
-#include <SDL2/SDL.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -39,31 +38,39 @@ slib::texture DecodePng(const char* filename)
     return { static_cast<int>(width), static_cast<int>(height), image,  4 };
 }
 
-void removeExcessiveWhiteSpace(const std::string& input, std::string& output)
-{
-    std::unique_copy (input.begin(), input.end(), std::back_insert_iterator<std::string>(output),
-                      [](char a,char b){ return std::isspace(a) && std::isspace(b);});
-}
-
 std::string trim(const std::string& input)
 {
     std::string output;
-    removeExcessiveWhiteSpace(input, output);
+    // Remove excessive whitespace
+    std::unique_copy (input.begin(), input.end(), std::back_insert_iterator<std::string>(output),
+                      [](char a,char b){ return std::isspace(a) && std::isspace(b);});
+    // Removes characters with ASCII value 0-31 (control characters)
     output.erase(std::remove_if(output.begin(), output.end(), [](char c) {
-        return (c <= 31); // Removes characters with ASCII value 0-31 (control characters)
+        return (c <= 31); 
     }), output.end());
     return output;
 }
-
-
 
 struct tri_tmp
 {
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
     const int vn1, vn2, vn3;
-    const std::string textureName; //TODO: Change to material name. 
+    const std::string material;
 };
+
+std::array<float, 3> parseVectorLine(const std::string& input)
+{
+    std::stringstream ss(input);
+    std::array<float,3> arr{};
+    std::string token;
+    int i = 0;
+    while(std::getline(ss, token, ' '))
+    {
+        arr.at(i++) = std::stof(token);
+    }
+    return arr;
+}
 
 std::map<std::string, slib::material> parseMtlFile(const char* path)
 {
@@ -96,20 +103,63 @@ std::map<std::string, slib::material> parseMtlFile(const char* path)
             std::string mtlPath = line.substr(line.find("map_Kd") + std::string("map_Kd ").length());
             material.map_Kd = DecodePng(std::string(RES_PATH + mtlPath).c_str());;
         }
+        else if (line.find("map_Ks") != std::string::npos)
+        {
+            std::string mtlPath = line.substr(line.find("map_Ks") + std::string("map_Ks ").length());
+            material.map_Kd = DecodePng(std::string(RES_PATH + mtlPath).c_str());;
+        }
+        else if (line.find("map_Ns") != std::string::npos)
+        {
+            std::string mtlPath = line.substr(line.find("map_Ns") + std::string("map_Ns ").length());
+            material.map_Kd = DecodePng(std::string(RES_PATH + mtlPath).c_str());;
+        }
+        else if (line.find("Ka") != std::string::npos)
+        {
+            std::string input = line.substr(line.find("Ka ") + std::string("Ka ").length());
+            std::array<float, 3> arr = parseVectorLine(input);
+            material.Ka[0] = arr.at(0);
+            material.Ka[1] = arr.at(1);
+            material.Ka[2] = arr.at(2);
+        }
         else if (line.find("Kd") != std::string::npos)
         {
-            std::string output = line.substr(line.find("Kd ") + std::string("Kd ").length());
-            std::stringstream ss(output);
-            std::vector<float> vec;
-            std::string token;
-            while(std::getline(ss, token, ' '))
-            {
-                vec.push_back(std::stof(token));
-            }
-            material.Kd[0] = vec.at(0);
-            material.Kd[1] = vec.at(1);
-            material.Kd[2] = vec.at(2);
-            
+            std::string input = line.substr(line.find("Kd ") + std::string("Kd ").length());
+            std::array<float, 3> arr = parseVectorLine(input);
+            material.Kd[0] = arr.at(0);
+            material.Kd[1] = arr.at(1);
+            material.Kd[2] = arr.at(2);
+        }
+        else if (line.find("Ks") != std::string::npos)
+        {
+            std::string input = line.substr(line.find("Ks ") + std::string("Ks ").length());
+            std::array<float, 3> arr = parseVectorLine(input);
+            material.Ks[0] = arr.at(0);
+            material.Ks[1] = arr.at(1);
+            material.Ks[2] = arr.at(2);
+        }
+        else if (line.find("Ke") != std::string::npos)
+        {
+            std::string input = line.substr(line.find("Ke ") + std::string("Ke ").length());
+            std::array<float, 3> arr = parseVectorLine(input);
+            material.Ke[0] = arr.at(0);
+            material.Ke[1] = arr.at(1);
+            material.Ke[2] = arr.at(2);
+        }
+        else if (line.find("Ni") != std::string::npos)
+        {
+            material.Ni = std::stof(line.substr(line.find("Ni ") + std::string("Ni ").length()));
+        }
+        else if (line.find("Ns") != std::string::npos)
+        {
+            material.Ns = std::stof(line.substr(line.find("Ns ") + std::string("Ns ").length()));
+        }
+        else if (line.find('d') != std::string::npos)
+        {
+            material.d = std::stof(line.substr(line.find("d ") + std::string("d ").length()));
+        }
+        else if (line.find("illum") != std::string::npos)
+        {
+            material.illum = std::stoi(line.substr(line.find("illum ") + std::string("illum ").length()));
         }
     }
 
@@ -121,49 +171,17 @@ std::map<std::string, slib::material> parseMtlFile(const char* path)
 
 slib::vec3 getVector(const std::string& line)
 {
-    std::string output = line;
-    std::stringstream ss(output.erase(0,2));
-    std::vector<float> vec;
-    vec.reserve(3);
-    std::string token;
-    while(std::getline(ss, token, ' ')) 
-    {
-        vec.push_back(std::stof(token));
-    }
-    return { vec.at(0), vec.at(1), vec.at(2) };
-}
-
-slib::vec3 getNormal(const std::string& line)
-{
-    std::string output = line;
-    std::stringstream ss(output.erase(0,3));
-    std::vector<float> vec;
-    vec.reserve(3);
-    std::string token;
-    while(std::getline(ss, token, ' '))
-    {
-        vec.push_back(std::stof(token));
-    }
-    return { vec.at(0), vec.at(1), vec.at(2) };
+    std::array<float,3> arr = parseVectorLine(line);
+    return { arr.at(0), arr.at(1), arr.at(2) };
 }
 
 slib::vec2 getTextureVector(const std::string& line)
 {
-    std::string output = line;
-    std::stringstream ss(output.erase(0,3));
-    std::vector<float> vec;
-    vec.reserve(2);
-    std::string token;
-    while(std::getline(ss, token, ' '))
-    {
-        vec.push_back(std::stof(token));
-    }
-    return { vec.at(0), vec.at(1) };
+    std::array<float,3> arr = parseVectorLine(line);
+    return { arr.at(0), arr.at(1) };
 }
 
-
-
-tri_tmp getFace(const std::string& line, std::string textureName)
+tri_tmp getFace(const std::string& line, std::string material)
 {
     enum VertexFormat {
         V,
@@ -237,7 +255,7 @@ tri_tmp getFace(const std::string& line, std::string textureName)
             vertices.at(0), vertices.at(1), vertices.at(2),
             textureCoords.at(0), textureCoords.at(1), textureCoords.at(2),
             normals.at(0), normals.at(1), normals.at(2),
-            std::move(textureName)
+            std::move(material)
         };
     }
 
@@ -254,11 +272,7 @@ soft3d::Mesh ParseObj(const char* objPath)
     }
     
     std::map<std::string, slib::material> materials;
-    // Parse mtl file and population textures map.
     std::string currentTextureName;
-    // When parsing faces, change 'currentTextureName' when you encounter an -o flag.
-    // Store 'currentTextureName' in triangle
-
     std::vector<slib::vec3> vertices;
     std::vector<slib::vec3> vertexNormals; // Normals stored at same index as the corresponding vertex
     std::vector<slib::vec2> textureCoords;
@@ -275,23 +289,19 @@ soft3d::Mesh ParseObj(const char* objPath)
 
         if (line.substr(0, 2) == "v ")
         {
-            vertices.push_back(getVector(line));
+            vertices.push_back(getVector(line.erase(0,2)));
         }
         else if (line.substr(0, 2) == "f ")
         {
-            if (line.find("//") == std::string::npos)
-            {
-                auto tri = getFace(line, currentTextureName);
-                rawfaces.push_back(tri);
-            }
+            rawfaces.push_back(getFace(line, currentTextureName));
         }
         else if (line.substr(0, 2) == "vt")
         {
-            textureCoords.push_back(getTextureVector(line));
+            textureCoords.push_back(getTextureVector(line.erase(0, 3)));
         }
         else if (line.substr(0, 2) == "vn")
         {
-            normals.push_back(getNormal(line));
+            normals.push_back(getVector(line.erase(0,3)));
         }
         else if (line.find("usemtl") != std::string::npos)
         {
@@ -326,7 +336,7 @@ soft3d::Mesh ParseObj(const char* objPath)
     // Strip normal indices from faces (should now be accessed using the 'v1' (etc.) index with the normals vector)
     for (const tri_tmp& t : rawfaces) 
     {
-        slib::tri toPush = { t.v1, t.v2, t.v3, t.vt1, t.vt2, t.vt3, t.textureName };
+        slib::tri toPush = { t.v1, t.v2, t.v3, t.vt1, t.vt2, t.vt3, t.material };
         faces.push_back(toPush);
     }
 

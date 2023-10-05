@@ -12,6 +12,7 @@ struct vec2;
 struct vec3;
 struct vec4;
 struct mat;
+struct material;
 
 struct texture
 {
@@ -29,7 +30,7 @@ struct material
     std::array<float,3> Ke{};
     float Ni{};
     float d{};
-    float illum{};
+    int illum{};
     texture map_Kd;
     texture map_Ks;
     texture map_Ns;
@@ -42,7 +43,7 @@ struct tri
 {
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
-    std::string material;
+    const std::string material;
 };
 
 struct zvec2

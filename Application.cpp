@@ -114,12 +114,12 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-        //Scene* scene1 = spyroSceneInit(renderer);
+        Scene* scene1 = spyroSceneInit(renderer);
 //        Scene* scene2 = spyroModelSceneInit(renderer);
         //Scene* scene3 = vikingRoomSceneInit(renderer);
         Scene* scene4 = marioSceneInit(renderer);
         Scene* scene5 = majoraSceneInit(renderer);
-       //scenes.push_back(scene1);
+        scenes.push_back(scene1);
 //        scenes.push_back(scene2);
         //scenes.push_back(scene3);
         scenes.push_back(scene4);
