@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <vector>
+#include <array>
 #include <string>
 #include <iostream>
 
@@ -22,10 +23,10 @@ struct texture
 struct material
 {
     float Ns{};
-    float Ka[3]{};
-    float Kd[3]{};
-    float Ks[3]{};
-    float Ke[3]{};
+    std::array<float,3> Ka{};
+    std::array<float,3> Kd{};
+    std::array<float,3> Ks{};
+    std::array<float,3> Ke{};
     float Ni{};
     float d{};
     float illum{};
@@ -41,7 +42,7 @@ struct tri
 {
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
-    std::string textureName;
+    std::string material;
 };
 
 struct zvec2

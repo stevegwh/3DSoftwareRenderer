@@ -31,7 +31,7 @@ static soft3d::Scene* marioSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/Peaches Castle.obj");
     auto *renderable = new soft3d::Renderable(mesh, {0, 0, -2},
-                                              {0, 0, 0}, {1, 1, 1},
+                                              {0, 180, 0}, {1, 1, 1},
                                               {200, 100, 200});
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
@@ -114,15 +114,15 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-        Scene* scene1 = spyroSceneInit(renderer);
+        //Scene* scene1 = spyroSceneInit(renderer);
 //        Scene* scene2 = spyroModelSceneInit(renderer);
-        Scene* scene3 = vikingRoomSceneInit(renderer);
-        //Scene* scene4 = marioSceneInit(renderer);
+        //Scene* scene3 = vikingRoomSceneInit(renderer);
+        Scene* scene4 = marioSceneInit(renderer);
         Scene* scene5 = majoraSceneInit(renderer);
-       scenes.push_back(scene1);
+       //scenes.push_back(scene1);
 //        scenes.push_back(scene2);
-        scenes.push_back(scene3);
-        //scenes.push_back(scene4);
+        //scenes.push_back(scene3);
+        scenes.push_back(scene4);
         scenes.push_back(scene5);
         changeScene(0   ); // default scene
 

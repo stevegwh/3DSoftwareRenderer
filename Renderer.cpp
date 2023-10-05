@@ -13,7 +13,7 @@ namespace soft3d
 inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
 {
     // Convert to screen
-//#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
+#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
     for (int i = 0; i < projectedPoints.size(); ++i) 
     {
         auto& v = projectedPoints[i];
@@ -33,7 +33,7 @@ inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vec
         screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -68,9 +68,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) surface->pixels;
-//#pragma omp parallel for default(none) shared(pixels)
+#pragma omp parallel for default(none) shared(pixels)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -97,7 +97,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
                                  std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
-//#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
+#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
     for (int i = 0; i < renderable.mesh.vertices.size(); i++)
     {
         slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
@@ -119,7 +119,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
         auto transformedNormal = normalTransformMat * n4;
         normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
     }
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 void Renderer::Render()
@@ -167,44 +167,51 @@ inline void bufferPixels(SDL_Surface *surface, int x, int y, unsigned char r, un
 
 inline void texNearestNeighbour(const slib::texture& texture, float lum, float uvx, float uvy, int &r, int &g, int &b)
 {
-    // Clamp uv coords
-    uvx = std::max(0.0f, std::min(uvx, 1.0f));
-    uvy = std::max(0.0f, std::min(uvy, 1.0f));
-    // convert to texture space
+    // Wrap texture coordinates
+    uvx = fmod(uvx, 1.0f);
+    uvy = fmod(uvy, 1.0f);
+
+    // Ensure uvx and uvy are positive
+    uvx = uvx < 0 ? 1.0f + uvx : uvx;
+    uvy = uvy < 0 ? 1.0f + uvy : uvy;
+
+    // Convert to texture space
     auto tx = static_cast<int>(uvx * texture.w);
     auto ty = static_cast<int>(uvy * texture.h);
-    //-------------------
 
-    // grab the corresponding pixel color on the texture
-    int index = ty * texture.w * texture.bpp +
-        tx * texture.bpp;
+    // Grab the corresponding pixel color on the texture
+    int index = ty * texture.w * texture.bpp + tx * texture.bpp;
 
     if (lum > 1) 
     {
         r = std::max(0.0f, std::min(texture.data[index] * lum, 255.0f));
         g = std::max(0.0f, std::min(texture.data[index + 1] * lum, 255.0f));
         b = std::max(0.0f, std::min(texture.data[index + 2] * lum, 255.0f));
+        return;
     }
-    else 
-    {
-        r = texture.data[index];
-        g = texture.data[index + 1];
-        b = texture.data[index + 2];
-    }
+
+    r = texture.data[index];
+    g = texture.data[index + 1];
+    b = texture.data[index + 2];
 }
 
 inline void texBilinear(const slib::texture& texture,float lum, float uvx, float uvy, int &r, int &g, int &b)
 {
     // Billinear filtering
+    
+    // Wrap texture coordinates
+    uvx = fmod(uvx, 1.0f);
+    uvy = fmod(uvy, 1.0f);
+    // Ensure uvx and uvy are positive
+    uvx = uvx < 0 ? 1.0f + uvx : uvx;
+    uvy = uvy < 0 ? 1.0f + uvy : uvy;
+    
     // Four pixel samples
     auto right = static_cast<int>(std::ceil(uvx * texture.w));
     auto left = static_cast<int>(std::floor(uvx * texture.w));
     auto bottom = static_cast<int>(std::ceil(uvy * texture.h));
     auto top = static_cast<int>(std::floor(uvy * texture.h));
-    right = std::clamp(right, 0, texture.w - 1);
-    left = std::clamp(left, 0, texture.w - 1);
-    bottom = std::clamp(bottom, 0, texture.h - 1);
-    top = std::clamp(top, 0, texture.h - 1);
+
     // Texture index of above pixel samples
     int topLeft = top * texture.w * texture.bpp +
         left * texture.bpp;
@@ -246,7 +253,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                                 const std::vector<slib::vec3>& normals)
 {
     // Rasterize
-//#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
+#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
     for (const auto &t : processedFaces) 
     {
         const auto &p1 = screenPoints[t.v1];
@@ -264,9 +271,8 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         const auto &n1 = normals[t.v1];
         const auto &n2 = normals[t.v2];
         const auto &n3 = normals[t.v3];
-
-        // TODO: Will fail if texture empty.
-        const auto& texture = renderable.mesh.textures.at(t.textureName);
+        slib::texture texture = renderable.mesh.materials.at(t.material).map_Kd;
+        std::array<float, 3> vertexCol = renderable.mesh.materials.at(t.material).Kd;
 
         slib::vec3 lightingDirection = {1, 1, 1.5};
 
@@ -326,14 +332,17 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
 
                         // Lighting
                         float lum = 1;
-                        if (!renderable.ignoreLighting) {
-                            if (fragmentShader == GOURAUD) {
+                        if (!renderable.ignoreLighting) 
+                        {
+                            if (fragmentShader == GOURAUD) 
+                            {
                                 // Gouraud shading
                                 auto interpolated_normal = n1 * coords.x + n2 * coords.y + n3 * coords.z;
                                 interpolated_normal = smath::normalize(interpolated_normal);
                                 lum = smath::dot(interpolated_normal, lightingDirection);
                             }
-                            else if (fragmentShader == FLAT) {
+                            else if (fragmentShader == FLAT) 
+                            {
                                 // Flat shading
                                 lum = smath::dot(normal, lightingDirection);
                             }
@@ -342,7 +351,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                         int r = 1, g = 1, b = 1;
 
                         // Texturing
-                        if (!renderable.mesh.textures.empty())
+                        if (!texture.data.empty())
                         {
                             auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
                             auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
@@ -356,9 +365,6 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                             // Flip Y texture coordinate to account for NDC vs screen difference.
                             uvy = 1 - uvy;
 
-                            // TODO: Currently, all textures are clamped between 0-1. 
-                            // Instead, this could be a texture option where "REPEAT" uses modulo, STRETCH clamps it, etc.
-
                             if (textureFilter == NEIGHBOUR)
                             {
                                 texNearestNeighbour(texture, lum, uvx, uvy, r, g, b);
@@ -370,10 +376,9 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                         }
                         else
                         {
-                            slib::Color color = renderable.col;
-                            r = color.r;
-                            g = color.g;
-                            b = color.b;
+                            r = (static_cast<int>(vertexCol[0]) % 255);
+                            g = (static_cast<int>(vertexCol[1]) % 255);
+                            b = (static_cast<int>(vertexCol[2]) % 255);
                         }
 
                         bufferPixels(surface, x, y, r, g, b);
