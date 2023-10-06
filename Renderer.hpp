@@ -28,6 +28,9 @@ enum TextureFilter
     NEIGHBOUR,
     BILINEAR
 };
+
+struct RasterizeData;
+
 class Renderer
 {
     static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
@@ -49,6 +52,7 @@ class Renderer
     std::array<float, screenSize> zBuffer{};
     FragmentShader fragmentShader = FLAT;
     TextureFilter textureFilter = NEIGHBOUR;
+    void drawBlock(float x, float y, const RasterizeData& rd);
 public:
     void setShader(FragmentShader shader);
     void setTextureFilter(TextureFilter filter);
