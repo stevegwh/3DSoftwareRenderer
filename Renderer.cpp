@@ -9,11 +9,10 @@
 
 namespace soft3d
 {
-
 struct RasterizeData
 {
     slib::vec3 coords{};
-    slib::vec3 lightingDirection {1, 1, 1.5};
+    const slib::vec3 lightingDirection {1, 1, 1.5};
     slib::vec3 normal{};
     const slib::zvec2& p1;
     const slib::zvec2& p2;
@@ -49,7 +48,7 @@ struct RasterizeData
 inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
 {
     // Convert to screen
-#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
+//#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
     for (int i = 0; i < projectedPoints.size(); ++i) 
     {
         auto& v = projectedPoints[i];
@@ -69,7 +68,7 @@ inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vec
         screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
-#pragma omp barrier
+//#pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -104,9 +103,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) surface->pixels;
-#pragma omp parallel for default(none) shared(pixels)
+//#pragma omp parallel for default(none) shared(pixels)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
-#pragma omp barrier
+//#pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -133,7 +132,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
                                  std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
-#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
+//#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
     for (int i = 0; i < renderable.mesh.vertices.size(); i++)
     {
         slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
@@ -155,7 +154,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
         auto transformedNormal = normalTransformMat * n4;
         normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
     }
-#pragma omp barrier
+//#pragma omp barrier
 }
 
 void Renderer::Render()
@@ -234,7 +233,6 @@ inline void texNearestNeighbour(const slib::texture& texture, float lum, float u
 inline void texBilinear(const slib::texture& texture,float lum, float uvx, float uvy, int &r, int &g, int &b)
 {
     // Billinear filtering
-    
     // Wrap texture coordinates
     uvx = std::fmod(uvx, 1.0f);
     uvy = std::fmod(uvy, 1.0f);
@@ -347,15 +345,21 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                                 const std::vector<slib::vec3>& normals)
 {
     // Rasterize
-#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
+//#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
     for (const auto &t : processedFaces) 
     {
-        const auto &p1 = screenPoints[t.v1];
-        const auto &p2 = screenPoints[t.v2];
-        const auto &p3 = screenPoints[t.v3];
+        const auto& p1 = screenPoints[t.v1];
+        const auto& p2 = screenPoints[t.v2];
+        const auto& p3 = screenPoints[t.v3];
 
         float area = edgeFunctionArea(p1, p2, p3); // area of the triangle multiplied by 2
         if (area < 0) continue; // Backface culling
+
+        // Precalculate edge function
+        const float EY1 = p3.y - p2.y;
+        const float EX1 = p3.x - p2.x;
+        const float EY2 = p1.y - p3.y;
+        const float EX2 = p1.x - p3.x;
 
         RasterizeData rd(renderable, screenPoints, projectedPoints, normals, t, renderable.mesh.materials.at(t.material));
         
@@ -371,24 +375,19 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         const int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
         const int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
         
-        // Edge finding for triangle rasterization
-        for (int x = xmin; x <= xmax; ++x) 
+        for (int x = xmin; x <= xmax; ++x)
         {
-            for (int y = ymin; y <= ymax; ++y) 
+            for (int y = ymin; y <= ymax; ++y)
             {
                 const slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 1};
-
                 // Barycentric coords using an edge function
-                const float w0 = edgeFunctionArea(p2, p3, p); // signed area of the triangle v1v2p multiplied by 2
-                const float w1 = edgeFunctionArea(p3, p1, p); // signed area of the triangle v2v0p multiplied by 2
-                const float w2 = edgeFunctionArea(p1, p2, p); // signed area of the triangle v0v1p multiplied by 2
-                rd.coords = {w0, w1, w2};
+                rd.coords.x = edgeFunctionArea(p2, p3, p);
+                rd.coords.y = edgeFunctionArea(p3, p1, p);
+                rd.coords.z = edgeFunctionArea(p1, p2, p);
 
-                if (rd.coords.x >= 0 && rd.coords.y >= 0 && rd.coords.z >= 0) 
+                if (rd.coords.x >= 0 && rd.coords.y >= 0 && rd.coords.z >= 0)
                 {
-                    rd.coords.x /= area;
-                    rd.coords.y /= area;
-                    rd.coords.z /= area;
+                    rd.coords /= area;
                     drawBlock(x, y, rd);
                 }
             }
