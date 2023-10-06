@@ -6,6 +6,7 @@
 #include <cmath>
 #include <algorithm>
 #include "constants.hpp"
+#include <iostream>
 
 namespace soft3d
 {
@@ -46,10 +47,10 @@ struct RasterizeData
     {}
 };
 
-inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
+inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<slib::zvec2>& screenPoints)
 {
     // Convert to screen
-#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
+//#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
     for (int i = 0; i < projectedPoints.size(); ++i) 
     {
         auto& v = projectedPoints[i];
@@ -69,7 +70,7 @@ inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vec
         screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
-#pragma omp barrier
+//#pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -104,9 +105,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) surface->pixels;
-#pragma omp parallel for default(none) shared(pixels)
+//#pragma omp parallel for default(none) shared(pixels)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
-#pragma omp barrier
+//#pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -133,7 +134,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
                                  std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
-#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
+//#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
     for (int i = 0; i < renderable.mesh.vertices.size(); i++)
     {
         slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
@@ -155,7 +156,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
         auto transformedNormal = normalTransformMat * n4;
         normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
     }
-#pragma omp barrier
+//#pragma omp barrier
 }
 
 void Renderer::Render()
@@ -332,7 +333,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                                 const std::vector<slib::vec3>& normals)
 {
     // Rasterize
-#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
+//#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface, BLOCK_SIZE)
     for (const auto &t : processedFaces)
     {
         const auto &p1 = screenPoints[t.v1];
@@ -359,13 +360,14 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         }
 
         // Get bounding box.
-        const int blockXMin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}) / BLOCK_SIZE)), 0);
-        const int blockXMax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}) / BLOCK_SIZE)), static_cast<int>(SCREEN_WIDTH / BLOCK_SIZE));
-        const int blockYMin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}) / BLOCK_SIZE)), 0);
-        const int blockYMax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}) / BLOCK_SIZE)), static_cast<int>(SCREEN_HEIGHT / BLOCK_SIZE));
+        const int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
+        const int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH));
+        const int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
+        const int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT));
 
-        for (int blockX = blockXMin; blockX < blockXMax; ++blockX)
-        for (int blockY = blockYMin; blockY < blockYMax; ++blockY) 
+        
+        for (int blockStartX = xmin; blockStartX <= xmax; blockStartX += BLOCK_SIZE)
+        for (int blockStartY = ymin; blockStartY <= ymax; blockStartY += BLOCK_SIZE)
         {
             // Barycentric coordinates at the block corners
             slib::vec3 baryTopLeft{}, baryTopRight{}, baryBottomLeft{}, baryBottomRight{};
@@ -376,10 +378,10 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
             for (int i = 0; i < 2; ++i)
             for (int j = 0; j < 2; ++j)
             {
-                int x = blockX * BLOCK_SIZE + i * (BLOCK_SIZE - 1);
-                int y = blockY * BLOCK_SIZE + j * (BLOCK_SIZE - 1);
+                int x = blockStartX + i * (BLOCK_SIZE - 1);
+                int y = blockStartY + j * (BLOCK_SIZE - 1);
 
-                // Barycentric coords using an edge function
+                // Edge finding
                 rd.coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
                 rd.coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
                 rd.coords.z = area - rd.coords.x - rd.coords.y; // signed area of the triangle v0v1p multiplied by 2
@@ -391,22 +393,28 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                 else if (i == 1 && j == 1) baryBottomRight = rd.coords / area;
 
                 if (rd.coords.x >= 0 && rd.coords.y >= 0 && rd.coords.z >= 0)
+                {
                     anyInside = true;
+                    //rd.coords /= area;
+                    //drawBlock(x, y, rd);  // Render the corner pixel directly
+                }
                 else
+                {
                     allInside = false;
+                }
             }
 
             //if (!anyInside) continue;
 
-            for (int x = blockX * BLOCK_SIZE; x < (blockX + 1) * BLOCK_SIZE; ++x)
-            for (int y = blockY * BLOCK_SIZE; y < (blockY + 1) * BLOCK_SIZE; ++y)
+            for (int x = blockStartX; x < std::min(blockStartX + BLOCK_SIZE, static_cast<int>(SCREEN_WIDTH)); ++x)
+            for (int y = blockStartY; y < std::min(blockStartY + BLOCK_SIZE, static_cast<int>(SCREEN_HEIGHT)); ++y)
             {
                 if (allInside)
                 {
-                    float alpha = static_cast<float>(x - blockX * BLOCK_SIZE) / (BLOCK_SIZE - 1);
-                    float beta = static_cast<float>(y - blockY * BLOCK_SIZE) / (BLOCK_SIZE - 1);
+                    float alpha = static_cast<float>(x - blockStartX) / (BLOCK_SIZE - 1);
+                    float beta = static_cast<float>(y - blockStartY) / (BLOCK_SIZE - 1);
 
-                    // Interpolating the barycentric coordinates
+                    // Interpolate the barycentric coordinates
                     slib::vec3 baryHorzTop = baryTopLeft * (1.0f - alpha) + baryTopRight * alpha;
                     slib::vec3 baryHorzBottom = baryBottomLeft * (1.0f - alpha) + baryBottomRight * alpha;
                     rd.coords = baryHorzTop * (1.0f - beta) + baryHorzBottom * beta;
@@ -414,7 +422,7 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                     drawBlock(x, y, rd);
                     continue;
                 }
-                // Barycentric coords using an edge function
+                // Per-pixel edge finding
                 rd.coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
                 rd.coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
                 rd.coords.z = area - rd.coords.x - rd.coords.y; // signed area of the triangle v0v1p multiplied by 2
