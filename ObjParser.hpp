@@ -3,13 +3,9 @@
 //
 
 #pragma once
-#include <vector>
-#include <array>
-#include "slib.hpp"
 #include "Mesh.hpp"
-
 
 namespace ObjParser
 {
-    soft3d::Mesh ParseObj(const char* objPath);
+	soft3d::Mesh ParseObj(const char* objPath);
 };

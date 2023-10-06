@@ -11,17 +11,17 @@
 namespace soft3d
 {
 
-class Event
-{
-private:
-    std::vector<Observer*> observerList{};
+	class Event
+	{
+	private:
+		std::vector<Observer*> observerList{};
 
-public:
-    void Subscribe(Observer* observer);
-    void Unsubscribe(Observer* observer);
-    void InvokeAllEvents() const;
-    Event();
-    ~Event();
-};
+	public:
+		void Subscribe(Observer* observer);
+		void Unsubscribe(Observer* observer);
+		void InvokeAllEvents() const;
+		Event();
+		~Event();
+	};
 }
 

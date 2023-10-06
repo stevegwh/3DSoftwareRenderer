@@ -4,10 +4,13 @@
 
 namespace soft3d
 {
-struct Observer
-{
-    std::function<void()> callback;
-    explicit Observer(std::function<void()> func):callback(std::move(func)){}
-};
+	struct Observer
+	{
+		std::function<void()> callback;
+		explicit Observer(std::function<void()> func)
+				:callback(std::move(func))
+		{
+		}
+	};
 }
 

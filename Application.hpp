@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 #include "Renderer.hpp"
 #include "utils.hpp"
 #include "GUI.hpp"
@@ -12,30 +11,30 @@
 
 namespace soft3d
 {
-class Application
-{
-    soft3d::GUI* gui{};
-    soft3d::Renderer* renderer{};
-    std::vector<soft3d::Scene*> scenes;
-    SDL_Window* sdlWindow{};
-    SDL_Renderer* sdlRenderer{};
-    FPSCounter* fpsCounter{};
-    Clock* clock{};
-    SDL_bool loop = SDL_FALSE;
-    SDL_Event event{};
-    bool menuMouseEnabled{};
-    void changeScene(int newScene);
-    void quit();
-    void init();
-    void initGui();
-    void initSDL();
-    void draw();
-    void update();
-    void cleanup();
-    void disableMouse();
-public:
-    void Run();
-    Application();
+	class Application
+	{
+		soft3d::GUI* gui{};
+		soft3d::Renderer* renderer{};
+		std::vector<soft3d::Scene*> scenes;
+		SDL_Window* sdlWindow{};
+		SDL_Renderer* sdlRenderer{};
+		FPSCounter* fpsCounter{};
+		Clock* clock{};
+		SDL_bool loop = SDL_FALSE;
+		SDL_Event event{};
+		bool menuMouseEnabled{};
+		void changeScene(int newScene);
+		void quit();
+		void init();
+		void initGui();
+		void initSDL();
+		void draw();
+		void update();
+		void cleanup();
+		void disableMouse();
+	public:
+		void Run();
+		Application();
 
-};
+	};
 }
