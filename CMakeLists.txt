@@ -46,6 +46,9 @@ set(SOURCE_FILES
         Event.cpp
         Event.hpp
         Observer.hpp
+        Rasterizer.cpp
+        Rasterizer.hpp
+        ZBuffer.hpp
 )
 
 if(EMSCRIPTEN)
