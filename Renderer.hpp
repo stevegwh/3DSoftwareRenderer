@@ -16,6 +16,7 @@
 
 namespace soft3d
 {
+struct RasterizeData;
 enum FragmentShader
 {
     FLAT,
@@ -49,6 +50,7 @@ class Renderer
     std::array<float, screenSize> zBuffer{};
     FragmentShader fragmentShader = FLAT;
     TextureFilter textureFilter = NEIGHBOUR;
+    void drawBlock(float x, float y, const RasterizeData& rd);
 public:
     void setShader(FragmentShader shader);
     void setTextureFilter(TextureFilter filter);
