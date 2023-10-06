@@ -9,6 +9,7 @@
 
 namespace soft3d
 {
+const int BLOCK_SIZE = 8;
 struct RasterizeData
 {
     slib::vec3 coords{};
@@ -37,7 +38,7 @@ struct RasterizeData
                   const std::vector<slib::vec4>& projectedPoints, const std::vector<slib::vec3>& normals,
                   const slib::tri& t, const slib::material& _material)
     : 
-    p1(screenPoints[t.v2]), p2(screenPoints[t.v2]), p3(screenPoints[t.v3]),
+    p1(screenPoints[t.v1]), p2(screenPoints[t.v2]), p3(screenPoints[t.v3]),
     tx1(renderable.mesh.textureCoords[t.vt1]), tx2(renderable.mesh.textureCoords[t.vt2]), tx3(renderable.mesh.textureCoords[t.vt3]),
     material(_material),
     viewW1(projectedPoints[t.v1].w), viewW2(projectedPoints[t.v2].w), viewW3(projectedPoints[t.v3].w),
@@ -48,7 +49,7 @@ struct RasterizeData
 inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vector<slib::zvec2> &screenPoints)
 {
     // Convert to screen
-//#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
+#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
     for (int i = 0; i < projectedPoints.size(); ++i) 
     {
         auto& v = projectedPoints[i];
@@ -68,7 +69,7 @@ inline void createScreenSpace(std::vector<slib::vec4> &projectedPoints, std::vec
         screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -103,9 +104,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) surface->pixels;
-//#pragma omp parallel for default(none) shared(pixels)
+#pragma omp parallel for default(none) shared(pixels)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -132,7 +133,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
                                  std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
-//#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
+#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
     for (int i = 0; i < renderable.mesh.vertices.size(); i++)
     {
         slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
@@ -154,7 +155,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
         auto transformedNormal = normalTransformMat * n4;
         normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
     }
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 void Renderer::Render()
@@ -162,7 +163,7 @@ void Renderer::Render()
     // Clear zBuffer
     std::fill_n(zBuffer.begin(), screenSize, 0);
     updateViewMatrix();
-    for (auto &renderable : renderables) 
+    for (auto& renderable : renderables) 
     {        
         std::vector<slib::vec3> normals;
         normals.resize(renderable->mesh.normals.size());
@@ -184,11 +185,6 @@ void Renderer::Render()
     }
 
     pushBuffer(renderer, surface);
-}
-
-inline float edgeFunctionArea(const slib::zvec2 &a, const slib::zvec2 &b, const slib::zvec2 &c)
-{
-    return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 }
 
 inline void bufferPixels(SDL_Surface *surface, int x, int y, unsigned char r, unsigned char g, unsigned char b)
@@ -296,10 +292,8 @@ inline void Renderer::drawBlock(float x, float y, const soft3d::RasterizeData& r
         interpolated_normal = smath::normalize(interpolated_normal);
         lum = smath::dot(interpolated_normal, rd.lightingDirection);
     }
-    else if (fragmentShader == FLAT)
-    {
+    else if (fragmentShader == FLAT) 
         lum = smath::dot(rd.normal, rd.lightingDirection);
-    }
 
     int r = 1, g = 1, b = 1;
 
@@ -325,16 +319,9 @@ inline void Renderer::drawBlock(float x, float y, const soft3d::RasterizeData& r
     // Flip Y texture coordinate to account for NDC vs screen difference.
     uvy = 1 - uvy;
 
-    if (textureFilter == NEIGHBOUR)
-    {
-        texNearestNeighbour(rd.material.map_Kd, lum, uvx, uvy, r, g, b);
-    }
-    else if (textureFilter == BILINEAR)
-    {
-        texBilinear(rd.material.map_Kd, lum, uvx, uvy, r, g, b);
-    }
-
-
+    if (textureFilter == NEIGHBOUR) texNearestNeighbour(rd.material.map_Kd, lum, uvx, uvy, r, g, b);
+    else if (textureFilter == BILINEAR) texBilinear(rd.material.map_Kd, lum, uvx, uvy, r, g, b);
+    
     bufferPixels(surface, x, y, r, g, b);
 }
 
@@ -345,15 +332,17 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
                                 const std::vector<slib::vec3>& normals)
 {
     // Rasterize
-//#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
-    for (const auto &t : processedFaces) 
+#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, normals, projectedPoints, zBuffer, surface)
+    for (const auto &t : processedFaces)
     {
-        const auto& p1 = screenPoints[t.v1];
-        const auto& p2 = screenPoints[t.v2];
-        const auto& p3 = screenPoints[t.v3];
+        const auto &p1 = screenPoints[t.v1];
+        const auto &p2 = screenPoints[t.v2];
+        const auto &p3 = screenPoints[t.v3];
 
-        float area = edgeFunctionArea(p1, p2, p3); // area of the triangle multiplied by 2
-        if (area < 0) continue; // Backface culling
+        const float area =
+            (p3.x - p1.x) * (p2.y - p1.y) - (p3.y - p1.y) * (p2.x - p1.x); // area of the triangle multiplied by 2
+        if (area < 0)
+            continue; // Backface culling
 
         // Precalculate edge function
         const float EY1 = p3.y - p2.y;
@@ -370,20 +359,65 @@ inline void Renderer::rasterize(const std::vector<slib::tri>& processedFaces,
         }
 
         // Get bounding box.
-        const int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
-        const int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH) - 1);
-        const int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
-        const int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT) - 1);
-        
-        for (int x = xmin; x <= xmax; ++x)
+        const int blockXMin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}) / BLOCK_SIZE)), 0);
+        const int blockXMax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}) / BLOCK_SIZE)), static_cast<int>(SCREEN_WIDTH / BLOCK_SIZE));
+        const int blockYMin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}) / BLOCK_SIZE)), 0);
+        const int blockYMax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}) / BLOCK_SIZE)), static_cast<int>(SCREEN_HEIGHT / BLOCK_SIZE));
+
+        for (int blockX = blockXMin; blockX < blockXMax; ++blockX)
+        for (int blockY = blockYMin; blockY < blockYMax; ++blockY) 
         {
-            for (int y = ymin; y <= ymax; ++y)
+            // Barycentric coordinates at the block corners
+            slib::vec3 baryTopLeft{}, baryTopRight{}, baryBottomLeft{}, baryBottomRight{};
+
+            // Check corners of the block
+            bool allInside = true;
+            bool anyInside = false;
+            for (int i = 0; i < 2; ++i)
+            for (int j = 0; j < 2; ++j)
             {
-                const slib::zvec2 p = {static_cast<float>(x), static_cast<float>(y), 1};
+                int x = blockX * BLOCK_SIZE + i * (BLOCK_SIZE - 1);
+                int y = blockY * BLOCK_SIZE + j * (BLOCK_SIZE - 1);
+
                 // Barycentric coords using an edge function
-                rd.coords.x = edgeFunctionArea(p2, p3, p);
-                rd.coords.y = edgeFunctionArea(p3, p1, p);
-                rd.coords.z = edgeFunctionArea(p1, p2, p);
+                rd.coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
+                rd.coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
+                rd.coords.z = area - rd.coords.x - rd.coords.y; // signed area of the triangle v0v1p multiplied by 2
+
+                // Store the barycentric coordinates
+                if (i == 0 && j == 0) baryTopLeft = rd.coords / area;
+                else if (i == 1 && j == 0) baryTopRight = rd.coords / area;
+                else if (i == 0 && j == 1) baryBottomLeft = rd.coords / area;
+                else if (i == 1 && j == 1) baryBottomRight = rd.coords / area;
+
+                if (rd.coords.x >= 0 && rd.coords.y >= 0 && rd.coords.z >= 0)
+                    anyInside = true;
+                else
+                    allInside = false;
+            }
+
+            //if (!anyInside) continue;
+
+            for (int x = blockX * BLOCK_SIZE; x < (blockX + 1) * BLOCK_SIZE; ++x)
+            for (int y = blockY * BLOCK_SIZE; y < (blockY + 1) * BLOCK_SIZE; ++y)
+            {
+                if (allInside)
+                {
+                    float alpha = static_cast<float>(x - blockX * BLOCK_SIZE) / (BLOCK_SIZE - 1);
+                    float beta = static_cast<float>(y - blockY * BLOCK_SIZE) / (BLOCK_SIZE - 1);
+
+                    // Interpolating the barycentric coordinates
+                    slib::vec3 baryHorzTop = baryTopLeft * (1.0f - alpha) + baryTopRight * alpha;
+                    slib::vec3 baryHorzBottom = baryBottomLeft * (1.0f - alpha) + baryBottomRight * alpha;
+                    rd.coords = baryHorzTop * (1.0f - beta) + baryHorzBottom * beta;
+
+                    drawBlock(x, y, rd);
+                    continue;
+                }
+                // Barycentric coords using an edge function
+                rd.coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
+                rd.coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
+                rd.coords.z = area - rd.coords.x - rd.coords.y; // signed area of the triangle v0v1p multiplied by 2
 
                 if (rd.coords.x >= 0 && rd.coords.y >= 0 && rd.coords.z >= 0)
                 {
