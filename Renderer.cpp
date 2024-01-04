@@ -35,9 +35,9 @@ namespace soft3d
 		}
 	}
 
-	inline bool makeClipSpace(const slib::tri& face,
-			const std::vector<slib::vec4>& projectedPoints,
-			std::vector<slib::tri>& processedFaces)
+	inline bool createClipSpace(const slib::tri& face,
+                                const std::vector<slib::vec4>& projectedPoints,
+                                std::vector<slib::tri>& processedFaces)
 	{
 		// count inside/outside points
 		// if face is entirely in the frustum, push it to processedFaces.
@@ -143,7 +143,7 @@ namespace soft3d
 			// Culling and clipping
 			for (const auto& f : renderable->mesh.faces)
 			{
-				makeClipSpace(f, projectedPoints, processedFaces);
+                createClipSpace(f, projectedPoints, processedFaces);
 			}
 			createScreenSpace(projectedPoints, screenPoints);
 #pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, projectedPoints, normals)
