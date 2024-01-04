@@ -64,13 +64,11 @@ namespace soft3d
 		const FragmentShader fragmentShader;
 		const TextureFilter textureFilter;
 
-		void
-		drawBlock(float x, float y);
+		void drawBlock(float x, float y);
 
 	public:
 
-		void
-		rasterizeTriangle(float area);
+		void rasterizeTriangle(float area);
 
 		Rasterizer(
 				ZBuffer* const _zBuffer,

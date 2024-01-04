@@ -1,4 +1,5 @@
 .idea
 .vs
+Models
 build
 cmake-build-debug

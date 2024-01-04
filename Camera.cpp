@@ -8,10 +8,10 @@ namespace soft3d
 
 	void Camera::Update(float deltaTime)
 	{
-		const float speed = 0.05f; // Adjust this value as needed
+		const float speed = 0.05f;
 		const float adjustedSpeed = speed * deltaTime;
 
-		const Uint8* keyState = SDL_GetKeyboardState(NULL);
+		const Uint8* keyState = SDL_GetKeyboardState(nullptr);
 		if (keyState[SDL_SCANCODE_W])
 		{
 			pos -= forward * adjustedSpeed;

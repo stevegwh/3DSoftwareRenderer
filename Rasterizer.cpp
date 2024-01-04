@@ -12,8 +12,6 @@
 namespace soft3d
 {
 
-	const int BLOCK_SIZE = 8;
-
 	inline void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, unsigned char g, unsigned char b)
 	{
 		auto* pixels = (unsigned char*)surface->pixels;
@@ -89,13 +87,13 @@ namespace soft3d
 		for (int i = 0; i < 3; ++i)
 		{
 			auto colorTopLeft = texture.data[topLeft + i];
-			colorTopLeft *= (1.0f - weightx) * (1.0f - weighty);
+			colorTopLeft *= ((1.0f - weightx) * (1.0f - weighty));
 			auto colorTopRight = texture.data[topRight + i];
-			colorTopRight *= (weightx * 1.0f - weighty);
+			colorTopRight *= (weightx * (1.0f - weighty));
 			auto colorBottomLeft = texture.data[bottomLeft + i];
-			colorBottomLeft *= (1.0f - weightx) * weighty;
+			colorBottomLeft *= ((1.0f - weightx) * weighty);
 			auto colorBottomRight = texture.data[bottomRight + i];
-			colorBottomRight *= weighty * weightx;
+			colorBottomRight *= (weightx * weighty);
 			rgb[i] = (colorTopLeft + colorTopRight + colorBottomLeft + colorBottomRight);
 		}
 
@@ -177,91 +175,26 @@ namespace soft3d
 		const int ymin = std::max(static_cast<int>(std::floor(std::min({ p1.y, p2.y, p3.y }))), 0);
 		const int ymax = std::min(static_cast<int>(std::ceil(std::max({ p1.y, p2.y, p3.y }))),
 				static_cast<int>(SCREEN_HEIGHT));
+        
+        // Iterate over every pixel in the triangle
+        for (int x = xmin; x <= xmax; ++x)
+        {
+            for (int y = ymin; y <= ymax; ++y)
+            {
 
-		for (int blockStartX = xmin; blockStartX <= xmax; blockStartX += BLOCK_SIZE)
-			for (int blockStartY = ymin; blockStartY <= ymax; blockStartY += BLOCK_SIZE)
-			{
-				// Barycentric coordinates at the block corners
-				slib::vec3 baryTopLeft{}, baryTopRight{}, baryBottomLeft{}, baryBottomRight{};
+                coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1; 
+                // signed area of the triangle v1v2p multiplied by 2
+                coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2; 
+                // signed area of the triangle v2v0p multiplied by 2
+                coords.z = area - coords.x - coords.y; 
+                // signed area of the triangle v0v1p multiplied by 2
 
-				// Check corners of the block
-				bool allInside = true;
-				bool anyInside = false;
-				for (int i = 0; i < 2; ++i)
-					for (int j = 0; j < 2; ++j)
-					{
-						int x = blockStartX + i * (BLOCK_SIZE - 1);
-						int y = blockStartY + j * (BLOCK_SIZE - 1);
-
-						// Edge finding
-						coords.x =
-								(x - p2.x) * EY1
-										- (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
-						coords.y =
-								(x - p3.x) * EY2
-										- (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
-						coords.z =
-								area - coords.x - coords.y; // signed area of the triangle v0v1p multiplied by 2
-
-						// Store the barycentric coordinates
-						if (i == 0 && j == 0)
-							baryTopLeft = coords / area;
-						else if (i == 1 && j == 0)
-							baryTopRight = coords / area;
-						else if (i == 0 && j == 1)
-							baryBottomLeft = coords / area;
-						else if (i == 1 && j == 1)
-							baryBottomRight = coords / area;
-
-						if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
-						{
-							anyInside = true;
-							// TODO: Can draw these immediately and skip doing so in the next loop
-							//rd.coords /= area;
-							//drawBlock(x, y, rd);  // Render the corner pixel directly
-						}
-						else
-						{
-							allInside = false;
-						}
-					}
-
-				// TODO: Does not work as intended.
-				//if (!anyInside) continue;
-
-				for (int x = blockStartX; x < std::min(blockStartX + BLOCK_SIZE, static_cast<int>(SCREEN_WIDTH)); ++x)
-					for (int y = blockStartY; y < std::min(blockStartY + BLOCK_SIZE, static_cast<int>(SCREEN_HEIGHT));
-						 ++y)
-					{
-						if (allInside)
-						{
-							float alpha = static_cast<float>(x - blockStartX) / (BLOCK_SIZE - 1);
-							float beta = static_cast<float>(y - blockStartY) / (BLOCK_SIZE - 1);
-
-							// Interpolate the barycentric coordinates
-							slib::vec3 baryHorzTop = baryTopLeft * (1.0f - alpha) + baryTopRight * alpha;
-							slib::vec3 baryHorzBottom = baryBottomLeft * (1.0f - alpha) + baryBottomRight * alpha;
-							coords = baryHorzTop * (1.0f - beta) + baryHorzBottom * beta;
-
-							drawBlock(x, y);
-							continue;
-						}
-						// Per-pixel edge finding
-						coords.x =
-								(x - p2.x) * EY1
-										- (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
-						coords.y =
-								(x - p3.x) * EY2
-										- (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
-						coords.z =
-								area - coords.x - coords.y; // signed area of the triangle v0v1p multiplied by 2
-
-						if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
-						{
-							coords /= area;
-							drawBlock(x, y);
-						}
-					}
-			}
+                if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
+                {
+                    coords /= area;
+                    drawBlock(x, y);
+                }
+            }
+        }
 	}
 }

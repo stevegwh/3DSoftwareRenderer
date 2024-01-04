@@ -12,8 +12,7 @@ namespace soft3d
 	{
 		static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
 		std::array<float, screenSize> buffer{};
-		void
-		clear()
+		void clear()
 		{
 			std::fill_n(buffer.begin(), screenSize, 0);
 		}
