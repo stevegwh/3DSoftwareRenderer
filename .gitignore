@@ -2,3 +2,5 @@
 .vs
 build
 cmake-build-debug
+.DC_Store
+Models
