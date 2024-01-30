@@ -12,8 +12,6 @@
 namespace soft3d
 {
 
-const int BLOCK_SIZE = 8;
-
 inline void bufferPixels(SDL_Surface *surface, int x, int y, unsigned char r, unsigned char g, unsigned char b)
 {
     auto *pixels = (unsigned char *) surface->pixels;
@@ -53,57 +51,75 @@ inline void texNearestNeighbour(const slib::texture &texture, float lum, float u
     b = texture.data[index + 2];
 }
 
-inline void texBilinear(const slib::texture &texture, float lum, float uvx, float uvy, int &r, int &g, int &b)
+inline void texBilinear(const slib::texture& texture, float lum, float uvx, float uvy, int& r, int& g, int& b)
 {
     // Billinear filtering
-    // Wrap texture coordinates
+    // Fixed majora's mask bug
     uvx = std::fmod(uvx, 1.0f);
     uvy = std::fmod(uvy, 1.0f);
+
     // Ensure uvx and uvy are positive
+    // Fixed mario level bug
     uvx = uvx < 0 ? 1.0f + uvx : uvx;
     uvy = uvy < 0 ? 1.0f + uvy : uvy;
 
+    float tx = uvx * texture.w;
+    float ty = uvy * texture.h;
+
     // Four pixel samples
-    auto right = static_cast<int>(std::ceil(uvx * texture.w));
-    auto left = static_cast<int>(std::floor(uvx * texture.w));
-    auto bottom = static_cast<int>(std::ceil(uvy * texture.h));
-    auto top = static_cast<int>(std::floor(uvy * texture.h));
+    int right = std::ceil(tx);
+    int left = std::floor(tx);
+    int bottom = std::ceil(ty);
+    int top = std::floor(ty);
+
+    float fracU = tx - left;
+    float fracV = ty - top;
+
+    float ul = (1.0f - fracU) * (1.0f - fracV);
+    float ll = (1.0f - fracU) * fracV;
+    float ur = fracU * (1.0f - fracV);
+    float lr = fracU * fracV;
 
     // Texture index of above pixel samples
-    int topLeft = top * texture.w * texture.bpp +
-        left * texture.bpp;
-    int topRight = top * texture.w * texture.bpp +
-        right * texture.bpp;
-    int bottomLeft = bottom * texture.w * texture.bpp +
-        left * texture.bpp;
-    int bottomRight = bottom * texture.w * texture.bpp +
-        right * texture.bpp;
-    // Weight to average by
-    int weightx = uvx * texture.w;
-    int weighty = uvy * texture.h;
-    weightx -= left;
-    weighty -= top;
+    auto topLeft = (top * texture.w + left) * texture.bpp;
+    auto topRight = (top * texture.w + right) * texture.bpp;
+    auto bottomLeft = (bottom * texture.w + left) * texture.bpp;
+    auto bottomRight = (bottom * texture.w + right) * texture.bpp;
 
-    std::array<int, 3> rgb{};
-    for (int i = 0; i < 3; ++i)
-    {
-        auto colorTopLeft = texture.data[topLeft + i];
-        colorTopLeft *= (1.0f - weightx) * (1.0f - weighty);
-        auto colorTopRight = texture.data[topRight + i];
-        colorTopRight *= (weightx * 1.0f - weighty);
-        auto colorBottomLeft = texture.data[bottomLeft + i];
-        colorBottomLeft *= (1.0f - weightx) * weighty;
-        auto colorBottomRight = texture.data[bottomRight + i];
-        colorBottomRight *= weighty * weightx;
-        rgb[i] = (colorTopLeft + colorTopRight + colorBottomLeft + colorBottomRight);
-    }
+    slib::Color colorTopLeft = {
+        texture.data[topLeft],
+        texture.data[topLeft + 1],
+        texture.data[topLeft + 2]
+    };
 
-    r = std::max(0.0f, std::min(rgb[0] * lum, 255.0f));
-    g = std::max(0.0f, std::min(rgb[1] * lum, 255.0f));
-    b = std::max(0.0f, std::min(rgb[2] * lum, 255.0f));
+    slib::Color colorTopRight = {
+        texture.data[topRight],
+        texture.data[topRight + 1],
+        texture.data[topRight + 2]
+    };
+
+    slib::Color colorBottomLeft = {
+        texture.data[bottomLeft],
+        texture.data[bottomLeft + 1],
+        texture.data[bottomLeft + 2]
+    };
+
+    slib::Color colorBottomRight = {
+        texture.data[bottomRight],
+        texture.data[bottomRight + 1],
+        texture.data[bottomRight + 2]
+    };
+
+    float red = ul * colorTopLeft.r + ll * colorBottomLeft.r + ur * colorTopRight.r + lr * colorBottomRight.r;
+    float green = ul * colorTopLeft.g + ll * colorBottomLeft.g + ur * colorTopRight.g + lr * colorBottomRight.g;
+    float blue = ul * colorTopLeft.b + ll * colorBottomLeft.b + ur * colorTopRight.b + lr * colorBottomRight.b;
+
+    r = std::max(0, std::min(static_cast<int>(red * lum), 255));
+    g = std::max(0, std::min(static_cast<int>(green * lum), 255));
+    b = std::max(0, std::min(static_cast<int>(blue * lum), 255));
 }
 
-inline void Rasterizer::drawBlock(float x, float y)
+inline void Rasterizer::drawPixel(float x, float y)
 {
     // zBuffer.
     float interpolated_z = coords.x * p1.w + coords.y * p2.w + coords.z * p3.w;
@@ -165,95 +181,37 @@ void Rasterizer::rasterizeTriangle(float area)
         if (!renderable.mesh.normals.empty())
             normal = smath::normalize((n1 + n2 + n3) / 3);
         else
-            normal = smath::facenormal(t, renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
+            normal = smath::facenormal(t,
+                                       renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
     }
 
     // Get bounding box.
-    const int xmin = std::max(static_cast<int>(std::floor(std::min({p1.x, p2.x, p3.x}))), 0);
-    const int xmax = std::min(static_cast<int>(std::ceil(std::max({p1.x, p2.x, p3.x}))), static_cast<int>(SCREEN_WIDTH));
-    const int ymin = std::max(static_cast<int>(std::floor(std::min({p1.y, p2.y, p3.y}))), 0);
-    const int ymax = std::min(static_cast<int>(std::ceil(std::max({p1.y, p2.y, p3.y}))), static_cast<int>(SCREEN_HEIGHT));
+    const int xmin = std::max(static_cast<int>(std::floor(std::min({ p1.x, p2.x, p3.x }))), 0);
+    const int xmax = std::min(static_cast<int>(std::ceil(std::max({ p1.x, p2.x, p3.x }))),
+                              static_cast<int>(SCREEN_WIDTH));
+    const int ymin = std::max(static_cast<int>(std::floor(std::min({ p1.y, p2.y, p3.y }))), 0);
+    const int ymax = std::min(static_cast<int>(std::ceil(std::max({ p1.y, p2.y, p3.y }))),
+                              static_cast<int>(SCREEN_HEIGHT));
 
-    for (int blockStartX = xmin; blockStartX <= xmax; blockStartX += BLOCK_SIZE)
-        for (int blockStartY = ymin; blockStartY <= ymax; blockStartY += BLOCK_SIZE)
+    // Iterate over every pixel in the triangle
+    for (int x = xmin; x <= xmax; ++x)
+    {
+        for (int y = ymin; y <= ymax; ++y)
         {
-            // Barycentric coordinates at the block corners
-            slib::vec3 baryTopLeft{}, baryTopRight{}, baryBottomLeft{}, baryBottomRight{};
 
-            // Check corners of the block
-            bool allInside = true;
-            bool anyInside = false;
-            for (int i = 0; i < 2; ++i)
-                for (int j = 0; j < 2; ++j)
-                {
-                    int x = blockStartX + i * (BLOCK_SIZE - 1);
-                    int y = blockStartY + j * (BLOCK_SIZE - 1);
+            coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1;
+            // signed area of the triangle v1v2p multiplied by 2
+            coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2;
+            // signed area of the triangle v2v0p multiplied by 2
+            coords.z = area - coords.x - coords.y;
+            // signed area of the triangle v0v1p multiplied by 2
 
-                    // Edge finding
-                    coords.x =
-                        (x - p2.x) * EY1 - (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
-                    coords.y =
-                        (x - p3.x) * EY2 - (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
-                    coords.z =
-                        area - coords.x - coords.y; // signed area of the triangle v0v1p multiplied by 2
-
-                    // Store the barycentric coordinates
-                    if (i == 0 && j == 0)
-                        baryTopLeft = coords / area;
-                    else if (i == 1 && j == 0)
-                        baryTopRight = coords / area;
-                    else if (i == 0 && j == 1)
-                        baryBottomLeft = coords / area;
-                    else if (i == 1 && j == 1)
-                        baryBottomRight = coords / area;
-
-                    if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
-                    {
-                        anyInside = true;
-                        // TODO: Can draw these immediately and skip doing so in the next loop
-                        //rd.coords /= area;
-                        //drawBlock(x, y, rd);  // Render the corner pixel directly
-                    }
-                    else
-                    {
-                        allInside = false;
-                    }
-                }
-
-            // TODO: Does not work as intended.
-            //if (!anyInside) continue;
-
-            for (int x = blockStartX; x < std::min(blockStartX + BLOCK_SIZE, static_cast<int>(SCREEN_WIDTH)); ++x)
-                for (int y = blockStartY; y < std::min(blockStartY + BLOCK_SIZE, static_cast<int>(SCREEN_HEIGHT));
-                     ++y)
-                {
-                    if (allInside)
-                    {
-                        float alpha = static_cast<float>(x - blockStartX) / (BLOCK_SIZE - 1);
-                        float beta = static_cast<float>(y - blockStartY) / (BLOCK_SIZE - 1);
-
-                        // Interpolate the barycentric coordinates
-                        slib::vec3 baryHorzTop = baryTopLeft * (1.0f - alpha) + baryTopRight * alpha;
-                        slib::vec3 baryHorzBottom = baryBottomLeft * (1.0f - alpha) + baryBottomRight * alpha;
-                        coords = baryHorzTop * (1.0f - beta) + baryHorzBottom * beta;
-
-                        drawBlock(x, y);
-                        continue;
-                    }
-                    // Per-pixel edge finding
-                    coords.x =
-                        (x - p2.x) * EY1 - (y - p2.y) * EX1; // signed area of the triangle v1v2p multiplied by 2
-                    coords.y =
-                        (x - p3.x) * EY2 - (y - p3.y) * EX2; // signed area of the triangle v2v0p multiplied by 2
-                    coords.z =
-                        area - coords.x - coords.y; // signed area of the triangle v0v1p multiplied by 2
-
-                    if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
-                    {
-                        coords /= area;
-                        drawBlock(x, y);
-                    }
-                }
+            if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
+            {
+                coords /= area;
+                drawPixel(x, y);
+            }
         }
+    }
 }
 }

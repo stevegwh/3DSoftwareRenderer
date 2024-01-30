@@ -1,0 +1,608 @@
+newmtl material_0
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd geswater00.png
+newmtl material_1
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_2
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_3
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc2.png
+newmtl material_4
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc1.png
+newmtl material_5
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc0.png
+newmtl material_6
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc2.png
+newmtl material_7
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc7.png
+newmtl material_8
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_9
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gesslit.png
+newmtl material_10
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_11
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc7.png
+newmtl material_12
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gesslit.png
+newmtl material_13
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc6.png
+newmtl material_14
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc0.png
+newmtl material_15
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_16
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_blick4.png
+newmtl material_17
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_geswaku0.png
+newmtl material_18
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_metalbar1.png
+newmtl material_19
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_geswaku0.png
+newmtl material_20
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_so2.png
+newmtl material_21
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gesami0.png
+newmtl material_22
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_23
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_24
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gespanel0.png
+newmtl material_25
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc8.png
+newmtl material_26
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_27
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc6.png
+newmtl material_28
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd gele_yuka2.png
+newmtl material_29
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_30
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc6.png
+newmtl material_31
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_32
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc8.png
+newmtl material_33
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_34
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gespanel0.png
+newmtl material_35
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc6.png
+newmtl material_36
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_37
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_38
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc7.png
+newmtl material_39
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_bigblick0.png
+newmtl material_40
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_dan0.png
+newmtl material_41
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_wkabe1.png
+newmtl material_42
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_wkabe1.png
+newmtl material_43
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_blick3.png
+newmtl material_44
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_bigblick0.png
+newmtl material_45
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_blick3.png
+newmtl material_46
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_47
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_48
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gesami0.png
+newmtl material_49
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd paip_1.png
+newmtl material_50
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd belt.png
+newmtl material_51
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd belt.png
+newmtl material_52
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd belt2.png
+newmtl material_53
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd giya.png
+newmtl material_54
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_k_6.png
+newmtl material_55
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd metalplate.png
+newmtl material_56
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd usuaometal.png
+newmtl material_57
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_k_2.png
+newmtl material_58
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd metalplate.png
+newmtl material_59
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd usuaometal.png
+newmtl material_60
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd paip_1.png
+newmtl material_61
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_k_4.png
+newmtl material_62
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd w_1.png
+newmtl material_63
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd plant04.png
+newmtl material_64
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd s2ryuka_01.png
+newmtl material_65
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc7.png
+newmtl material_66
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc5.png
+newmtl material_67
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_so2.png
+newmtl material_68
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gesami0.png
+newmtl material_69
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_sabi0.png
+newmtl material_70
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gold0.png
+newmtl material_71
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_dokansky.png
+newmtl material_72
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_conc7.png
+newmtl material_73
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_wkabe1.png
+newmtl material_74
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_bolt.png
+newmtl material_75
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_so2.png
+newmtl material_76
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_so2.png
+newmtl material_77
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_metalbar0.png
+newmtl material_78
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_metalbar1.png
+newmtl material_79
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_metalbar0.png
+newmtl material_80
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gespanel0.png
+newmtl material_81
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_geskuda0.png
+newmtl material_82
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_so2.png
+newmtl material_83
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_geskuda0.png
+newmtl material_84
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kuda_so2.png
+newmtl material_85
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_geskuda0.png
+newmtl material_86
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd belt2.png
+newmtl material_87
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_sabi0.png
+newmtl material_88
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd gele_yuka2.png
+newmtl material_89
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_gesami0.png
+newmtl material_90
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_blush0.png
+newmtl material_91
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_t_gamen.png
+newmtl material_92
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd metalplate.png
+newmtl material_93
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ring.png
+newmtl material_94
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bluemetal2.png
+newmtl material_95
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd usuaometal.png
+newmtl material_96
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd usuaometal3.png
+newmtl material_97
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd gomme.png
+newmtl material_98
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_t_tora.png
+newmtl material_99
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_tan01.png
+newmtl material_100
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd usuaometal4.png
+newmtl material_101
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1

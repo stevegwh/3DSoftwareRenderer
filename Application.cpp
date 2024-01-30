@@ -98,7 +98,7 @@ namespace soft3d
         }
     
         // Force SDL to use the CPU.
-        sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_SOFTWARE);
+        sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
         if (sdlRenderer == nullptr) 
         {
             std::cout << "Could not initialise SDL renderer. Exiting..." << std::endl;

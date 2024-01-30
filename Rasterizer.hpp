@@ -61,7 +61,7 @@ class Rasterizer
     const FragmentShader fragmentShader;
     const TextureFilter textureFilter;
     
-    void drawBlock(float x, float y);
+    void drawPixel(float x, float y);
 
 public:
 

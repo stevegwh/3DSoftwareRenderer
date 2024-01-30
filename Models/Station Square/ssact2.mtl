@@ -1,0 +1,2997 @@
+newmtl material_0
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwm.png
+newmtl material_1
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwn.png
+newmtl material_2
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe01.png
+newmtl material_3
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe32.png
+newmtl material_4
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi22.png
+newmtl material_5
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakub.png
+newmtl material_6
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bstwakua.png
+newmtl material_7
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wd.png
+newmtl material_8
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_9
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wd.png
+newmtl material_10
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_11
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiric.png
+newmtl material_12
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiric.png
+newmtl material_13
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiric.png
+newmtl material_14
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi10.png
+newmtl material_15
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi03.png
+newmtl material_16
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe12.png
+newmtl material_17
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi01.png
+newmtl material_18
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi02.png
+newmtl material_19
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe14.png
+newmtl material_20
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe14.png
+newmtl material_21
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi26.png
+newmtl material_22
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe36.png
+newmtl material_23
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi16.png
+newmtl material_24
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe41.png
+newmtl material_25
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi25.png
+newmtl material_26
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi28.png
+newmtl material_27
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi29.png
+newmtl material_28
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe41.png
+newmtl material_29
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi23.png
+newmtl material_30
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe34.png
+newmtl material_31
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira03.png
+newmtl material_32
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd aca_wload01.png
+newmtl material_33
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd aca_wload03.png
+newmtl material_34
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd aca_wload02.png
+newmtl material_35
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd aca_cload.png
+newmtl material_36
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajinoin01.png
+newmtl material_37
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd yuka_01w.png
+newmtl material_38
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_yuka02.png
+newmtl material_39
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cat_hasira04.png
+newmtl material_40
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira02.png
+newmtl material_41
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_42
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe07.png
+newmtl material_43
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira04.png
+newmtl material_44
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasi01.png
+newmtl material_45
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01w.png
+newmtl material_46
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01w.png
+newmtl material_47
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira01.png
+newmtl material_48
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_49
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten01.png
+newmtl material_50
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten03.png
+newmtl material_51
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten02.png
+newmtl material_52
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten03.png
+newmtl material_53
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten03.png
+newmtl material_54
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe08.png
+newmtl material_55
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira03.png
+newmtl material_56
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira02.png
+newmtl material_57
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_58
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01w.png
+newmtl material_59
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_entg.png
+newmtl material_60
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd cst_cabe09.png
+newmtl material_61
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten03.png
+newmtl material_62
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_kabe.png
+newmtl material_63
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hari.png
+newmtl material_64
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd cst_hasi02.png
+newmtl material_65
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd yuka_02w.png
+newmtl material_66
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bstente.png
+newmtl material_67
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_68
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_ten03.png
+newmtl material_69
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_70
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado18.png
+newmtl material_71
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe29.png
+newmtl material_72
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado14.png
+newmtl material_73
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe35.png
+newmtl material_74
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi20.png
+newmtl material_75
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe29.png
+newmtl material_76
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe27.png
+newmtl material_77
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe29.png
+newmtl material_78
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe27.png
+newmtl material_79
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe28.png
+newmtl material_80
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe32.png
+newmtl material_81
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado08.png
+newmtl material_82
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe46.png
+newmtl material_83
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe30.png
+newmtl material_84
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri01.png
+newmtl material_85
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira03.png
+newmtl material_86
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_sen01.png
+newmtl material_87
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri02.png
+newmtl material_88
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan04.png
+newmtl material_89
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_sen01.png
+newmtl material_90
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajino14.png
+newmtl material_91
+Ka 1 1 1
+Kd 1 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajino14.png
+newmtl material_92
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01w.png
+newmtl material_93
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe03.png
+newmtl material_94
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_02g.png
+newmtl material_95
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01g.png
+newmtl material_96
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_entd.png
+newmtl material_97
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd yuka_01w.png
+newmtl material_98
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01g.png
+newmtl material_99
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe01.png
+newmtl material_100
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe03.png
+newmtl material_101
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe03.png
+newmtl material_102
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan04.png
+newmtl material_103
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan08.png
+newmtl material_104
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_moyou02.png
+newmtl material_105
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe02.png
+newmtl material_106
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe02.png
+newmtl material_107
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe02.png
+newmtl material_108
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_yane.png
+newmtl material_109
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_110
+Ka 1 1 1
+Kd 1 1 0
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_111
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd ast_ten02.png
+newmtl material_112
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chubec.png
+newmtl material_113
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chubea.png
+newmtl material_114
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chubeb.png
+newmtl material_115
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe01.png
+newmtl material_116
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri01.png
+newmtl material_117
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri02.png
+newmtl material_118
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_sen04.png
+newmtl material_119
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_sen04.png
+newmtl material_120
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri02.png
+newmtl material_121
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_122
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_01g.png
+newmtl material_123
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_sen01.png
+newmtl material_124
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira02.png
+newmtl material_125
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd kabe_01g.png
+newmtl material_126
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira04.png
+newmtl material_127
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_entc.png
+newmtl material_128
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hari.png
+newmtl material_129
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_moyou05.png
+newmtl material_130
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasi02.png
+newmtl material_131
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe09.png
+newmtl material_132
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajino16.png
+newmtl material_133
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado07.png
+newmtl material_134
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi04.png
+newmtl material_135
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_136
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe21.png
+newmtl material_137
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi14.png
+newmtl material_138
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi14.png
+newmtl material_139
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi12.png
+newmtl material_140
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi12.png
+newmtl material_141
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi17.png
+newmtl material_142
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_143
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesirib.png
+newmtl material_144
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_145
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_146
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_147
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiria.png
+newmtl material_148
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiria.png
+newmtl material_149
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesirib.png
+newmtl material_150
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_151
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesirib.png
+newmtl material_152
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiria.png
+newmtl material_153
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_154
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiria.png
+newmtl material_155
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_ana.png
+newmtl material_156
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wa.png
+newmtl material_157
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doorb.png
+newmtl material_158
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doora.png
+newmtl material_159
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doorb.png
+newmtl material_160
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doora.png
+newmtl material_161
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_noren.png
+newmtl material_162
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakue.png
+newmtl material_163
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wa.png
+newmtl material_164
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_165
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_166
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wab.png
+newmtl material_167
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wa.png
+newmtl material_168
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madoa.png
+newmtl material_169
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_170
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_171
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_172
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_sswin.png
+newmtl material_173
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_tesiria.png
+newmtl material_174
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wb.png
+newmtl material_175
+Ka 1 1 1
+Kd 1 1 0
+Ks 1 1 1
+illum 1
+map_Kd bst_wb.png
+newmtl material_176
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_hasira02.png
+newmtl material_177
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_178
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_sswinb.png
+newmtl material_179
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wa.png
+newmtl material_180
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_kaic.png
+newmtl material_181
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wa.png
+newmtl material_182
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_kaib.png
+newmtl material_183
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wab.png
+newmtl material_184
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_kaia.png
+newmtl material_185
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_kaia.png
+newmtl material_186
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wd.png
+newmtl material_187
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_188
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_kabew.png
+newmtl material_189
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakud.png
+newmtl material_190
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_swb.png
+newmtl material_191
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_192
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakud.png
+newmtl material_193
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_194
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_195
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_swa.png
+newmtl material_196
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_refa.png
+newmtl material_197
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuc.png
+newmtl material_198
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_199
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wc.png
+newmtl material_200
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bstwakua.png
+newmtl material_201
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi01.png
+newmtl material_202
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi02.png
+newmtl material_203
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi01.png
+newmtl material_204
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado01.png
+newmtl material_205
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe09.png
+newmtl material_206
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado03.png
+newmtl material_207
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi09.png
+newmtl material_208
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe12.png
+newmtl material_209
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado06.png
+newmtl material_210
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe15.png
+newmtl material_211
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe19.png
+newmtl material_212
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado04.png
+newmtl material_213
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe10.png
+newmtl material_214
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi06.png
+newmtl material_215
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi05.png
+newmtl material_216
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe11.png
+newmtl material_217
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe14.png
+newmtl material_218
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe11.png
+newmtl material_219
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe04.png
+newmtl material_220
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe05.png
+newmtl material_221
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe13.png
+newmtl material_222
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe13.png
+newmtl material_223
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe18.png
+newmtl material_224
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe20.png
+newmtl material_225
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado05.png
+newmtl material_226
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi07.png
+newmtl material_227
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi08.png
+newmtl material_228
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe17.png
+newmtl material_229
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe40.png
+newmtl material_230
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi28.png
+newmtl material_231
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado19.png
+newmtl material_232
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado15.png
+newmtl material_233
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi27.png
+newmtl material_234
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi31.png
+newmtl material_235
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe43.png
+newmtl material_236
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado20.png
+newmtl material_237
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi34.png
+newmtl material_238
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado16.png
+newmtl material_239
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe47.png
+newmtl material_240
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe43.png
+newmtl material_241
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe50.png
+newmtl material_242
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe46.png
+newmtl material_243
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi21.png
+newmtl material_244
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi19.png
+newmtl material_245
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi19.png
+newmtl material_246
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe29.png
+newmtl material_247
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado13.png
+newmtl material_248
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe33.png
+newmtl material_249
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado12.png
+newmtl material_250
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe33.png
+newmtl material_251
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wg.png
+newmtl material_252
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuf.png
+newmtl material_253
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doord.png
+newmtl material_254
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_refa.png
+newmtl material_255
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_we.png
+newmtl material_256
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wh.png
+newmtl material_257
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wi.png
+newmtl material_258
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madob.png
+newmtl material_259
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madob.png
+newmtl material_260
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madob.png
+newmtl material_261
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madob.png
+newmtl material_262
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madob.png
+newmtl material_263
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madob.png
+newmtl material_264
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_swd.png
+newmtl material_265
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_swcb.png
+newmtl material_266
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_entc.png
+newmtl material_267
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_entc.png
+newmtl material_268
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_swc.png
+newmtl material_269
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wf.png
+newmtl material_270
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wf.png
+newmtl material_271
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wf.png
+newmtl material_272
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakui.png
+newmtl material_273
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_we.png
+newmtl material_274
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_we.png
+newmtl material_275
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_refa.png
+newmtl material_276
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_we.png
+newmtl material_277
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_we.png
+newmtl material_278
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakugb.png
+newmtl material_279
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakug.png
+newmtl material_280
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakug.png
+newmtl material_281
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakug.png
+newmtl material_282
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakugb.png
+newmtl material_283
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuh.png
+newmtl material_284
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuh.png
+newmtl material_285
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakue.png
+newmtl material_286
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horo.png
+newmtl material_287
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horob.png
+newmtl material_288
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horob.png
+newmtl material_289
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horo.png
+newmtl material_290
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horo.png
+newmtl material_291
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horo.png
+newmtl material_292
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horo.png
+newmtl material_293
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_horob.png
+newmtl material_294
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wo.png
+newmtl material_295
+Ka 1 1 1
+Kd 0 1 0
+Ks 1 1 1
+illum 1
+map_Kd bst_wo.png
+newmtl material_296
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madod.png
+newmtl material_297
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wk.png
+newmtl material_298
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wk.png
+newmtl material_299
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_madoc.png
+newmtl material_300
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wj.png
+newmtl material_301
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_302
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_303
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_304
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi12.png
+newmtl material_305
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe24.png
+newmtl material_306
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe23.png
+newmtl material_307
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe23.png
+newmtl material_308
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado11.png
+newmtl material_309
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado09.png
+newmtl material_310
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe22.png
+newmtl material_311
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe22.png
+newmtl material_312
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi13.png
+newmtl material_313
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasi18.png
+newmtl material_314
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado10.png
+newmtl material_315
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cat_hasira04.png
+newmtl material_316
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasi03.png
+newmtl material_317
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cat_hasira07.png
+newmtl material_318
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cat_hasira05.png
+newmtl material_319
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cat_hasira06.png
+newmtl material_320
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cat_hasira08.png
+newmtl material_321
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe12.png
+newmtl material_322
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_yuka01.png
+newmtl material_323
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_03g.png
+newmtl material_324
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasi01.png
+newmtl material_325
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_entc.png
+newmtl material_326
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajino11.png
+newmtl material_327
+Ka 1 1 1
+Kd 1 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajino12.png
+newmtl material_328
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_cajinoin02.png
+newmtl material_329
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan_01.png
+newmtl material_330
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_mado17.png
+newmtl material_331
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_sen03.png
+newmtl material_332
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe06.png
+newmtl material_333
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri02.png
+newmtl material_334
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tukue01.png
+newmtl material_335
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_sen01.png
+newmtl material_336
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri01.png
+newmtl material_337
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri01.png
+newmtl material_338
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tesuri01.png
+newmtl material_339
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan02.png
+newmtl material_340
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan03.png
+newmtl material_341
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan_01.png
+newmtl material_342
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan06.png
+newmtl material_343
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan06.png
+newmtl material_344
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan03.png
+newmtl material_345
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan07.png
+newmtl material_346
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira01.png
+newmtl material_347
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_hari.png
+newmtl material_348
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_hari.png
+newmtl material_349
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bstente.png
+newmtl material_350
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wp.png
+newmtl material_351
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wl.png
+newmtl material_352
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yuka.png
+newmtl material_353
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yukab.png
+newmtl material_354
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wn.png
+newmtl material_355
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wp.png
+newmtl material_356
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wl.png
+newmtl material_357
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wp.png
+newmtl material_358
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakul.png
+newmtl material_359
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakul.png
+newmtl material_360
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_gfinb.png
+newmtl material_361
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakul.png
+newmtl material_362
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakul.png
+newmtl material_363
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doorf.png
+newmtl material_364
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_refc.png
+newmtl material_365
+Ka 1 1 1
+Kd 1 1 0
+Ks 1 1 1
+illum 1
+map_Kd bst_wakul.png
+newmtl material_366
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_wakul.png
+newmtl material_367
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_neonb.png
+newmtl material_368
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_neon.png
+newmtl material_369
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_neonc.png
+newmtl material_370
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_neond.png
+newmtl material_371
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_fanb.png
+newmtl material_372
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_fan.png
+newmtl material_373
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wa.png
+newmtl material_374
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_375
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_swf.png
+newmtl material_376
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_gfina.png
+newmtl material_377
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_gfina.png
+newmtl material_378
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwq.png
+newmtl material_379
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwr.png
+newmtl material_380
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wq.png
+newmtl material_381
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_gfinb.png
+newmtl material_382
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yuka.png
+newmtl material_383
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_384
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_385
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_wakuk.png
+newmtl material_386
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yaneb.png
+newmtl material_387
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe10.png
+newmtl material_388
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd st3_100.png
+newmtl material_389
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd st3_100.png
+newmtl material_390
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd tokeiyoko.png
+newmtl material_391
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_hoteltenjyo0.png
+newmtl material_392
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_hoteldoor.png
+newmtl material_393
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd sshotelpink0.png
+newmtl material_394
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd sshotelpink0.png
+newmtl material_395
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_396
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd hoteldoor_ref.png
+newmtl material_397
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd tokeiyoko.png
+newmtl material_398
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_hoteltenjyo0.png
+newmtl material_399
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_hotelline0.png
+newmtl material_400
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd sshotelpink0.png
+newmtl material_401
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_hotelmado1.png
+newmtl material_402
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ss_hoteltenjyo0.png
+newmtl material_403
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd s_w37.png
+newmtl material_404
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_405
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_cwh.png
+newmtl material_406
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_407
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_cwk.png
+newmtl material_408
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira02.png
+newmtl material_409
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd kabe_01g.png
+newmtl material_410
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe10.png
+newmtl material_411
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira01.png
+newmtl material_412
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira02.png
+newmtl material_413
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira01.png
+newmtl material_414
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hasira01.png
+newmtl material_415
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cahaikei_d.png
+newmtl material_416
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ca_haikeiyane.png
+newmtl material_417
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_entc.png
+newmtl material_418
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira01.png
+newmtl material_419
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_moyou05.png
+newmtl material_420
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe03.png
+newmtl material_421
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe09.png
+newmtl material_422
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_entc.png
+newmtl material_423
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kabe07.png
+newmtl material_424
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tokei01.png
+newmtl material_425
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_hari.png
+newmtl material_426
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tokei03.png
+newmtl material_427
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_tokei02.png
+newmtl material_428
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_429
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwh.png
+newmtl material_430
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwk.png
+newmtl material_431
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwh.png
+newmtl material_432
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwdb.png
+newmtl material_433
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_434
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_435
+Ka 1 1 1
+Kd 0 1 0
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_436
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwd.png
+newmtl material_437
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwg.png
+newmtl material_438
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwg.png
+newmtl material_439
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwk.png
+newmtl material_440
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwk.png
+newmtl material_441
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwg.png
+newmtl material_442
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_443
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_444
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwl.png
+newmtl material_445
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwh.png
+newmtl material_446
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_447
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_448
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwa.png
+newmtl material_449
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwl.png
+newmtl material_450
+Ka 1 1 1
+Kd 1 1 0
+Ks 1 1 1
+illum 1
+map_Kd bst_cwf.png
+newmtl material_451
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yukab.png
+newmtl material_452
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_doorg.png
+newmtl material_453
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwo.png
+newmtl material_454
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_refd.png
+newmtl material_455
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_456
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwi.png
+newmtl material_457
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwl.png
+newmtl material_458
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwa.png
+newmtl material_459
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_460
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwi.png
+newmtl material_461
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_462
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwa.png
+newmtl material_463
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwc.png
+newmtl material_464
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwp.png
+newmtl material_465
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwp.png
+newmtl material_466
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chari.png
+newmtl material_467
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd chaoinspace.png
+newmtl material_468
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chari.png
+newmtl material_469
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chari.png
+newmtl material_470
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_chari.png
+newmtl material_471
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yanec.png
+newmtl material_472
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_yanec.png
+newmtl material_473
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_norenb.png
+newmtl material_474
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_norenb.png
+newmtl material_475
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+newmtl material_476
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd bst_cwh.png
+newmtl material_477
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd kabe_01w.png
+newmtl material_478
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd ast_hasira02.png
+newmtl material_479
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd kabe_01g.png
+newmtl material_480
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd ast_ten03.png
+newmtl material_481
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_entd.png
+newmtl material_482
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_enta.png
+newmtl material_483
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd shuchia.png
+newmtl material_484
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_485
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd shuchia.png
+newmtl material_486
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_yane.png
+newmtl material_487
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+illum 1
+map_Kd bst_kabe.png
+newmtl material_488
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_489
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_490
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_491
+Ka 1 1 1
+Kd 0 0 1
+Ks 1 1 1
+illum 1
+map_Kd shuchia.png
+newmtl material_492
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd shuchia.png
+newmtl material_493
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_yane.png
+newmtl material_494
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_495
+Ka 1 1 1
+Kd 1 0 1
+Ks 1 1 1
+illum 1
+map_Kd shuchib.png
+newmtl material_496
+Ka 1 1 1
+Kd 0 1 1
+Ks 1 1 1
+illum 1
+map_Kd shuchia.png
+newmtl material_497
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd bst_enta.png
+newmtl material_498
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd ast_kabe55.png
+newmtl material_499
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd cst_kaidan07.png
+newmtl material_500
+Ka 1 1 1
+Kd 0 0 0
+Ks 1 1 1
+illum 1
+map_Kd kabe_03g.png
