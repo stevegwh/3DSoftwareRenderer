@@ -127,7 +127,7 @@ void Renderer::Render()
     zBuffer->clear();
     updateViewMatrix();
     for (auto& renderable : renderables) 
-    {        
+    {
         std::vector<slib::vec3> normals;
         normals.resize(renderable->mesh.normals.size());
         std::vector<slib::vec4> projectedPoints;

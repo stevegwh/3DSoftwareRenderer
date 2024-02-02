@@ -21,16 +21,9 @@ inline void bufferPixels(SDL_Surface *surface, int x, int y, unsigned char r, un
     pixels[4 * (y * surface->w + x) + 3] = 255;
 }
 
+// GL_NEAREST
 inline void texNearestNeighbour(const slib::texture &texture, float lum, float uvx, float uvy, int &r, int &g, int &b)
 {
-    // Wrap texture coordinates
-    uvx = fmod(uvx, 1.0f);
-    uvy = fmod(uvy, 1.0f);
-
-    // Ensure uvx and uvy are positive
-    uvx = uvx < 0 ? 1.0f + uvx : uvx;
-    uvy = uvy < 0 ? 1.0f + uvy : uvy;
-
     // Convert to texture space
     auto tx = static_cast<int>(uvx * texture.w);
     auto ty = static_cast<int>(uvy * texture.h);
@@ -50,31 +43,33 @@ inline void texNearestNeighbour(const slib::texture &texture, float lum, float u
     g = texture.data[index + 1];
     b = texture.data[index + 2];
 }
-
-inline void texBilinear(const slib::texture& texture, float lum, float uvx, float uvy, int& r, int& g, int& b)
+// GL_LINEAR
+inline void texBilinear(const slib::texture& texture, bool textureAtlas, int tileSize, float lum, 
+                        float uvx, float uvy, int& r, int& g, int& b)
 {
-    // Billinear filtering
-    // Fixed majora's mask bug
-    uvx = std::fmod(uvx, 1.0f);
-    uvy = std::fmod(uvy, 1.0f);
-
-    // Ensure uvx and uvy are positive
-    // Fixed mario level bug
-    uvx = uvx < 0 ? 1.0f + uvx : uvx;
-    uvy = uvy < 0 ? 1.0f + uvy : uvy;
-
     float tx = uvx * texture.w;
     float ty = uvy * texture.h;
 
-    // Four pixel samples
-    int right = std::ceil(tx);
-    int left = std::floor(tx);
-    int bottom = std::ceil(ty);
-    int top = std::floor(ty);
+    int left = static_cast<int>(tx);
+    int top = static_cast<int>(ty);
+    int right = left + 1;
+    int bottom = top + 1;
 
-    float fracU = tx - left;
-    float fracV = ty - top;
-
+    if (textureAtlas)
+    {
+        int tileIndexX = tx / tileSize;
+        int tileIndexY = ty / tileSize;
+        int tileStartX = tileIndexX * tileSize;
+        int tileStartY = tileIndexY * tileSize;
+        right = ((right - tileStartX) % tileSize) + tileStartX;
+        bottom = ((bottom - tileStartY) % tileSize) + tileStartY;
+    }
+    
+    // Get the mantissa of the u/v
+    float fracU = tx - static_cast<float>(left);
+    float fracV = ty - static_cast<float>(top);
+    
+    // Calculate the distance (weight) for each corner
     float ul = (1.0f - fracU) * (1.0f - fracV);
     float ll = (1.0f - fracU) * fracV;
     float ur = fracU * (1.0f - fracV);
@@ -159,11 +154,27 @@ inline void Rasterizer::drawPixel(float x, float y)
     float uvx = (coords.x * at.x + coords.y * bt.x + coords.z * ct.x) / wt;
     float uvy = (coords.x * at.y + coords.y * bt.y + coords.z * ct.y) / wt;
 
-    // Flip Y texture coordinate to account for NDC vs screen difference.
+    // GL_CLAMP
+//    uvx = std::clamp(uvx, 0.0f, 1.0f);
+//    uvy = std::clamp(uvy, 0.0f, 1.0f);
+    
+    // GL_REPEAT
+    uvx = fmod(uvx, 1.0f);
+    uvy = fmod(uvy, 1.0f);
+
+    // Ensure uvx and uvy are positive
+    uvx = uvx < 0 ? 1.0f + uvx : uvx;
+    uvy = uvy < 0 ? 1.0f + uvy : uvy;
+
+    // Flip Y texture coordinate to account screen coordinates
+    // (Textures start from bottom left corner. Our screen starts from the top left.)
     uvy = 1 - uvy;
 
     if (textureFilter == NEIGHBOUR) texNearestNeighbour(material.map_Kd, lum, uvx, uvy, r, g, b);
-    else if (textureFilter == BILINEAR) texBilinear(material.map_Kd, lum, uvx, uvy, r, g, b);
+    else if (textureFilter == BILINEAR) texBilinear(material.map_Kd, 
+                                                    renderable.mesh.atlas, 
+                                                    renderable.mesh.atlasTileSize, 
+                                                    lum, uvx, uvy, r, g, b);
 
     bufferPixels(surface, x, y, r, g, b);
 }

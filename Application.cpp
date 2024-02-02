@@ -16,6 +16,8 @@
 static soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyrolevel.obj");
+    mesh.atlas = true;
+    mesh.atlasTileSize = 32;
     auto *renderable = new soft3d::Renderable(mesh, {0, 0, -25},
                                       {0, 250, 0}, {.05, .05, .05},
                                       {200, 100, 200});
@@ -24,6 +26,7 @@ static soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
     sceneData.cameraStartPosition = {50, 20, 150};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
+    sceneData.textureFilter = soft3d::BILINEAR;
     return new soft3d::Scene(renderer, sceneData);
 }
 
@@ -38,6 +41,7 @@ static soft3d::Scene* marioSceneInit(soft3d::Renderer* renderer)
     sceneData.cameraStartPosition = {0, 10, 20};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
+    sceneData.textureFilter = soft3d::BILINEAR;
     return new soft3d::Scene(renderer, sceneData);
 }
 
@@ -52,12 +56,13 @@ static soft3d::Scene* majoraSceneInit(soft3d::Renderer* renderer)
     sceneData.cameraStartPosition = {0, 10, 20};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
+    sceneData.textureFilter = soft3d::BILINEAR;
     return new soft3d::Scene(renderer, sceneData);
 }
 
 static soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
 {
-    soft3d::Mesh mesh = ObjParser::ParseObj("resources/Lara.obj");
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj");
     auto *renderable = new soft3d::Renderable(mesh, {0, -2, -1},
                                               {0, -45, 0}, {1, 1, 1},
                                               {200, 100, 200});
@@ -66,6 +71,7 @@ static soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
     sceneData.cameraStartPosition = {0, 0, 10};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
+    sceneData.textureFilter = soft3d::BILINEAR;
     return new soft3d::Scene(renderer, sceneData);
 }
 
@@ -84,6 +90,7 @@ static soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
     sceneData.textureFilter = soft3d::BILINEAR;
     return new soft3d::Scene(renderer, sceneData);
 }
+
 
 namespace soft3d
 {
@@ -115,16 +122,16 @@ namespace soft3d
     inline void Application::initGui()
     {
         Scene* scene1 = spyroSceneInit(renderer);
-//        Scene* scene2 = spyroModelSceneInit(renderer);
-        //Scene* scene3 = vikingRoomSceneInit(renderer);
-        Scene* scene4 = marioSceneInit(renderer);
+        Scene* scene2 = spyroModelSceneInit(renderer);
+        Scene* scene3 = vikingRoomSceneInit(renderer);
+        //Scene* scene4 = marioSceneInit(renderer);
         Scene* scene5 = majoraSceneInit(renderer);
         scenes.push_back(scene1);
-//        scenes.push_back(scene2);
+        scenes.push_back(scene2);
         //scenes.push_back(scene3);
-        scenes.push_back(scene4);
+        //scenes.push_back(scene4);
         scenes.push_back(scene5);
-        changeScene(0   ); // default scene
+        changeScene(1   ); // default scene
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(new Observer(f1));
