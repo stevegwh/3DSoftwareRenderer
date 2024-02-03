@@ -29,13 +29,13 @@ inline void texNearestNeighbour(const slib::texture &texture, float lum, float u
     auto ty = static_cast<int>(uvy * texture.h);
 
     // Grab the corresponding pixel color on the texture
-    int index = ty * texture.w * texture.bpp + tx * texture.bpp;
+    int index = (ty * texture.w + tx) * texture.bpp;
 
     if (lum > 1)
     {
-        r = std::max(0.0f, std::min(texture.data[index] * lum, 255.0f));
-        g = std::max(0.0f, std::min(texture.data[index + 1] * lum, 255.0f));
-        b = std::max(0.0f, std::min(texture.data[index + 2] * lum, 255.0f));
+        r = std::max(0, std::min(static_cast<int>(texture.data[index] * lum), 255));
+        g = std::max(0, std::min(static_cast<int>(texture.data[index + 1] * lum), 255));
+        b = std::max(0, std::min(static_cast<int>(texture.data[index + 2] * lum), 255));
         return;
     }
 
@@ -55,6 +55,7 @@ inline void texBilinear(const slib::texture& texture, bool textureAtlas, int til
     int right = left + 1;
     int bottom = top + 1;
 
+    // If the texture uses an atlas, we need to ensure the pixels being sampled do not exceed the current tile's bounds
     if (textureAtlas)
     {
         int tileIndexX = tx / tileSize;
@@ -81,40 +82,20 @@ inline void texBilinear(const slib::texture& texture, bool textureAtlas, int til
     auto bottomLeft = (bottom * texture.w + left) * texture.bpp;
     auto bottomRight = (bottom * texture.w + right) * texture.bpp;
 
-    slib::Color colorTopLeft = {
-        texture.data[topLeft],
-        texture.data[topLeft + 1],
-        texture.data[topLeft + 2]
-    };
-
-    slib::Color colorTopRight = {
-        texture.data[topRight],
-        texture.data[topRight + 1],
-        texture.data[topRight + 2]
-    };
-
-    slib::Color colorBottomLeft = {
-        texture.data[bottomLeft],
-        texture.data[bottomLeft + 1],
-        texture.data[bottomLeft + 2]
-    };
-
-    slib::Color colorBottomRight = {
-        texture.data[bottomRight],
-        texture.data[bottomRight + 1],
-        texture.data[bottomRight + 2]
-    };
-
-    float red = ul * colorTopLeft.r + ll * colorBottomLeft.r + ur * colorTopRight.r + lr * colorBottomRight.r;
-    float green = ul * colorTopLeft.g + ll * colorBottomLeft.g + ur * colorTopRight.g + lr * colorBottomRight.g;
-    float blue = ul * colorTopLeft.b + ll * colorBottomLeft.b + ur * colorTopRight.b + lr * colorBottomRight.b;
+    float red = ul * texture.data[topLeft] + ll * texture.data[bottomLeft] +
+        ur * texture.data[topRight] + lr * texture.data[bottomRight];
+    float green = ul * texture.data[topLeft + 1] + ll * texture.data[bottomLeft + 1] +
+        ur * texture.data[topRight + 1] + lr * texture.data[bottomRight + 1];
+    float blue = ul * texture.data[topLeft + 2] + ll * texture.data[bottomLeft + 2] +
+        ur * texture.data[topRight + 2] + lr * texture.data[bottomRight + 2];
 
     r = std::max(0, std::min(static_cast<int>(red * lum), 255));
     g = std::max(0, std::min(static_cast<int>(green * lum), 255));
     b = std::max(0, std::min(static_cast<int>(blue * lum), 255));
+
 }
 
-inline void Rasterizer::drawPixel(float x, float y)
+inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords)
 {
     // zBuffer.
     float interpolated_z = coords.x * p1.w + coords.y * p2.w + coords.z * p3.w;
@@ -204,12 +185,14 @@ void Rasterizer::rasterizeTriangle(float area)
     const int ymax = std::min(static_cast<int>(std::ceil(std::max({ p1.y, p2.y, p3.y }))),
                               static_cast<int>(SCREEN_HEIGHT));
 
+    slib::vec3 coords{};
+
     // Iterate over every pixel in the triangle
+#pragma omp parallel for default(none) shared(xmin, xmax, ymin, ymax, area, EY1, EY2, EX1, EX2, coords)
     for (int x = xmin; x <= xmax; ++x)
     {
         for (int y = ymin; y <= ymax; ++y)
         {
-
             coords.x = (x - p2.x) * EY1 - (y - p2.y) * EX1;
             // signed area of the triangle v1v2p multiplied by 2
             coords.y = (x - p3.x) * EY2 - (y - p3.y) * EX2;
@@ -220,7 +203,7 @@ void Rasterizer::rasterizeTriangle(float area)
             if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
             {
                 coords /= area;
-                drawPixel(x, y);
+                drawPixel(x, y, coords);
             }
         }
     }

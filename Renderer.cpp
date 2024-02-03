@@ -13,12 +13,12 @@ namespace soft3d
 inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<slib::zvec2>& screenPoints)
 {
     // Convert to screen
-#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
-    for (int i = 0; i < projectedPoints.size(); ++i) 
+    #pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
+    for (int i = 0; i < projectedPoints.size(); ++i)
     {
         auto& v = projectedPoints[i];
         // NDC Space
-        if (v.w != 0) 
+        if (v.w != 0)
         {
             // Perspective divide
             v.x /= v.w;
@@ -33,7 +33,7 @@ inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vec
         screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
-#pragma omp barrier
+    #pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -68,9 +68,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) sdlSurface->pixels;
-#pragma omp parallel for default(none) shared(pixels)
+    #pragma omp parallel for default(none) shared(pixels)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
-#pragma omp barrier
+    #pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -89,7 +89,7 @@ inline void pushBuffer(SDL_Renderer* renderer, SDL_Surface* surface)
 inline void Renderer::updateViewMatrix()
 {
     viewMatrix = smath::fpsview(camera->pos, camera->rotation.x, camera->rotation.y);
-    // TODO: Should the renderer update the camera?
+    // TODO: Replace this with an event that camera subscribes to
     camera->UpdateDirectionVectors(viewMatrix);
 }
 
@@ -144,6 +144,7 @@ void Renderer::Render()
             makeClipSpace(f, projectedPoints, processedFaces);
         }
         createScreenSpace(projectedPoints, screenPoints);
+        
         #pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, projectedPoints, normals)
         for (const auto &t : processedFaces)
         {
@@ -156,7 +157,6 @@ void Renderer::Render()
             Rasterizer rasterizer(zBuffer, *renderable, screenPoints, projectedPoints, normals, t, sdlSurface, fragmentShader, textureFilter);
             rasterizer.rasterizeTriangle(area);
         }
-
     }
 
     pushBuffer(sdlRenderer, sdlSurface);

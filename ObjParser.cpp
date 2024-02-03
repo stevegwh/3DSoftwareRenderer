@@ -113,6 +113,15 @@ std::map<std::string, slib::material> parseMtlFile(const char* path)
             std::string mtlPath = line.substr(line.find("map_Ns") + std::string("map_Ns ").length());
             material.map_Ns = DecodePng(std::string(RES_PATH + mtlPath).c_str());;
         }
+        else if (line.find("map_Disp") != std::string::npos)
+        {
+        }
+        else if (line.find("map_Ka") != std::string::npos)
+        {
+        }
+        else if (line.find("map_d") != std::string::npos)
+        {
+        }
         else if (line.find("Ka") != std::string::npos)
         {
             std::string input = line.substr(line.find("Ka ") + std::string("Ka ").length());

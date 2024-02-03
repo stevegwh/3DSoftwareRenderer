@@ -32,7 +32,7 @@ class Rasterizer
     const slib::tri& t;
     const Renderable& renderable;
     
-    slib::vec3 coords{}; // Barycentric/Edge-finding coordinates
+    //slib::vec3 coords{}; // Barycentric/Edge-finding coordinates
     const slib::vec3 lightingDirection {1, 1, 1.5};
     slib::vec3 normal{};
 
@@ -61,7 +61,7 @@ class Rasterizer
     const FragmentShader fragmentShader;
     const TextureFilter textureFilter;
     
-    void drawPixel(float x, float y);
+    void drawPixel(float x, float y, const slib::vec3& coords);
 
 public:
 
