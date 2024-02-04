@@ -113,11 +113,29 @@ inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, fl
 
     int r = 1, g = 1, b = 1;
 
+    // If no texture.
     if (material.map_Kd.data.empty())
     {
-        r = (static_cast<int>(material.Kd[0]) % 255);
-        g = (static_cast<int>(material.Kd[1]) % 255);
-        b = (static_cast<int>(material.Kd[2]) % 255);
+        float kdR = material.Kd[0];
+        float kdG = material.Kd[1];
+        float kdB = material.Kd[2];
+
+        kdR = std::fmod(kdR, 1.0f);
+        kdG = std::fmod(kdG, 1.0f);
+        kdB = std::fmod(kdB, 1.0f);
+        
+        kdR = kdR < 0 ? 1.0f + kdR : kdR;
+        kdG = kdG < 0 ? 1.0f + kdG : kdG;
+        kdB = kdB < 0 ? 1.0f + kdB : kdB;
+        
+        r = (static_cast<int>(kdR * 255));
+        g = (static_cast<int>(kdG * 255));
+        b = (static_cast<int>(kdB * 255));
+        
+        r = std::max(0, std::min(static_cast<int>(r * lum), 255));
+        g = std::max(0, std::min(static_cast<int>(g * lum), 255));
+        b = std::max(0, std::min(static_cast<int>(b * lum), 255));
+        
         bufferPixels(surface, x, y, r, g, b);
         return;
     }
@@ -190,7 +208,7 @@ void Rasterizer::rasterizeTriangle(float area)
     slib::vec3 coords{};
 
     // Iterate over every pixel in the triangle
-//#pragma omp parallel for default(none) shared(xmin, xmax, ymin, ymax, area, EY1, EY2, EX1, EX2, coords)
+//#pragma omp parallel for default(none) shared(xmin, xmax, ymin, ymax, area, EY1, EY2, EX1, EX2, coords, lum)
     for (int x = xmin; x <= xmax; ++x)
     {
         for (int y = ymin; y <= ymax; ++y)

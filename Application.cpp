@@ -30,6 +30,23 @@ static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer& renderer)
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
+static std::unique_ptr<soft3d::Scene> isometricGameLevel(soft3d::Renderer& renderer)
+{
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/Isometric_Game_Level_Low_Poly.obj");
+    mesh.atlas = true;
+    mesh.atlasTileSize = 32;
+    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -25},
+                                                                              {0, 250, 0}, {5, 5, 5},
+                                                                              {200, 100, 200}));
+    soft3d::SceneData sceneData;
+    sceneData.renderables.push_back(renderable);
+    sceneData.cameraStartPosition = {150, 150, 200};
+    sceneData.cameraStartRotation = { -28, 32, 0 };
+    sceneData.fragmentShader = soft3d::GOURAUD;
+    sceneData.textureFilter = soft3d::NEIGHBOUR;
+    return std::make_unique<soft3d::Scene>(renderer, sceneData);
+}
+
 static std::unique_ptr<soft3d::Scene> concreteCatInit(soft3d::Renderer& renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/concrete_cat_statue.obj");
@@ -57,7 +74,7 @@ static std::unique_ptr<soft3d::Scene> vikingRoomSceneInit(soft3d::Renderer& rend
     sceneData.cameraStartPosition = {0, 0, 30};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
-    sceneData.textureFilter = soft3d::BILINEAR;
+    sceneData.textureFilter = soft3d::NEIGHBOUR;
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
@@ -90,13 +107,13 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-        std::unique_ptr<soft3d::Scene> scene1 = spyroSceneInit(*renderer);
+        std::unique_ptr<soft3d::Scene> scene1 = isometricGameLevel(*renderer);
         std::unique_ptr<soft3d::Scene> scene2 = vikingRoomSceneInit(*renderer);
         std::unique_ptr<soft3d::Scene> scene3 = concreteCatInit(*renderer);
         scenes.push_back(std::move(scene1));
         scenes.push_back(std::move(scene2));
         scenes.push_back(std::move(scene3));
-        changeScene(1   ); // default scene
+        changeScene(0   ); // default scene
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };
         gui->scene1ButtonDown->Subscribe(std::make_shared<Observer>(f1));

@@ -13,7 +13,7 @@ namespace soft3d
 inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<slib::zvec2>& screenPoints)
 {
     // Convert to screen
-    //#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
+    #pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
     for (int i = 0; i < projectedPoints.size(); ++i)
     {
         auto& v = projectedPoints[i];
@@ -33,7 +33,7 @@ inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vec
         screenPoints[i] = {x, y, v.z};
         //-----------------------------
     }
-    //#pragma omp barrier
+    #pragma omp barrier
 }
 
 inline bool makeClipSpace(const slib::tri &face,
@@ -68,9 +68,9 @@ inline bool makeClipSpace(const slib::tri &face,
 inline void Renderer::clearBuffer()
 {
     auto *pixels = (unsigned char *) sdlSurface->pixels;
-    //#pragma omp parallel for default(none) shared(pixels)
+    #pragma omp parallel for default(none) shared(pixels)
     for (int i = 0; i < screenSize * 4; ++i) pixels[i] = 0;
-    //#pragma omp barrier
+    #pragma omp barrier
 }
 
 void Renderer::RenderBuffer()
@@ -97,7 +97,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
                                  std::vector<slib::vec4>& projectedPoints, std::vector<slib::vec3>& normals)
 {
     bool hasNormalData = !renderable.mesh.normals.empty();
-//#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
+#pragma omp parallel for default(none) shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
     for (int i = 0; i < renderable.mesh.vertices.size(); i++)
     {
         slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
@@ -119,7 +119,7 @@ inline void createProjectedSpace(const Renderable& renderable, const slib::mat& 
         auto transformedNormal = normalTransformMat * n4;
         normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
     }
-//#pragma omp barrier
+#pragma omp barrier
 }
 
 void Renderer::Render()
@@ -145,7 +145,7 @@ void Renderer::Render()
         }
         createScreenSpace(projectedPoints, screenPoints);
         
-        //#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, projectedPoints, normals)
+        #pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, projectedPoints, normals)
         for (const auto &t : processedFaces)
         {
             const auto &p1 = screenPoints[t.v1];
