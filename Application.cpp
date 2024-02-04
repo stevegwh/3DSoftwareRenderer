@@ -30,48 +30,18 @@ static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer& renderer)
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static std::unique_ptr<soft3d::Scene> marioSceneInit(soft3d::Renderer& renderer)
+static std::unique_ptr<soft3d::Scene> concreteCatInit(soft3d::Renderer& renderer)
 {
-    soft3d::Mesh mesh = ObjParser::ParseObj("resources/Peaches Castle.obj");
-    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -2},
-                                              {0, 180, 0}, {1, 1, 1},
-                                              {200, 100, 200}));
-    soft3d::SceneData sceneData;
-    sceneData.renderables.push_back(renderable);
-    sceneData.cameraStartPosition = {0, 10, 20};
-    sceneData.cameraStartRotation = { 0, 0, 0 };
-    sceneData.fragmentShader = soft3d::GOURAUD;
-    sceneData.textureFilter = soft3d::BILINEAR;
-    return std::make_unique<soft3d::Scene>(renderer, sceneData);
-}
-
-static std::unique_ptr<soft3d::Scene> majoraSceneInit(soft3d::Renderer& renderer)
-{
-    soft3d::Mesh mesh = ObjParser::ParseObj("resources/happy_mask_salesman.obj");
-    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -10},
-                                              {0, 0, 0}, {0.2, 0.2, 0.2},
-                                              {200, 100, 200}));
-    soft3d::SceneData sceneData;
-    sceneData.renderables.push_back(renderable);
-    sceneData.cameraStartPosition = {0, 10, 20};
-    sceneData.cameraStartRotation = { 0, 0, 0 };
-    sceneData.fragmentShader = soft3d::GOURAUD;
-    sceneData.textureFilter = soft3d::BILINEAR;
-    return std::make_unique<soft3d::Scene>(renderer, sceneData);
-}
-
-static std::unique_ptr<soft3d::Scene> spyroModelSceneInit(soft3d::Renderer& renderer)
-{
-    soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj");
+    soft3d::Mesh mesh = ObjParser::ParseObj("resources/concrete_cat_statue.obj");
     auto renderable =  std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, -2, -1},
-                                              {0, -45, 0}, {1, 1, 1},
-                                              {200, 100, 200}));
+                                                                               {0, 0, 0}, {10, 10, 10},
+                                                                               {200, 100, 200}));
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 0, 10};
     sceneData.cameraStartRotation = { 0, 0, 0 };
-    sceneData.fragmentShader = soft3d::GOURAUD;
-    sceneData.textureFilter = soft3d::BILINEAR;
+    sceneData.fragmentShader = soft3d::FLAT;
+    sceneData.textureFilter = soft3d::NEIGHBOUR;
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
@@ -103,8 +73,7 @@ namespace soft3d
             std::cout << "Could not initialise SDL window. Exiting..." << std::endl;
             exit(1);
         }
-    
-        // Force SDL to use the CPU.
+        
         sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
         if (sdlRenderer == nullptr) 
         {
@@ -122,15 +91,11 @@ namespace soft3d
     inline void Application::initGui()
     {
         std::unique_ptr<soft3d::Scene> scene1 = spyroSceneInit(*renderer);
-        std::unique_ptr<soft3d::Scene> scene2 = spyroModelSceneInit(*renderer);
-        //std::unique_ptr<soft3d::Scene> scene3 = vikingRoomSceneInit(*renderer);
-        //std::unique_ptr<soft3d::Scene> scene4 = marioSceneInit(*renderer);
-        std::unique_ptr<soft3d::Scene> scene5 = majoraSceneInit(*renderer);
+        std::unique_ptr<soft3d::Scene> scene2 = vikingRoomSceneInit(*renderer);
+        std::unique_ptr<soft3d::Scene> scene3 = concreteCatInit(*renderer);
         scenes.push_back(std::move(scene1));
         scenes.push_back(std::move(scene2));
-        //scenes.push_back(std::move(scene3));
-        //scenes.push_back(std::move(scene4));
-        scenes.push_back(std::move(scene5));
+        scenes.push_back(std::move(scene3));
         changeScene(1   ); // default scene
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };

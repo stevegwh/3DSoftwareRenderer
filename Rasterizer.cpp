@@ -95,7 +95,7 @@ inline void texBilinear(const slib::texture& texture, bool textureAtlas, int til
 
 }
 
-inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords)
+inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, float lum)
 {
     // zBuffer.
     float interpolated_z = coords.x * p1.w + coords.y * p2.w + coords.z * p3.w;
@@ -104,15 +104,12 @@ inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords)
     zBuffer->buffer[zIndex] = interpolated_z;
 
     // Lighting
-    float lum = 1;
     if (fragmentShader == GOURAUD)
     {
         auto interpolated_normal = n1 * coords.x + n2 * coords.y + n3 * coords.z;
         interpolated_normal = smath::normalize(interpolated_normal);
         lum = smath::dot(interpolated_normal, lightingDirection);
     }
-    else if (fragmentShader == FLAT)
-        lum = smath::dot(normal, lightingDirection);
 
     int r = 1, g = 1, b = 1;
 
@@ -167,14 +164,19 @@ void Rasterizer::rasterizeTriangle(float area)
     const float EX1 = p3.x - p2.x;
     const float EY2 = p1.y - p3.y;
     const float EX2 = p1.x - p3.x;
-
+    
+    float lum = 1;
+    // Precalculate lighting (flat shading)
     if (fragmentShader == FLAT)
     {
         if (!renderable.mesh.normals.empty())
             normal = smath::normalize((n1 + n2 + n3) / 3);
         else
-            normal = smath::facenormal(t,
-                                       renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
+        {
+            normal = smath::facenormal(t,renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
+        }
+            
+        lum = smath::dot(normal, lightingDirection);                          
     }
 
     // Get bounding box.
@@ -203,7 +205,7 @@ void Rasterizer::rasterizeTriangle(float area)
             if (coords.x >= 0 && coords.y >= 0 && coords.z >= 0)
             {
                 coords /= area;
-                drawPixel(x, y, coords);
+                drawPixel(x, y, coords, lum);
             }
         }
     }

@@ -61,12 +61,12 @@ class Rasterizer
     const FragmentShader fragmentShader;
     const TextureFilter textureFilter;
     
-    void drawPixel(float x, float y, const slib::vec3& coords);
+    void drawPixel(float x, float y, const slib::vec3& coords, float lum);
 
 public:
 
     void rasterizeTriangle(float area);
-    
+        
     Rasterizer(
         ZBuffer* const _zBuffer,
         const Renderable& _renderable, 
