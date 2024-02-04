@@ -22,7 +22,6 @@ public:
     explicit Scene(Renderer* _renderer, SceneData _data)
     : renderer(_renderer), data(std::move(_data))
     {};
-    ~Scene();
 };
 }
 

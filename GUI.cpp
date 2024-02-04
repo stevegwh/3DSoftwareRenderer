@@ -103,23 +103,20 @@ namespace soft3d
     
     GUI::GUI(SDL_Window* _sdlWindow, SDL_Renderer* _sdlRenderer)
     : sdlRenderer(_sdlRenderer), sdlWindow(_sdlWindow),
-    scene1ButtonDown(new Event()), scene2ButtonDown(new Event()), scene3ButtonDown(new Event()),
-    quitButtonDown(new Event()), flatShaderButtonDown(new Event()), gouraudShaderButtonDown(new Event()),
-    bilinearButtonDown(new Event()), neighbourButtonDown(new Event())
+    scene1ButtonDown(std::make_unique<Event>()), 
+    scene2ButtonDown(std::make_unique<Event>()), 
+    scene3ButtonDown(std::make_unique<Event>()),
+    quitButtonDown(std::make_unique<Event>()), 
+    flatShaderButtonDown(std::make_unique<Event>()), 
+    gouraudShaderButtonDown(std::make_unique<Event>()),
+    bilinearButtonDown(std::make_unique<Event>()), 
+    neighbourButtonDown(std::make_unique<Event>())
     {
         init();
     }
     
     GUI::~GUI()
     {
-        delete scene1ButtonDown;
-        delete scene2ButtonDown;
-        delete scene3ButtonDown;
-        delete quitButtonDown;
-        delete flatShaderButtonDown;
-        delete gouraudShaderButtonDown;
-        delete bilinearButtonDown;
-        delete neighbourButtonDown;
         ImGui_ImplSDLRenderer2_Shutdown();
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();

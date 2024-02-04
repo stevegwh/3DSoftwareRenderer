@@ -9,38 +9,29 @@ namespace soft3d
 
 void Event::InvokeAllEvents() const
 {
-    for (Observer* ob : observerList)
+    for (const std::shared_ptr<Observer>& ob : observerList)
     {
         ob->callback();
     }
 }
 
-void Event::Subscribe(Observer* observer)
+void Event::Subscribe(const std::shared_ptr<Observer>& observer)
 {
     observerList.push_back(observer);
 }
 
-void Event::Unsubscribe(Observer* observer)
+void Event::Unsubscribe(const std::shared_ptr<Observer>& observer)
 {
     for (auto it = observerList.begin(); it != observerList.end(); ++it)
     {
         if (*it == observer)
         {
             observerList.erase(it);
-            delete *it;
             break;
         }
     }
 }
 
 Event::Event() = default;
-
-Event::~Event()
-{
-    for ( auto& observer : observerList) 
-    {
-        delete observer;
-    }
-}
 
 }

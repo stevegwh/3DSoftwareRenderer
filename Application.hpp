@@ -16,7 +16,7 @@ class Application
 {
     soft3d::GUI* gui{};
     soft3d::Renderer* renderer{};
-    std::vector<soft3d::Scene*> scenes;
+    std::vector<std::unique_ptr<soft3d::Scene>> scenes;
     SDL_Window* sdlWindow{};
     SDL_Renderer* sdlRenderer{};
     FPSCounter* fpsCounter{};

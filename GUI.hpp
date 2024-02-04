@@ -23,14 +23,14 @@ namespace soft3d
         ~GUI();
         void Draw();
         void Update(SDL_Event* event);
-        soft3d::Event* const scene1ButtonDown;
-        soft3d::Event* const scene2ButtonDown;
-        soft3d::Event* const scene3ButtonDown;
-        soft3d::Event* const quitButtonDown;
-        soft3d::Event* const flatShaderButtonDown;
-        soft3d::Event* const gouraudShaderButtonDown;
-        soft3d::Event* const bilinearButtonDown;
-        soft3d::Event* const neighbourButtonDown;
+        std::unique_ptr<Event> scene1ButtonDown;
+        std::unique_ptr<Event> scene2ButtonDown;
+        std::unique_ptr<Event> scene3ButtonDown;
+        std::unique_ptr<Event> quitButtonDown;
+        std::unique_ptr<Event> flatShaderButtonDown;
+        std::unique_ptr<Event> gouraudShaderButtonDown;
+        std::unique_ptr<Event> bilinearButtonDown;
+        std::unique_ptr<Event> neighbourButtonDown;
         int fpsCounter = 0;
     };
 }

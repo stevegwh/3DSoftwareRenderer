@@ -13,74 +13,74 @@
 #include "Renderable.hpp" 
 #include <omp.h>
 
-static soft3d::Scene* spyroSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyrolevel.obj");
     mesh.atlas = true;
     mesh.atlasTileSize = 32;
-    auto *renderable = new soft3d::Renderable(mesh, {0, 0, -25},
+    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -25},
                                       {0, 250, 0}, {.05, .05, .05},
-                                      {200, 100, 200});
+                                      {200, 100, 200}));
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {50, 20, 150};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     sceneData.textureFilter = soft3d::BILINEAR;
-    return new soft3d::Scene(renderer, sceneData);
+    return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static soft3d::Scene* marioSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> marioSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/Peaches Castle.obj");
-    auto *renderable = new soft3d::Renderable(mesh, {0, 0, -2},
+    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -2},
                                               {0, 180, 0}, {1, 1, 1},
-                                              {200, 100, 200});
+                                              {200, 100, 200}));
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 10, 20};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     sceneData.textureFilter = soft3d::BILINEAR;
-    return new soft3d::Scene(renderer, sceneData);
+    return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static soft3d::Scene* majoraSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> majoraSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/happy_mask_salesman.obj");
-    auto *renderable = new soft3d::Renderable(mesh, {0, 0, -10},
+    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -10},
                                               {0, 0, 0}, {0.2, 0.2, 0.2},
-                                              {200, 100, 200});
+                                              {200, 100, 200}));
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 10, 20};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     sceneData.textureFilter = soft3d::BILINEAR;
-    return new soft3d::Scene(renderer, sceneData);
+    return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static soft3d::Scene* spyroModelSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> spyroModelSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj");
-    auto *renderable = new soft3d::Renderable(mesh, {0, -2, -1},
+    auto renderable =  std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, -2, -1},
                                               {0, -45, 0}, {1, 1, 1},
-                                              {200, 100, 200});
+                                              {200, 100, 200}));
     soft3d::SceneData sceneData;
     sceneData.renderables.push_back(renderable);
     sceneData.cameraStartPosition = {0, 0, 10};
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     sceneData.textureFilter = soft3d::BILINEAR;
-    return new soft3d::Scene(renderer, sceneData);
+    return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> vikingRoomSceneInit(soft3d::Renderer* renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/viking_room.obj");
-    auto *renderable = new soft3d::Renderable(mesh, {0, -5, -1},
+    auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, -5, -1},
                                               {0, -135, 0}, {10, 10, 10},
-                                              {200, 100, 200});
+                                              {200, 100, 200}));
     soft3d::SceneData sceneData;
     
     sceneData.renderables.push_back(renderable);
@@ -88,7 +88,7 @@ static soft3d::Scene* vikingRoomSceneInit(soft3d::Renderer* renderer)
     sceneData.cameraStartRotation = { 0, 0, 0 };
     sceneData.fragmentShader = soft3d::GOURAUD;
     sceneData.textureFilter = soft3d::BILINEAR;
-    return new soft3d::Scene(renderer, sceneData);
+    return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
 
@@ -121,42 +121,42 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-        Scene* scene1 = spyroSceneInit(renderer);
-        Scene* scene2 = spyroModelSceneInit(renderer);
-        Scene* scene3 = vikingRoomSceneInit(renderer);
-        //Scene* scene4 = marioSceneInit(renderer);
-        Scene* scene5 = majoraSceneInit(renderer);
-        scenes.push_back(scene1);
-        scenes.push_back(scene2);
-        //scenes.push_back(scene3);
-        //scenes.push_back(scene4);
-        scenes.push_back(scene5);
+        std::unique_ptr<soft3d::Scene> scene1 = spyroSceneInit(renderer);
+        std::unique_ptr<soft3d::Scene> scene2 = spyroModelSceneInit(renderer);
+        //std::unique_ptr<soft3d::Scene> scene3 = vikingRoomSceneInit(renderer);
+        //std::unique_ptr<soft3d::Scene> scene4 = marioSceneInit(renderer);
+        std::unique_ptr<soft3d::Scene> scene5 = majoraSceneInit(renderer);
+        scenes.push_back(std::move(scene1));
+        scenes.push_back(std::move(scene2));
+        //scenes.push_back(std::move(scene3));
+        //scenes.push_back(std::move(scene4));
+        scenes.push_back(std::move(scene5));
         changeScene(1   ); // default scene
 
         const std::function<void()> f1 = [p = this] { p->changeScene(0); };
-        gui->scene1ButtonDown->Subscribe(new Observer(f1));
+        gui->scene1ButtonDown->Subscribe(std::make_shared<Observer>(f1));
         const std::function<void()> f2 = [p = this] { p->changeScene(1); };
-        gui->scene2ButtonDown->Subscribe(new Observer(f2));
+        gui->scene2ButtonDown->Subscribe(std::make_shared<Observer>(f2));
         const std::function<void()> f3 = [p = this] { p->changeScene(2); };
-        gui->scene3ButtonDown->Subscribe(new Observer(f3));
+        gui->scene3ButtonDown->Subscribe(std::make_shared<Observer>(f3));
         const std::function<void()> f4 = [p = this] { p->quit(); };
-        gui->quitButtonDown->Subscribe(new Observer(f4));
+        gui->quitButtonDown->Subscribe(std::make_shared<Observer>(f4));
         const std::function<void()> f5 = [p = renderer] { p->setShader(soft3d::FLAT); };
         const std::function<void()> m1 = [p = this] { p->disableMouse(); };
-        gui->flatShaderButtonDown->Subscribe(new Observer(f5));
-        gui->flatShaderButtonDown->Subscribe(new Observer(m1));
+        gui->flatShaderButtonDown->Subscribe(std::make_shared<Observer>(f5));
+        gui->flatShaderButtonDown->Subscribe(std::make_shared<Observer>(m1));
         const std::function<void()> f6 = [p = renderer] { p->setShader(soft3d::GOURAUD); };
         const std::function<void()> m2 = [p = this] { p->disableMouse(); };
-        gui->gouraudShaderButtonDown->Subscribe(new Observer(f6));
-        gui->gouraudShaderButtonDown->Subscribe(new Observer(m2));
+        gui->gouraudShaderButtonDown->Subscribe(std::make_shared<Observer>(f6));
+        gui->gouraudShaderButtonDown->Subscribe(std::make_shared<Observer>(m2));
         const std::function<void()> f7 = [p = renderer] { p->setTextureFilter(soft3d::NEIGHBOUR); };
         const std::function<void()> m3 = [p = this] { p->disableMouse(); };
-        gui->neighbourButtonDown->Subscribe(new Observer(f7));
-        gui->neighbourButtonDown->Subscribe(new Observer(m3));
+        gui->neighbourButtonDown->Subscribe(std::make_shared<Observer>(f7));
+        gui->neighbourButtonDown->Subscribe(std::make_shared<Observer>(m3));
         const std::function<void()> f8 = [p = renderer] { p->setTextureFilter(soft3d::BILINEAR); };
         const std::function<void()> m4 = [p = this] { p->disableMouse(); };
-        gui->bilinearButtonDown->Subscribe(new Observer(f8));
-        gui->bilinearButtonDown->Subscribe(new Observer(m4));
+        gui->bilinearButtonDown->Subscribe(std::make_shared<Observer>(f8));
+        gui->bilinearButtonDown->Subscribe(std::make_shared<Observer>(m4));
     }
     
     void Application::init()
@@ -250,10 +250,6 @@ namespace soft3d
     
     void Application::cleanup()
     {
-        for (auto& scene : scenes) 
-        {
-            delete scene;
-        }
         delete gui;
         delete renderer;
         delete fpsCounter;

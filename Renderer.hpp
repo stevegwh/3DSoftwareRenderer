@@ -14,6 +14,17 @@
 #include <vector>
 #include <SDL2/SDL.h>
 
+struct ZBuffer
+{
+    static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
+    std::array<float, screenSize> buffer{};
+    void
+    clear()
+    {
+        std::fill_n(buffer.begin(), screenSize, 0);
+    }
+};
+
 namespace soft3d
 {
 
@@ -33,7 +44,7 @@ class Renderer
     slib::mat perspectiveMat;
     slib::mat viewMatrix;
     SDL_Surface* sdlSurface;
-    std::vector<Renderable*> renderables;
+    std::vector<std::shared_ptr<Renderable>> renderables;
     FragmentShader fragmentShader = FLAT;
     TextureFilter textureFilter = NEIGHBOUR;
 public:
@@ -59,7 +70,7 @@ public:
 
     void RenderBuffer();
     void Render();
-    void AddRenderable(Renderable &renderable);
+    void AddRenderable(const std::shared_ptr<Renderable>& renderable);
     void ClearRenderables();
     void setShader(FragmentShader shader);
     void setTextureFilter(TextureFilter filter);

@@ -15,7 +15,7 @@ struct SceneData
     TextureFilter textureFilter = NEIGHBOUR;
     slib::vec3 cameraStartPosition{};
     slib::vec3 cameraStartRotation{};
-    std::vector<Renderable*> renderables;
+    std::vector<std::shared_ptr<Renderable>> renderables;
 };
 }
 
