@@ -94,8 +94,6 @@ namespace soft3d
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
     }
     
-    
-    
     void GUI::Update(SDL_Event* event)
     {
         ImGui_ImplSDL2_ProcessEvent(event);

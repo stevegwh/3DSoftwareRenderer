@@ -32,6 +32,4 @@ void Event::Unsubscribe(const std::shared_ptr<Observer>& observer)
     }
 }
 
-Event::Event() = default;
-
 }

@@ -13,7 +13,7 @@
 #include "Renderable.hpp" 
 #include <omp.h>
 
-static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer& renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyrolevel.obj");
     mesh.atlas = true;
@@ -30,7 +30,7 @@ static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer* renderer)
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static std::unique_ptr<soft3d::Scene> marioSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> marioSceneInit(soft3d::Renderer& renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/Peaches Castle.obj");
     auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -2},
@@ -45,7 +45,7 @@ static std::unique_ptr<soft3d::Scene> marioSceneInit(soft3d::Renderer* renderer)
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static std::unique_ptr<soft3d::Scene> majoraSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> majoraSceneInit(soft3d::Renderer& renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/happy_mask_salesman.obj");
     auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, 0, -10},
@@ -60,7 +60,7 @@ static std::unique_ptr<soft3d::Scene> majoraSceneInit(soft3d::Renderer* renderer
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static std::unique_ptr<soft3d::Scene> spyroModelSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> spyroModelSceneInit(soft3d::Renderer& renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/spyro.obj");
     auto renderable =  std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, -2, -1},
@@ -75,7 +75,7 @@ static std::unique_ptr<soft3d::Scene> spyroModelSceneInit(soft3d::Renderer* rend
     return std::make_unique<soft3d::Scene>(renderer, sceneData);
 }
 
-static std::unique_ptr<soft3d::Scene> vikingRoomSceneInit(soft3d::Renderer* renderer)
+static std::unique_ptr<soft3d::Scene> vikingRoomSceneInit(soft3d::Renderer& renderer)
 {
     soft3d::Mesh mesh = ObjParser::ParseObj("resources/viking_room.obj");
     auto renderable = std::make_shared<soft3d::Renderable>(soft3d::Renderable(mesh, {0, -5, -1},
@@ -121,11 +121,11 @@ namespace soft3d
     
     inline void Application::initGui()
     {
-        std::unique_ptr<soft3d::Scene> scene1 = spyroSceneInit(renderer);
-        std::unique_ptr<soft3d::Scene> scene2 = spyroModelSceneInit(renderer);
-        //std::unique_ptr<soft3d::Scene> scene3 = vikingRoomSceneInit(renderer);
-        //std::unique_ptr<soft3d::Scene> scene4 = marioSceneInit(renderer);
-        std::unique_ptr<soft3d::Scene> scene5 = majoraSceneInit(renderer);
+        std::unique_ptr<soft3d::Scene> scene1 = spyroSceneInit(*renderer);
+        std::unique_ptr<soft3d::Scene> scene2 = spyroModelSceneInit(*renderer);
+        //std::unique_ptr<soft3d::Scene> scene3 = vikingRoomSceneInit(*renderer);
+        //std::unique_ptr<soft3d::Scene> scene4 = marioSceneInit(*renderer);
+        std::unique_ptr<soft3d::Scene> scene5 = majoraSceneInit(*renderer);
         scenes.push_back(std::move(scene1));
         scenes.push_back(std::move(scene2));
         //scenes.push_back(std::move(scene3));
@@ -161,8 +161,6 @@ namespace soft3d
     
     void Application::init()
     {
-        fpsCounter = new FPSCounter;
-        clock = new Clock;
         initSDL();
         renderer = new soft3d::Renderer(sdlRenderer);
         gui = new soft3d::GUI(sdlWindow, sdlRenderer);
@@ -197,10 +195,10 @@ namespace soft3d
     
     void Application::update()
     {
-        clock->tick();
-        fpsCounter->Update();
-        gui->fpsCounter = fpsCounter->fps_current;
-        renderer->camera->Update(clock->delta);
+        clock.tick();
+        fpsCounter.Update();
+        gui->fpsCounter = fpsCounter.fps_current;
+        renderer->camera.Update(clock.delta);
         
         while (SDL_PollEvent(&event)) 
         {
@@ -210,7 +208,7 @@ namespace soft3d
             }
             else
             {
-                renderer->camera->HandleEvent(&event);
+                renderer->camera.HandleEvent(&event);
             }
             if (event.type == SDL_QUIT) 
             {
@@ -252,8 +250,6 @@ namespace soft3d
     {
         delete gui;
         delete renderer;
-        delete fpsCounter;
-        delete clock;
         SDL_DestroyWindow(sdlWindow);
         SDL_DestroyRenderer(sdlRenderer);
         SDL_Quit();

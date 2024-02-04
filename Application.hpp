@@ -19,8 +19,8 @@ class Application
     std::vector<std::unique_ptr<soft3d::Scene>> scenes;
     SDL_Window* sdlWindow{};
     SDL_Renderer* sdlRenderer{};
-    FPSCounter* fpsCounter{};
-    Clock* clock{};
+    FPSCounter fpsCounter{};
+    Clock clock{};
     SDL_bool loop = SDL_FALSE;
     SDL_Event event{};
     bool menuMouseEnabled{};
@@ -36,6 +36,5 @@ class Application
 public:
     void Run();
     Application();
-
 };
 }

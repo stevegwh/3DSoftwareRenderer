@@ -14,16 +14,16 @@
 #include <vector>
 #include <SDL2/SDL.h>
 
-struct ZBuffer
-{
-    static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
-    std::array<float, screenSize> buffer{};
-    void
-    clear()
-    {
-        std::fill_n(buffer.begin(), screenSize, 0);
-    }
-};
+//struct ZBuffer
+//{
+//    static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
+//    std::array<float, screenSize> buffer{};
+//    void
+//    clear()
+//    {
+//        std::fill_n(buffer.begin(), screenSize, 0);
+//    }
+//};
 
 namespace soft3d
 {
@@ -49,14 +49,14 @@ class Renderer
     TextureFilter textureFilter = NEIGHBOUR;
 public:
     bool wireFrame = false;
-    soft3d::Camera* const camera;
+    soft3d::Camera camera;
     explicit Renderer(SDL_Renderer* _sdlRenderer)
         :
         zBuffer(new ZBuffer()),
         sdlRenderer(_sdlRenderer), perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
         viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
         sdlSurface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0)),
-        camera(new soft3d::Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
+        camera(soft3d::Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
     {
         SDL_SetSurfaceBlendMode(sdlSurface, SDL_BLENDMODE_BLEND);
     }
@@ -64,7 +64,6 @@ public:
     ~Renderer()
     {
         SDL_FreeSurface(sdlSurface);
-        delete camera;
         delete zBuffer;
     }
 

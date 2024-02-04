@@ -188,7 +188,7 @@ void Rasterizer::rasterizeTriangle(float area)
     slib::vec3 coords{};
 
     // Iterate over every pixel in the triangle
-#pragma omp parallel for default(none) shared(xmin, xmax, ymin, ymax, area, EY1, EY2, EX1, EX2, coords)
+//#pragma omp parallel for default(none) shared(xmin, xmax, ymin, ymax, area, EY1, EY2, EX1, EX2, coords)
     for (int x = xmin; x <= xmax; ++x)
     {
         for (int y = ymin; y <= ymax; ++y)

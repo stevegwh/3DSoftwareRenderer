@@ -15,11 +15,11 @@ namespace soft3d
 {
 class Scene
 {
-    Renderer* renderer;
+    Renderer& renderer;
     SceneData data;
 public:
     void LoadScene();
-    explicit Scene(Renderer* _renderer, SceneData _data)
+    explicit Scene(Renderer& _renderer, SceneData _data)
     : renderer(_renderer), data(std::move(_data))
     {};
 };

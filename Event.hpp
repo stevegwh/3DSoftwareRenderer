@@ -21,7 +21,6 @@ public:
     void Subscribe(const std::shared_ptr<Observer>& observer);
     void Unsubscribe(const std::shared_ptr<Observer>& observer);
     void InvokeAllEvents() const;
-    Event();
 };
 }
 
