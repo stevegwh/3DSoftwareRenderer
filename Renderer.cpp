@@ -172,7 +172,7 @@ void Renderer::ClearRenderables()
     renderables.clear();
 }
 
-void Renderer::setShader(soft3d::FragmentShader shader)
+void Renderer::setShader(FragmentShader shader)
 {
     if (shader == GOURAUD)
     {

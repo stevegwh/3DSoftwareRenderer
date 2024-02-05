@@ -3,15 +3,14 @@
 //
 
 #include "Application.hpp"
-#include <array>
 #include <SDL2/SDL.h>
 #include "slib.hpp"
 #include "constants.hpp"
 #include "ObjParser.hpp"
-#include "utils.hpp"
 #include "Renderer.hpp"
 #include "Renderable.hpp" 
 #include <omp.h>
+#include <memory>
 
 static std::unique_ptr<soft3d::Scene> spyroSceneInit(soft3d::Renderer& renderer)
 {
@@ -144,8 +143,8 @@ namespace soft3d
     void Application::init()
     {
         initSDL();
-        renderer = new soft3d::Renderer(sdlRenderer);
-        gui = new soft3d::GUI(sdlWindow, sdlRenderer);
+        renderer = std::make_shared<Renderer>(sdlRenderer);
+        gui = std::make_unique<GUI>(sdlWindow, sdlRenderer);
         menuMouseEnabled = false;
         initGui();
         omp_set_num_threads(omp_get_max_threads());
@@ -230,8 +229,6 @@ namespace soft3d
     
     void Application::cleanup()
     {
-        delete gui;
-        delete renderer;
         SDL_DestroyWindow(sdlWindow);
         SDL_DestroyRenderer(sdlRenderer);
         SDL_Quit();

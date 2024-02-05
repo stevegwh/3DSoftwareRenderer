@@ -7,6 +7,7 @@
 
 #include "Renderer.hpp"
 #include "utils.hpp"
+#include <memory>
 #include "GUI.hpp"
 #include "Scene.hpp"
 
@@ -14,8 +15,8 @@ namespace soft3d
 {
 class Application
 {
-    soft3d::GUI* gui{};
-    soft3d::Renderer* renderer{};
+    std::unique_ptr<GUI> gui;
+    std::shared_ptr<Renderer> renderer;
     std::vector<std::unique_ptr<soft3d::Scene>> scenes;
     SDL_Window* sdlWindow{};
     SDL_Renderer* sdlRenderer{};
