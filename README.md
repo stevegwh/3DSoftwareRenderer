@@ -19,17 +19,16 @@
 - A GUI that displays the scene's framerate and allows the user to select from various pre-selected scenes.
 - Multithreaded processing thanks to the `opm` library.
 
+## Screenshots
+![](shading%20types.gif)
+![](tex%20sampling%20types.gif)
+
 ## To Do
 - Triangle clipping is currently not implemented. Currently, triangle too close to the camera are just culled to avoid dividing by zero.
-- Phong shading.
-- More advanced lighting.
+- Billinear filtering causes shadows to appear darker (sampling bug).
 - Multithreaded rendering causes slight flickering.
 
-## Benchmarks
-- On a MacBook Air M1 (7 GPU Cores), complex scenes average 50-60 fps with Gouraud shading and Bilinear filtering. With flat shading and nearest neighbour, 80+ FPS is achievable. Single model scenes are consistently above 150 FPS.
-
 ## Models Used
-
 - Viking Room by nigelgoh.
 - Isometric Game Level Low Poly by Karthik Naidu.
 - Concrete Cat statue by Rico Cilliers and Riley Queen
