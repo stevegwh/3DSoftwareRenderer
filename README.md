@@ -20,8 +20,8 @@
 - Multithreaded processing thanks to the `opm` library.
 
 ## Screenshots
-![](shading%20types.gif)
-![](tex%20sampling%20types.gif)
+<img src="shading types.gif" width="698" alt="Animated image of flat and gouraud shading." />
+<img src="tex sampling types.gif" width="698" alt="Animated image of nearest neighbour and bilinear texture filtering." />
 
 ## To Do
 - Triangle clipping is currently not implemented. Currently, triangle too close to the camera are just culled to avoid dividing by zero.
