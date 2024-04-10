@@ -35,20 +35,20 @@ namespace soft3d
             {
                 if(ImGui::MenuItem("Scene 1"))
                 {
-                    scene1ButtonDown->InvokeAllEvents();
+                    scene1ButtonDown->InvokeAllCallbacks();
                 }
                 if(ImGui::MenuItem("Scene 2"))
                 {
-                    scene2ButtonDown->InvokeAllEvents();
+                    scene2ButtonDown->InvokeAllCallbacks();
                 }
                 if(ImGui::MenuItem("Scene 3"))
                 {
-                    scene3ButtonDown->InvokeAllEvents();
+                    scene3ButtonDown->InvokeAllCallbacks();
                 }
                 ImGui::Separator();
                 if(ImGui::MenuItem("Quit"))
                 {
-                    quitButtonDown->InvokeAllEvents();
+                    quitButtonDown->InvokeAllCallbacks();
                 }
                 ImGui::EndMenu();
             }
@@ -56,11 +56,11 @@ namespace soft3d
             {
                 if(ImGui::MenuItem("Flat"))
                 {
-                    flatShaderButtonDown->InvokeAllEvents();
+                    flatShaderButtonDown->InvokeAllCallbacks();
                 }
                 if(ImGui::MenuItem("Gouraud"))
                 {
-                    gouraudShaderButtonDown->InvokeAllEvents();
+                    gouraudShaderButtonDown->InvokeAllCallbacks();
                 }
                 ImGui::EndMenu();
             }
@@ -68,11 +68,11 @@ namespace soft3d
             {
                 if(ImGui::MenuItem("Neighbour"))
                 {
-                    neighbourButtonDown->InvokeAllEvents();
+                    neighbourButtonDown->InvokeAllCallbacks();
                 }
                 if(ImGui::MenuItem("Bilinear"))
                 {
-                    bilinearButtonDown->InvokeAllEvents();
+                    bilinearButtonDown->InvokeAllCallbacks();
                 }
                 ImGui::EndMenu();
             }

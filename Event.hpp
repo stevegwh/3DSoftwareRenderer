@@ -5,22 +5,20 @@
 #pragma once
 
 #include <functional>
-#include <vector>
-#include "Observer.hpp"
+#include <unordered_map>
+#include <memory>
+
+#include "EventCallback.hpp"
 
 namespace soft3d
 {
-
 class Event
 {
 private:
-    //std::vector<Observer*> observerList{};
-    std::vector<std::shared_ptr<Observer>> observerList{};
-
+    std::unordered_map<std::string, std::weak_ptr<EventCallback>> callbacks{};
 public:
-    void Subscribe(const std::shared_ptr<Observer>& observer);
-    void Unsubscribe(const std::shared_ptr<Observer>& observer);
-    void InvokeAllEvents() const;
+    void Subscribe(const std::shared_ptr<EventCallback>& callback);
+    void Unsubscribe(const std::string& signature);
+    void InvokeAllCallbacks();
 };
-}
-
+} //sage

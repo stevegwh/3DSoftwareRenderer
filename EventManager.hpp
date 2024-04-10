@@ -1,0 +1,25 @@
+//
+// Created by Steve Wheeler on 28/03/2024.
+//
+
+#pragma once
+
+#include <functional>
+#include <vector>
+#include <memory>
+#include <utility>
+
+#include "Event.hpp"
+#include "EventCallback.hpp"
+
+namespace soft3d
+{
+
+class EventManager
+{
+public:
+    std::vector<std::shared_ptr<EventCallback>> callbacks;
+    void Subscribe(std::function<void()> func, Event& event);
+};
+
+}

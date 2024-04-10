@@ -115,31 +115,19 @@ namespace soft3d
         scenes.push_back(std::move(scene2));
         scenes.push_back(std::move(scene3));
         changeScene(0   ); // default scene
-
-        const std::function<void()> f1 = [p = this] { p->changeScene(0); };
-        gui->scene1ButtonDown->Subscribe(std::make_shared<Observer>(f1));
-        const std::function<void()> f2 = [p = this] { p->changeScene(1); };
-        gui->scene2ButtonDown->Subscribe(std::make_shared<Observer>(f2));
-        const std::function<void()> f3 = [p = this] { p->changeScene(2); };
-        gui->scene3ButtonDown->Subscribe(std::make_shared<Observer>(f3));
-        const std::function<void()> f4 = [p = this] { p->quit(); };
-        gui->quitButtonDown->Subscribe(std::make_shared<Observer>(f4));
-        const std::function<void()> f5 = [p = renderer] { p->setShader(soft3d::FLAT); };
-        const std::function<void()> m1 = [p = this] { p->disableMouse(); };
-        gui->flatShaderButtonDown->Subscribe(std::make_shared<Observer>(f5));
-        gui->flatShaderButtonDown->Subscribe(std::make_shared<Observer>(m1));
-        const std::function<void()> f6 = [p = renderer] { p->setShader(soft3d::GOURAUD); };
-        const std::function<void()> m2 = [p = this] { p->disableMouse(); };
-        gui->gouraudShaderButtonDown->Subscribe(std::make_shared<Observer>(f6));
-        gui->gouraudShaderButtonDown->Subscribe(std::make_shared<Observer>(m2));
-        const std::function<void()> f7 = [p = renderer] { p->setTextureFilter(soft3d::NEIGHBOUR); };
-        const std::function<void()> m3 = [p = this] { p->disableMouse(); };
-        gui->neighbourButtonDown->Subscribe(std::make_shared<Observer>(f7));
-        gui->neighbourButtonDown->Subscribe(std::make_shared<Observer>(m3));
-        const std::function<void()> f8 = [p = renderer] { p->setTextureFilter(soft3d::BILINEAR); };
-        const std::function<void()> m4 = [p = this] { p->disableMouse(); };
-        gui->bilinearButtonDown->Subscribe(std::make_shared<Observer>(f8));
-        gui->bilinearButtonDown->Subscribe(std::make_shared<Observer>(m4));
+        
+        eventManager->Subscribe([p = this] { p->changeScene(0); }, *gui->scene1ButtonDown);
+        eventManager->Subscribe([p = this] { p->changeScene(1); }, *gui->scene2ButtonDown);
+        eventManager->Subscribe([p = this] { p->changeScene(2); }, *gui->scene3ButtonDown);
+        eventManager->Subscribe([p = this] { p->quit(); }, *gui->quitButtonDown);
+        eventManager->Subscribe([p = renderer] { p->setShader(soft3d::FLAT); }, *gui->flatShaderButtonDown);
+        eventManager->Subscribe([p = this] { p->disableMouse(); }, *gui->flatShaderButtonDown);
+        eventManager->Subscribe([p = renderer] { p->setShader(soft3d::GOURAUD); }, *gui->gouraudShaderButtonDown);
+        eventManager->Subscribe([p = this] { p->disableMouse(); }, *gui->gouraudShaderButtonDown);
+        eventManager->Subscribe([p = renderer] { p->setTextureFilter(soft3d::NEIGHBOUR); }, *gui->neighbourButtonDown);
+        eventManager->Subscribe([p = this] { p->disableMouse(); }, *gui->neighbourButtonDown);
+        eventManager->Subscribe([p = renderer] { p->setTextureFilter(soft3d::BILINEAR); }, *gui->bilinearButtonDown);
+        eventManager->Subscribe([p = this] { p->disableMouse(); }, *gui->bilinearButtonDown);
     }
     
     void Application::init()
@@ -247,6 +235,7 @@ namespace soft3d
     }
     
     Application::Application()
+    : eventManager(std::make_unique<EventManager>())
     {
         init();
     }

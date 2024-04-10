@@ -10,6 +10,7 @@
 #include <memory>
 #include "GUI.hpp"
 #include "Scene.hpp"
+#include "EventManager.hpp"
 
 namespace soft3d
 {
@@ -18,6 +19,7 @@ class Application
     std::unique_ptr<GUI> gui;
     std::shared_ptr<Renderer> renderer;
     std::vector<std::unique_ptr<soft3d::Scene>> scenes;
+    std::unique_ptr<EventManager> eventManager;
     SDL_Window* sdlWindow{};
     SDL_Renderer* sdlRenderer{};
     FPSCounter fpsCounter{};

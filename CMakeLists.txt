@@ -45,7 +45,9 @@ set(SOURCE_FILES
         SceneData.hpp
         Event.cpp
         Event.hpp
-        Observer.hpp
+        EventManager.cpp
+        EventManager.hpp
+        EventCallback.hpp
         Rasterizer.cpp
         Rasterizer.hpp
         ZBuffer.hpp
