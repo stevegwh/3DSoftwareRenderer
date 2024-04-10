@@ -162,7 +162,7 @@ void Renderer::Render()
     pushBuffer(sdlRenderer, sdlSurface);
 }
 
-void Renderer::AddRenderable(const std::shared_ptr<Renderable>& renderable)
+void Renderer::AddRenderable(const Renderable* renderable)
 {
     renderables.push_back(renderable);
 }

@@ -44,7 +44,7 @@ class Renderer
     slib::mat perspectiveMat;
     slib::mat viewMatrix;
     SDL_Surface* sdlSurface;
-    std::vector<std::shared_ptr<Renderable>> renderables;
+    std::vector<const Renderable*> renderables;
     FragmentShader fragmentShader = FLAT;
     TextureFilter textureFilter = NEIGHBOUR;
 public:
@@ -69,7 +69,7 @@ public:
 
     void RenderBuffer();
     void Render();
-    void AddRenderable(const std::shared_ptr<Renderable>& renderable);
+    void AddRenderable(const Renderable* renderable);
     void ClearRenderables();
     void setShader(FragmentShader shader);
     void setTextureFilter(TextureFilter filter);
