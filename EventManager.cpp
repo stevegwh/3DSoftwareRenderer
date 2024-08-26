@@ -4,7 +4,7 @@
 
 #include "EventManager.hpp"
 
-namespace soft3d
+namespace sage
 {
 void EventManager::Subscribe(std::function<void()> func, Event& event)
 {

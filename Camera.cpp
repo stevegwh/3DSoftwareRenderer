@@ -3,7 +3,8 @@
 //
 
 #include "Camera.hpp"
-namespace soft3d
+
+namespace sage
 {
 
     void Camera::Update(float deltaTime)
@@ -41,9 +42,9 @@ namespace soft3d
         rotation.x -= y * sensitivity;
     }
     
-    void Camera::UpdateDirectionVectors(const slib::mat &viewMatrix)
+    void Camera::UpdateDirectionVectors(const glm::mat4 &viewMatrix)
     {
-        forward = slib::vec3({viewMatrix.data[0][2], viewMatrix.data[1][2], viewMatrix.data[2][2]});
-        right = slib::vec3({viewMatrix.data[0][0], viewMatrix.data[1][0], viewMatrix.data[2][0]});
+        forward = glm::vec3({viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]});
+        right = glm::vec3({viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]});
     }
 }

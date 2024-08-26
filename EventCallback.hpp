@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-namespace soft3d
+namespace sage
 {
 struct EventCallback
 {

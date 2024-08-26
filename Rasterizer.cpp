@@ -9,7 +9,7 @@
 #include "slib.hpp"
 #include <iostream>
 
-namespace soft3d
+namespace sage
 {
 
 inline void bufferPixels(SDL_Surface *surface, int x, int y, unsigned char r, unsigned char g, unsigned char b)
@@ -22,7 +22,7 @@ inline void bufferPixels(SDL_Surface *surface, int x, int y, unsigned char r, un
 }
 
 // GL_NEAREST
-inline void texNearestNeighbour(const slib::texture &texture, float lum, float uvx, float uvy, int &r, int &g, int &b)
+inline void texNearestNeighbour(const slib::texture& texture, float lum, float uvx, float uvy, int &r, int &g, int &b)
 {
     // Convert to texture space
     auto tx = static_cast<int>(uvx * texture.w);
@@ -95,10 +95,10 @@ inline void texBilinear(const slib::texture& texture, bool textureAtlas, int til
 
 }
 
-inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, float lum)
+inline void Rasterizer::drawPixel(float x, float y, const glm::vec3& coords, float lum)
 {
     // zBuffer.
-    float interpolated_z = coords.x * p1.w + coords.y * p2.w + coords.z * p3.w;
+    float interpolated_z = coords.x * p1.z + coords.y * p2.z + coords.z * p3.z;
     int zIndex = y * static_cast<int>(SCREEN_WIDTH) + x;
     if (!(interpolated_z < zBuffer->buffer[zIndex] || zBuffer->buffer[zIndex] == 0)) return;
     zBuffer->buffer[zIndex] = interpolated_z;
@@ -107,8 +107,8 @@ inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, fl
     if (fragmentShader == GOURAUD)
     {
         auto interpolated_normal = n1 * coords.x + n2 * coords.y + n3 * coords.z;
-        interpolated_normal = smath::normalize(interpolated_normal);
-        lum = smath::dot(interpolated_normal, lightingDirection);
+        interpolated_normal = glm::normalize(interpolated_normal);
+        lum = glm::dot(interpolated_normal, lightingDirection);
     }
 
     int r = 1, g = 1, b = 1;
@@ -141,9 +141,9 @@ inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, fl
     }
 
     // Texturing
-    const auto at = slib::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
-    const auto bt = slib::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
-    const auto ct = slib::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
+    const auto at = glm::vec3({tx1.x, tx1.y, 1.0f}) / viewW1;
+    const auto bt = glm::vec3({tx2.x, tx2.y, 1.0f}) / viewW2;
+    const auto ct = glm::vec3({tx3.x, tx3.y, 1.0f}) / viewW3;
     const float wt = coords.x * at.z + coords.y * bt.z + coords.z * ct.z;
     // "coords" are the barycentric coordinates of the current pixel 
     // "at", "bt", "ct" are the texture coordinates of the corners of the current triangle
@@ -187,14 +187,14 @@ void Rasterizer::rasterizeTriangle(float area)
     // Precalculate lighting (flat shading)
     if (fragmentShader == FLAT)
     {
-        if (!renderable.mesh.normals.empty())
-            normal = smath::normalize((n1 + n2 + n3) / 3);
-        else
-        {
-            normal = smath::facenormal(t,renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
-        }
+        //if (!renderable.mesh.normals.empty())
+            normal = glm::normalize((n1 + n2 + n3) / 3.0f);
+        //else
+        //{
+            //normal = smath::facenormal(t,renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
+        //}
             
-        lum = smath::dot(normal, lightingDirection);                          
+        lum = glm::dot(normal, lightingDirection);                          
     }
 
     // Get bounding box.
@@ -205,7 +205,7 @@ void Rasterizer::rasterizeTriangle(float area)
     const int ymax = std::min(static_cast<int>(std::ceil(std::max({ p1.y, p2.y, p3.y }))),
                               static_cast<int>(SCREEN_HEIGHT));
 
-    slib::vec3 coords{};
+    glm::vec3 coords{};
 
     // Iterate over every pixel in the triangle
 //#pragma omp parallel for default(none) shared(xmin, xmax, ymin, ymax, area, EY1, EY2, EX1, EX2, coords, lum)

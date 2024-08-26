@@ -6,9 +6,11 @@
 
 #include "Renderable.hpp"
 #include "ZBuffer.hpp"
-#include <SDL2/SDL.h>
 
-namespace soft3d
+#include <SDL2/SDL.h>
+#include <glm/glm.hpp>
+
+namespace sage
 {
 
 enum FragmentShader
@@ -32,19 +34,18 @@ class Rasterizer
     const slib::tri& t;
     const Renderable& renderable;
     
-    //slib::vec3 coords{}; // Barycentric/Edge-finding coordinates
-    const slib::vec3 lightingDirection {1, 1, 1.5};
-    slib::vec3 normal{};
+    const glm::vec3 lightingDirection {1, 1, 1.5};
+    glm::vec3 normal{};
 
     // Screen points of each vertex
-    const slib::zvec2& p1;
-    const slib::zvec2& p2;
-    const slib::zvec2& p3;
+    const glm::vec3& p1;
+    const glm::vec3& p2;
+    const glm::vec3& p3;
     
     // Texture coordinates of each vertex
-    const slib::vec2& tx1;
-    const slib::vec2& tx2;
-    const slib::vec2& tx3;
+    const glm::vec2& tx1;
+    const glm::vec2& tx2;
+    const glm::vec2& tx3;
 
     const slib::material& material;
     
@@ -54,14 +55,14 @@ class Rasterizer
     const float viewW3;
     
     // Normals from model data (transformed)
-    const slib::vec3& n1;
-    const slib::vec3& n2;
-    const slib::vec3& n3;
+    const glm::vec3& n1;
+    const glm::vec3& n2;
+    const glm::vec3& n3;
     
     const FragmentShader fragmentShader;
     const TextureFilter textureFilter;
     
-    void drawPixel(float x, float y, const slib::vec3& coords, float lum);
+    void drawPixel(float x, float y, const glm::vec3& coords, float lum);
 
 public:
 
@@ -69,10 +70,7 @@ public:
         
     Rasterizer(
         ZBuffer* const _zBuffer,
-        const Renderable& _renderable, 
-        const std::vector<slib::zvec2>& screenPoints,
-        const std::vector<slib::vec4>& projectedPoints, 
-        const std::vector<slib::vec3>& normals,
+        const Renderable& _renderable,
         const slib::tri& _t, 
         SDL_Surface* const _surface,
         FragmentShader _fragmentShader, 
@@ -82,19 +80,19 @@ public:
         zBuffer(_zBuffer), 
         t(_t), 
         renderable(_renderable),
-        p1(screenPoints[t.v1]), 
-        p2(screenPoints[t.v2]), 
-        p3(screenPoints[t.v3]),
-        tx1(_renderable.mesh.textureCoords[t.vt1]), 
-        tx2(_renderable.mesh.textureCoords[t.vt2]), 
-        tx3(_renderable.mesh.textureCoords[t.vt3]),
+        p1(t.v1.screenPoint), 
+        p2(t.v2.screenPoint), 
+        p3(t.v3.screenPoint),
+        tx1(t.v1.textureCoords), 
+        tx2(t.v2.textureCoords), 
+        tx3(t.v3.textureCoords),
         material(renderable.mesh.materials.at(t.material)),
-        viewW1(projectedPoints[t.v1].w), 
-        viewW2(projectedPoints[t.v2].w), 
-        viewW3(projectedPoints[t.v3].w),
-        n1(normals[t.v1]), 
-        n2(normals[t.v2]), 
-        n3(normals[t.v3]),
+        viewW1(t.v1.projectedPoint.w), 
+        viewW2(t.v2.projectedPoint.w), 
+        viewW3(t.v3.projectedPoint.w),
+        n1(t.v1.normal), 
+        n2(t.v2.normal), 
+        n3(t.v3.normal),
         fragmentShader(_fragmentShader), 
         textureFilter(_textureFilter)
         {};

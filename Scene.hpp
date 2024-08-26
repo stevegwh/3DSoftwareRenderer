@@ -13,7 +13,7 @@
 #include "Renderer.hpp"
 #include "SceneData.hpp"
 
-namespace soft3d
+namespace sage
 {
 class Scene
 {

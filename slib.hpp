@@ -4,14 +4,10 @@
 #include <array>
 #include <string>
 #include <iostream>
-
+#include <glm/glm.hpp>
 
 namespace slib
 {
-struct vec2;
-struct vec3;
-struct vec4;
-struct mat;
 struct material;
 
 struct texture
@@ -36,81 +32,28 @@ struct material
     texture map_Ns;
 };
 
-/*
- * Only contains indices/keys. Used to retrieve data from the vertex attributes stored in the mesh.
- */
+struct vertex
+{
+    glm::vec3 position;
+    glm::vec2 textureCoords;
+    glm::vec3 normal;
+    glm::vec4 projectedPoint;
+    glm::vec3 screenPoint;
+};
+
 struct tri
 {
-    const int v1, v2, v3;
-    const int vt1, vt2, vt3;
-    const std::string material;
-};
-
-struct zvec2
-{
-    float x, y, w;
-};
-
-struct vec2
-{
-    float x, y;
-    vec2 &operator*=(const vec2& rhs);
-    vec2 &operator*=(float rhs);
-    vec2 operator-(const vec2& rhs) const;
-};
-
-struct vec3
-{
-    float x, y, z;
-    vec3 &operator+=(float rhs);
-    vec3 &operator-=(float rhs);
-    vec3 &operator*=(float rhs);
-    vec3 &operator/=(float rhs);
-    vec3 operator-(float rhs) const;
-    vec3 operator+(float rhs) const;
-    vec3 operator*(float rhs) const;
-    vec3 operator/(float rhs) const;
-    vec3 &operator+=(const vec3 &rhs);
-    vec3 &operator-=(const vec3 &rhs);
-    vec3 &operator*=(const vec3 &rhs);
-    vec3 &operator/=(const vec3 &rhs);
-    vec3 operator-(const vec3 &rhs) const;
-    vec3 operator+(const vec3 &rhs) const;
-    vec3 operator*(const vec3 &rhs) const;
-    vec3 operator/(const vec3 &rhs) const;
-    vec3 operator*(const mat &rhs) const;
-    vec3 &operator*=(const mat &rhs);
-    bool operator==(const vec3 &rhs) const;
-    bool operator==(float rhs) const;
-    bool operator<(const vec3 &rhs) const;
-    bool operator>(const vec3 &rhs) const;
-    bool operator<=(const vec3 &rhs) const;
-    bool operator>=(const vec3 &rhs) const;
-};
-
-struct vec4
-{
-    float x, y, z, w;
-    vec4 operator*(const mat &rhs) const;
-    vec4 operator*=(const mat &rhs);
-};
-
-struct mat
-{
-    std::vector<std::vector<float>> data;
-    explicit mat(std::vector<std::vector<float>> _data)
-        : data(std::move(_data))
-    {};
-
-    mat &operator+=(const mat &rhs);
-    mat &operator*=(const mat &rhs);
-    mat operator*(const mat &rhs) const;
-    vec4 operator*(const vec4 &rhs) const;
-
+    slib::vertex v1;
+    slib::vertex v2;
+    slib::vertex v3;
+    std::string material;
 };
 
 struct Color
 {
     int r, g, b;
 };
+
+glm::mat4 fpsviewGl( const glm::vec3& eye, float pitch, float yaw );
+
 }

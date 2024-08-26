@@ -6,7 +6,7 @@
 #include "constants.hpp"
 #include <string>
 
-namespace soft3d
+namespace sage
 {
 
     void GUI::init()

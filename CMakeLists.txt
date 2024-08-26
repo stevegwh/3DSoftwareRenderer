@@ -5,17 +5,13 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(${SDL2_INCLUDE_DIRS} vendor vendor/imgui)
 set(SOURCE_FILES
         main.cpp
-        slib.hpp
         constants.hpp
         ObjParser.cpp
         ObjParser.hpp
         Mesh.hpp
-        smath.cpp
-        smath.hpp
         utils.hpp
         Renderer.cpp
         Renderer.hpp
-        slib.cpp
         Renderable.hpp
         vendor/lodepng.cpp
         vendor/lodepng.h
@@ -42,6 +38,7 @@ set(SOURCE_FILES
         Camera.hpp
         Scene.cpp
         Scene.hpp
+        slib.hpp
         SceneData.hpp
         Event.cpp
         Event.hpp
@@ -51,13 +48,15 @@ set(SOURCE_FILES
         Rasterizer.cpp
         Rasterizer.hpp
         ZBuffer.hpp
+        slib.cpp
 )
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++20 -O3")
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+find_package(glm REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} glm::glm)
 find_package(OpenMP REQUIRED)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)

@@ -12,13 +12,13 @@
 #include "Scene.hpp"
 #include "EventManager.hpp"
 
-namespace soft3d
+namespace sage
 {
 class Application
 {
     std::unique_ptr<GUI> gui;
     std::shared_ptr<Renderer> renderer;
-    std::vector<std::unique_ptr<soft3d::Scene>> scenes;
+    std::vector<std::unique_ptr<sage::Scene>> scenes;
     std::unique_ptr<EventManager> eventManager;
     SDL_Window* sdlWindow{};
     SDL_Renderer* sdlRenderer{};

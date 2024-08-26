@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <regex>
 #include <utility>
-#include "smath.hpp"
+#include <glm/glm.hpp>
 #include "constants.hpp"
 #include "vendor/lodepng.h"
 
@@ -51,7 +51,7 @@ std::string trim(const std::string& input)
     return output;
 }
 
-struct tri_tmp
+struct tri_obj
 {
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
@@ -178,19 +178,19 @@ std::map<std::string, slib::material> parseMtlFile(const char* path)
     return toReturn;
 }
 
-slib::vec3 getVector(const std::string& line)
+glm::vec3 getVector(const std::string& line)
 {
     std::array<float,3> arr = parseVectorLine(line);
     return { arr.at(0), arr.at(1), arr.at(2) };
 }
 
-slib::vec2 getTextureVector(const std::string& line)
+glm::vec2 getTextureVector(const std::string& line)
 {
     std::array<float,3> arr = parseVectorLine(line);
     return { arr.at(0), arr.at(1) };
 }
 
-tri_tmp getFace(const std::string& line, std::string material)
+tri_obj getFace(const std::string& line, std::string material)
 {
     enum VertexFormat {
         V,
@@ -272,7 +272,7 @@ tri_tmp getFace(const std::string& line, std::string material)
 
 namespace ObjParser
 {
-soft3d::Mesh ParseObj(const char* objPath)
+sage::Mesh ParseObj(const char* objPath)
 {
     std::ifstream obj(objPath);
     if (!obj.is_open()) {
@@ -282,12 +282,11 @@ soft3d::Mesh ParseObj(const char* objPath)
     
     std::map<std::string, slib::material> materials;
     std::string currentTextureName;
-    std::vector<slib::vec3> vertices;
-    std::vector<slib::vec3> vertexNormals; // Normals stored at same index as the corresponding vertex
-    std::vector<slib::vec2> textureCoords;
-    std::vector<slib::vec3> normals; // The normals as listed in the obj file
-    std::vector<tri_tmp> rawfaces; // faces with normal data
-    std::vector<slib::tri> faces; // faces stripped of normal data
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals; // The normals as listed in the obj file
+    std::vector<glm::vec2> textureCoords;
+    std::vector<tri_obj> rawfaces; // faces in obj data (indices to arrays: v/vt/vn)
+    std::vector<slib::tri> faces; // faces with data written directly (no separate arrays needed)
     std::string line;
     
     while (getline(obj, line))
@@ -324,32 +323,32 @@ soft3d::Mesh ParseObj(const char* objPath)
         
     }
     
-    
-    // Get the vertex normals of each triangle and store them in the 'normals' vector at the same index as in the 
-    // 'vertices' vector.
-    vertexNormals.resize(vertices.size());
     faces.reserve(rawfaces.size());
-
-#pragma omp parallel for default(none) shared(rawfaces, vertexNormals, normals, faces)
-    for (const tri_tmp &tri : rawfaces) 
+//#pragma omp parallel for default(none) shared(vertices, normals, textureCoords, rawfaces, faces)
+    for (const tri_obj &tri : rawfaces)
     {
-        auto n1 = normals[tri.vn1];
-        auto n2 = normals[tri.vn2];
-        auto n3 = normals[tri.vn3];
-        vertexNormals[tri.v1] = n1;
-        vertexNormals[tri.v2] = n2;
-        vertexNormals[tri.v3] = n3;
+        slib::tri tri_n{};
+        slib::vertex vx1{};
+        slib::vertex vx2{};
+        slib::vertex vx3{};
+        vx1.position = vertices[tri.v1];
+        vx2.position = vertices[tri.v2];
+        vx3.position = vertices[tri.v3];
+        vx1.normal = normals[tri.vn1];
+        vx2.normal = normals[tri.vn2];
+        vx3.normal = normals[tri.vn3];
+        vx1.textureCoords = textureCoords[tri.vt1];
+        vx2.textureCoords = textureCoords[tri.vt2];
+        vx3.textureCoords = textureCoords[tri.vt3];
+        tri_n.material = tri.material;
+        tri_n.v1 = vx1;
+        tri_n.v2 = vx2;
+        tri_n.v3 = vx3;
+        faces.push_back(tri_n);
     }
-#pragma omp barrier
-
-    // Strip normal indices from faces (should now be accessed using the 'v1' (etc.) index with the normals vector)
-    for (const tri_tmp& t : rawfaces) 
-    {
-        slib::tri toPush = { t.v1, t.v2, t.v3, t.vt1, t.vt2, t.vt3, t.material };
-        faces.push_back(toPush);
-    }
+//#pragma omp barrier
 
     obj.close();
-    return {vertices, faces, textureCoords, vertexNormals, materials};
+    return {faces, materials};
 }
 }

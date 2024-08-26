@@ -4,7 +4,7 @@
 
 #include "Event.hpp"
 
-namespace soft3d
+namespace sage
 {
 
 void Event::InvokeAllCallbacks()  
