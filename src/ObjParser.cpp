@@ -12,7 +12,7 @@
 #include <utility>
 #include "smath.hpp"
 #include "constants.hpp"
-#include "vendor/lodepng.h"
+#include "lodepng.h"
 
 slib::texture DecodePng(const char* filename)
 {

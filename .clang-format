@@ -1,0 +1,15 @@
+﻿---
+BasedOnStyle: Microsoft
+NamespaceIndentation: All
+PointerAlignment: Left
+AlignAfterOpenBracket: AlwaysBreak
+BinPackArguments: false
+BinPackParameters: false
+AllowAllConstructorInitializersOnNextLine: true
+AllowAllArgumentsOnNextLine: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ColumnLimit: 115
+SortIncludes: CaseInsensitive
+IncludeBlocks: Preserve
+AlwaysBreakTemplateDeclarations: Yes
