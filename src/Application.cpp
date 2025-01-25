@@ -151,7 +151,7 @@ namespace sage
         loop = SDL_FALSE;
     }
 
-    void Application::draw()
+    void Application::draw() const
     {
         renderer->Render();
         gui->Draw();
@@ -211,7 +211,7 @@ namespace sage
         }
     }
 
-    void Application::cleanup()
+    void Application::cleanup() const
     {
         SDL_DestroyWindow(sdlWindow);
         SDL_DestroyRenderer(sdlRenderer);

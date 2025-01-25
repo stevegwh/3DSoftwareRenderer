@@ -14,23 +14,11 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
-// struct ZBuffer
-//{
-//     static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
-//     std::array<float, screenSize> buffer{};
-//     void
-//     clear()
-//     {
-//         std::fill_n(buffer.begin(), screenSize, 0);
-//     }
-// };
-
 namespace sage
 {
 
     class Renderer
     {
-
         static constexpr float zFar = 1000;
         static constexpr float zNear = 0.1;
         static constexpr float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;

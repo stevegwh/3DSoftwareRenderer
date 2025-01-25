@@ -9,12 +9,43 @@
 namespace sage
 {
 
+    inline bool makeClipSpace(const slib::tri& f)
+    {
+        // count inside/outside points
+        // if face is entirely in the frustum, push it to processedFaces.
+        // if face is entirely outside the frustum, return.
+        // if partially, clip triangle.
+        // // if inside == 2, form a quad.
+        // // if inside == 1, form triangle.
+
+        const auto& v1 = f.v1.projectedPoint;
+        const auto& v2 = f.v2.projectedPoint;
+        const auto& v3 = f.v3.projectedPoint;
+
+        if (v1.x > v1.w && v2.x > v2.w && v3.x > v3.w) return false;
+        if (v1.x < -v1.w && v2.x < -v2.w && v3.x < -v3.w) return false;
+        if (v1.y > v1.w && v2.y > v2.w && v3.y > v3.w) return false;
+        if (v1.y < -v1.w && v2.y < -v2.w && v3.y < -v3.w) return false;
+        if (v1.z < 0.0f && v2.z < 0.0f && v3.z < 0.0f) return false;
+        // TODO: far plane clipping doesn't work?
+        // if (v1.z > v1.w && v2.z > v2.w && v3.z > v3.w) return false;
+
+        return true;
+        // clip *all* triangles against 1 edge, then all against the next, and the
+        // next.
+    }
+
     inline void createScreenSpace(std::vector<slib::tri>& faces)
     {
         // Convert to screen
 #pragma omp parallel for default(none) shared(faces, SCREEN_WIDTH, SCREEN_HEIGHT)
         for (auto& f : faces)
         {
+            if (!makeClipSpace(f))
+            {
+                f.skip = true;
+                continue;
+            }
             auto ndc = [](auto& v, auto& screen) {
                 // NDC Space
                 if (v.w != 0)
@@ -36,33 +67,6 @@ namespace sage
             ndc(f.v3.projectedPoint, f.v3.screenPoint);
         }
 #pragma omp barrier
-    }
-
-    inline bool makeClipSpace(const slib::tri& f, std::vector<slib::tri>& processedFaces)
-    {
-        // count inside/outside points
-        // if face is entirely in the frustum, push it to processedFaces.
-        // if face is entirely outside the frustum, return.
-        // if partially, clip triangle.
-        // // if inside == 2, form a quad.
-        // // if inside == 1, form triangle.
-
-        const auto& v1 = f.v1.projectedPoint;
-        const auto& v2 = f.v2.projectedPoint;
-        const auto& v3 = f.v3.projectedPoint;
-
-        if (v1.x > v1.w && v2.x > v2.w && v3.x > v3.w) return false;
-        if (v1.x < -v1.w && v2.x < -v2.w && v3.x < -v3.w) return false;
-        if (v1.y > v1.w && v2.y > v2.w && v3.y > v3.w) return false;
-        if (v1.y < -v1.w && v2.y < -v2.w && v3.y < -v3.w) return false;
-        if (v1.z < 0.0f && v2.z < 0.0f && v3.z < 0.0f) return false;
-        // TODO: far plane clipping doesn't work?
-        // if (v1.z > v1.w && v2.z > v2.w && v3.z > v3.w) return false;
-
-        processedFaces.push_back(f);
-        return true;
-        // clip *all* triangles against 1 edge, then all against the next, and the
-        // next.
     }
 
     inline void Renderer::clearBuffer() const
@@ -101,16 +105,16 @@ namespace sage
         const slib::mat4& perspectiveMat,
         std::vector<slib::tri>& faces)
     {
-        const slib::mat4 scaleMatrixGl =
+        const slib::mat4 scaleMatrix =
             smath::scale({renderable.scale.x, renderable.scale.y, renderable.scale.z});
-        const slib::mat4 rotationMatrixGl = smath::rotation(renderable.eulerAngles);
-        const slib::mat4 translationMatrixGl =
+        const slib::mat4 rotationMatrix = smath::rotation(renderable.eulerAngles);
+        const slib::mat4 translationMatrix =
             smath::translation({renderable.position.x, renderable.position.y, renderable.position.z});
 
         // World Space Transform
         const slib::mat4 normalTransformMat =
-            rotationMatrixGl * scaleMatrixGl; // Normal transforms do not need to be translated
-        const slib::mat4 fullTransformMat = translationMatrixGl * normalTransformMat;
+            rotationMatrix * scaleMatrix; // Normal transforms do not need to be translated
+        const slib::mat4 fullTransformMat = translationMatrix * normalTransformMat;
         const auto viewTransform = viewMatrix * fullTransformMat;
 
 #pragma omp parallel for default(none)                                                                            \
@@ -134,21 +138,13 @@ namespace sage
         for (const auto& renderable : renderables)
         {
             std::vector<slib::tri> faces = renderable->mesh.faces;
-            std::vector<slib::tri> processedFaces;
-            processedFaces.reserve(faces.size());
-
             createProjectedSpace(*renderable, viewMatrix, perspectiveMat, faces);
+            createScreenSpace(faces);
 
-            // Culling and clipping
+#pragma omp parallel for default(none) shared(faces, renderable)
             for (const auto& f : faces)
             {
-                makeClipSpace(f, processedFaces);
-            }
-            createScreenSpace(processedFaces);
-
-#pragma omp parallel for default(none) shared(processedFaces, renderable)
-            for (const auto& f : processedFaces)
-            {
+                if (f.skip) continue;
                 const auto& p1 = f.v1.screenPoint;
                 const auto& p2 = f.v2.screenPoint;
                 const auto& p3 = f.v3.screenPoint;

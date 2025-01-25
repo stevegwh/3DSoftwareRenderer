@@ -32,9 +32,9 @@ class Application
     void init();
     void initGui();
     void initSDL();
-    void draw();
+    void draw() const;
     void update();
-    void cleanup();
+    void cleanup() const;
     void disableMouse();
 public:
     void Run();
