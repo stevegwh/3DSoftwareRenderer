@@ -1,21 +1,20 @@
 //
 // Created by Steve Wheeler on 29/09/2023.
 //
-
-#include <vector>
-#include "Renderable.hpp"
-
 #pragma once
+
+#include "Renderable.hpp"
+#include "slib.hpp"
+#include <vector>
 
 namespace sage
 {
-struct SceneData
-{
-    FragmentShader fragmentShader = FLAT;
-    TextureFilter textureFilter = NEIGHBOUR;
-    glm::vec3 cameraStartPosition{};
-    glm::vec3 cameraStartRotation{};
-    std::vector<std::unique_ptr<Renderable>> renderables;
-};
-}
-
+    struct SceneData
+    {
+        FragmentShader fragmentShader = FLAT;
+        TextureFilter textureFilter = NEIGHBOUR;
+        slib::vec3 cameraStartPosition{};
+        slib::vec3 cameraStartRotation{};
+        std::vector<std::unique_ptr<Renderable>> renderables;
+    };
+} // namespace sage

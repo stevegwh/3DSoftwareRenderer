@@ -11,40 +11,44 @@ namespace sage
     {
         const float speed = 0.05f; // Adjust this value as needed
         const float adjustedSpeed = speed * deltaTime;
-    
-        const Uint8 *keyState = SDL_GetKeyboardState(NULL);
-        if (keyState[SDL_SCANCODE_W]) {
+
+        const Uint8* keyState = SDL_GetKeyboardState(NULL);
+        if (keyState[SDL_SCANCODE_W])
+        {
             pos -= forward * adjustedSpeed;
         }
-        if (keyState[SDL_SCANCODE_S]) {
+        if (keyState[SDL_SCANCODE_S])
+        {
             pos += forward * adjustedSpeed;
         }
-        if (keyState[SDL_SCANCODE_A]) {
+        if (keyState[SDL_SCANCODE_A])
+        {
             pos -= right * adjustedSpeed;
         }
-        if (keyState[SDL_SCANCODE_D]) {
+        if (keyState[SDL_SCANCODE_D])
+        {
             pos += right * adjustedSpeed;
         }
     }
-    
-    void Camera::HandleEvent(SDL_Event *event)
+
+    void Camera::HandleEvent(SDL_Event* event)
     {
-        if (event->type == SDL_MOUSEMOTION) {
+        if (event->type == SDL_MOUSEMOTION)
+        {
             rotate(event->motion.xrel, event->motion.yrel);
         }
     }
 
-    
     void Camera::rotate(float x, float y)
     {
         const float sensitivity = 0.075f;
         rotation.y -= x * sensitivity;
         rotation.x -= y * sensitivity;
     }
-    
-    void Camera::UpdateDirectionVectors(const glm::mat4 &viewMatrix)
+
+    void Camera::UpdateDirectionVectors(const slib::mat4& viewMatrix)
     {
-        forward = glm::vec3({viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]});
-        right = glm::vec3({viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]});
+        forward = slib::vec3({viewMatrix.data[0][2], viewMatrix.data[1][2], viewMatrix.data[2][2]});
+        right = slib::vec3({viewMatrix.data[0][0], viewMatrix.data[1][0], viewMatrix.data[2][0]});
     }
-}
+} // namespace sage
