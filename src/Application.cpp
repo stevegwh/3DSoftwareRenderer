@@ -26,7 +26,7 @@ static std::unique_ptr<sage::Scene> spyroSceneInit(sage::Renderer& renderer)
     sceneData->cameraStartPosition = {50, 20, 150};
     sceneData->cameraStartRotation = {0, 0, 0};
     sceneData->fragmentShader = sage::GOURAUD;
-    sceneData->textureFilter = sage::BILINEAR;
+    sceneData->textureFilter = sage::NEIGHBOUR;
     return std::make_unique<sage::Scene>(renderer, std::move(sceneData));
 }
 
@@ -62,12 +62,12 @@ static std::unique_ptr<sage::Scene> vikingRoomSceneInit(sage::Renderer& renderer
 {
     sage::Mesh mesh = ObjParser::ParseObj("resources/viking_room.obj");
     auto renderable = std::make_unique<sage::Renderable>(
-        sage::Renderable(mesh, {0, -5, -1}, {0, -135, 0}, {10, 10, 10}, {200, 100, 200}));
+        sage::Renderable(mesh, {0.75, -2, -1}, {0, -135, 0}, {7.5, 7.5, 7.5}, {200, 100, 200}));
     auto sceneData = std::make_unique<sage::SceneData>();
 
     sceneData->renderables.push_back(std::move(renderable));
-    sceneData->cameraStartPosition = {0, 0, 30};
-    sceneData->cameraStartRotation = {0, 0, 0};
+    sceneData->cameraStartPosition = {0, 0, 38};
+    sceneData->cameraStartRotation = {-23, 0, 0};
     sceneData->fragmentShader = sage::GOURAUD;
     sceneData->textureFilter = sage::NEIGHBOUR;
     return std::make_unique<sage::Scene>(renderer, std::move(sceneData));
@@ -107,7 +107,7 @@ namespace sage
         scenes.push_back(std::move(scene1));
         scenes.push_back(std::move(scene2));
         scenes.push_back(std::move(scene3));
-        changeScene(0); // default scene
+        changeScene(2); // default scene
 
         eventManager->Subscribe([p = this] { p->changeScene(0); }, *gui->scene1ButtonDown);
         eventManager->Subscribe([p = this] { p->changeScene(1); }, *gui->scene2ButtonDown);

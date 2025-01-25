@@ -3,10 +3,14 @@
 //
 
 #include "ObjParser.hpp"
+
 #include "constants.hpp"
-#include "lodepng.h"
 #include "slib.hpp"
+
+#include "lodepng.h"
+
 #include <algorithm>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -335,6 +339,11 @@ namespace ObjParser
                 materials = parseMtlFile(path.c_str());
             }
         }
+
+        assert(!vertices.empty());
+        assert(!normals.empty());
+        assert(!textureCoords.empty());
+        assert(!rawfaces.empty());
 
         faces.reserve(rawfaces.size());
         // #pragma omp parallel for default(none) shared(vertices, normals, textureCoords, rawfaces, faces)
