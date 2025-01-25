@@ -11,5 +11,5 @@
 
 namespace ObjParser
 {
-    soft3d::Mesh ParseObj(const char* objPath);
+    sage::Mesh ParseObj(const char* objPath);
 };

@@ -5,41 +5,11 @@
 #include "Renderer.hpp"
 #include "constants.hpp"
 #include "Rasterizer.hpp"
-#include <iostream>
 
-namespace soft3d
+namespace sage
 {
 
-    inline void createScreenSpace(std::vector<slib::vec4>& projectedPoints, std::vector<slib::zvec2>& screenPoints)
-    {
-// Convert to screen
-#pragma omp parallel for default(none) shared(projectedPoints, screenPoints, SCREEN_WIDTH, SCREEN_HEIGHT)
-        for (int i = 0; i < projectedPoints.size(); ++i)
-        {
-            auto& v = projectedPoints[i];
-            // NDC Space
-            if (v.w != 0)
-            {
-                // Perspective divide
-                v.x /= v.w;
-                v.y /= v.w;
-                v.z /= v.w;
-            }
-            //-----------------------------
-
-            // Screen space
-            const auto x = static_cast<float>(SCREEN_WIDTH / 2 + v.x * SCREEN_WIDTH / 2);
-            const auto y = static_cast<float>(SCREEN_HEIGHT / 2 - v.y * SCREEN_HEIGHT / 2);
-            screenPoints[i] = {x, y, v.z};
-            //-----------------------------
-        }
-#pragma omp barrier
-    }
-
-    inline bool makeClipSpace(
-        const slib::tri& face,
-        const std::vector<slib::vec4>& projectedPoints,
-        std::vector<slib::tri>& processedFaces)
+    inline bool makeClipSpace(const slib::tri& f)
     {
         // count inside/outside points
         // if face is entirely in the frustum, push it to processedFaces.
@@ -48,9 +18,9 @@ namespace soft3d
         // // if inside == 2, form a quad.
         // // if inside == 1, form triangle.
 
-        const auto& v1 = projectedPoints[face.v1];
-        const auto& v2 = projectedPoints[face.v2];
-        const auto& v3 = projectedPoints[face.v3];
+        const auto& v1 = f.v1.projectedPoint;
+        const auto& v2 = f.v2.projectedPoint;
+        const auto& v3 = f.v3.projectedPoint;
 
         if (v1.x > v1.w && v2.x > v2.w && v3.x > v3.w) return false;
         if (v1.x < -v1.w && v2.x < -v2.w && v3.x < -v3.w) return false;
@@ -60,21 +30,55 @@ namespace soft3d
         // TODO: far plane clipping doesn't work?
         // if (v1.z > v1.w && v2.z > v2.w && v3.z > v3.w) return false;
 
-        processedFaces.push_back(face);
         return true;
-        // clip *all* triangles against 1 edge, then all against the next, and the next.
+        // clip *all* triangles against 1 edge, then all against the next, and the
+        // next.
     }
 
-    inline void Renderer::clearBuffer()
+    inline void createScreenSpace(std::vector<slib::tri>& faces)
     {
-        auto* pixels = (unsigned char*)sdlSurface->pixels;
+        // Convert to screen
+#pragma omp parallel for default(none) shared(faces, SCREEN_WIDTH, SCREEN_HEIGHT)
+        for (auto& f : faces)
+        {
+            if (!makeClipSpace(f))
+            {
+                f.skip = true;
+                continue;
+            }
+            auto ndc = [](auto& v, auto& screen) {
+                // NDC Space
+                if (v.w != 0)
+                {
+                    // Perspective divide
+                    v.x /= v.w;
+                    v.y /= v.w;
+                    v.z /= v.w;
+                }
+                //-----------------------------
+
+                // Screen space
+                const auto x1 = static_cast<float>(SCREEN_WIDTH / 2 + v.x * SCREEN_WIDTH / 2);
+                const auto y1 = static_cast<float>(SCREEN_HEIGHT / 2 - v.y * SCREEN_HEIGHT / 2);
+                screen = {x1, y1, v.z};
+            };
+            ndc(f.v1.projectedPoint, f.v1.screenPoint);
+            ndc(f.v2.projectedPoint, f.v2.screenPoint);
+            ndc(f.v3.projectedPoint, f.v3.screenPoint);
+        }
+#pragma omp barrier
+    }
+
+    inline void Renderer::clearBuffer() const
+    {
+        auto* pixels = static_cast<unsigned char*>(sdlSurface->pixels);
 #pragma omp parallel for default(none) shared(pixels)
         for (int i = 0; i < screenSize * 4; ++i)
             pixels[i] = 0;
 #pragma omp barrier
     }
 
-    void Renderer::RenderBuffer()
+    void Renderer::RenderBuffer() const
     {
         SDL_RenderPresent(sdlRenderer);
         clearBuffer();
@@ -89,44 +93,40 @@ namespace soft3d
 
     inline void Renderer::updateViewMatrix()
     {
-        viewMatrix = smath::fpsview(camera.pos, camera.rotation.x, camera.rotation.y);
+        viewMatrix =
+            smath::fpsview({camera.pos.x, camera.pos.y, camera.pos.z}, camera.rotation.x, camera.rotation.y);
         // TODO: Replace this with an event that camera subscribes to
         camera.UpdateDirectionVectors(viewMatrix);
     }
 
     inline void createProjectedSpace(
         const Renderable& renderable,
-        const slib::mat& viewMatrix,
-        const slib::mat& perspectiveMat,
-        std::vector<slib::vec4>& projectedPoints,
-        std::vector<slib::vec3>& normals)
+        const slib::mat4& viewMatrix,
+        const slib::mat4& perspectiveMat,
+        std::vector<slib::tri>& faces)
     {
-        bool hasNormalData = !renderable.mesh.normals.empty();
+        const slib::mat4 scaleMatrix =
+            smath::scale({renderable.scale.x, renderable.scale.y, renderable.scale.z});
+        const slib::mat4 rotationMatrix = smath::rotation(renderable.eulerAngles);
+        const slib::mat4 translationMatrix =
+            smath::translation({renderable.position.x, renderable.position.y, renderable.position.z});
+
+        // World Space Transform
+        const slib::mat4 normalTransformMat =
+            rotationMatrix * scaleMatrix; // Normal transforms do not need to be translated
+        const slib::mat4 fullTransformMat = translationMatrix * normalTransformMat;
+        const auto viewTransform = viewMatrix * fullTransformMat;
+
 #pragma omp parallel for default(none)                                                                            \
-    shared(renderable, viewMatrix, perspectiveMat, projectedPoints, normals, hasNormalData)
-        for (int i = 0; i < renderable.mesh.vertices.size(); i++)
+    shared(renderable, viewMatrix, perspectiveMat, faces, normalTransformMat, viewTransform)
+        for (auto& f : faces)
         {
-            slib::mat scaleMatrix = smath::scaleMatrix(renderable.scale);
-            slib::mat rotationMatrix = smath::rotationMatrix(renderable.eulerAngles);
-            slib::mat translationMatrix = smath::translationMatrix(renderable.position);
-
-            // World Space Transform
-            slib::mat normalTransformMat =
-                scaleMatrix * rotationMatrix; // Normal transforms do not need to be translated
-            slib::mat fullTransformMat = normalTransformMat * translationMatrix;
-            slib::vec4 v4(
-                {renderable.mesh.vertices[i].x, renderable.mesh.vertices[i].y, renderable.mesh.vertices[i].z, 1});
-            auto transformedVector = viewMatrix * fullTransformMat * v4;
-
-            // Projection transform
-            projectedPoints[i] = perspectiveMat * transformedVector;
-
-            // Transform normal data to world space
-            if (!hasNormalData) continue;
-            slib::vec4 n4(
-                {renderable.mesh.normals[i].x, renderable.mesh.normals[i].y, renderable.mesh.normals[i].z, 0});
-            auto transformedNormal = normalTransformMat * n4;
-            normals[i] = {transformedNormal.x, transformedNormal.y, transformedNormal.z};
+            f.v1.projectedPoint = viewTransform * slib::vec4(f.v1.position, 1) * perspectiveMat;
+            f.v1.normal = normalTransformMat * slib::vec4(f.v1.normal, 0);
+            f.v2.projectedPoint = viewTransform * slib::vec4(f.v2.position, 1) * perspectiveMat;
+            f.v2.normal = normalTransformMat * slib::vec4(f.v2.normal, 0);
+            f.v3.projectedPoint = viewTransform * slib::vec4(f.v3.position, 1) * perspectiveMat;
+            f.v3.normal = normalTransformMat * slib::vec4(f.v3.normal, 0);
         }
 #pragma omp barrier
     }
@@ -135,45 +135,24 @@ namespace soft3d
     {
         zBuffer->clear();
         updateViewMatrix();
-        for (auto& renderable : renderables)
+        for (const auto& renderable : renderables)
         {
-            std::vector<slib::vec3> normals;
-            normals.resize(renderable->mesh.normals.size());
-            std::vector<slib::vec4> projectedPoints;
-            projectedPoints.resize(renderable->mesh.vertices.size());
-            std::vector<slib::tri> processedFaces;
-            processedFaces.reserve(renderable->mesh.faces.size());
-            std::vector<slib::zvec2> screenPoints;
-            screenPoints.resize(renderable->mesh.vertices.size());
+            std::vector<slib::tri> faces = renderable->mesh.faces;
+            createProjectedSpace(*renderable, viewMatrix, perspectiveMat, faces);
+            createScreenSpace(faces);
 
-            createProjectedSpace(*renderable, viewMatrix, perspectiveMat, projectedPoints, normals);
-            // Culling and clipping
-            for (const auto& f : renderable->mesh.faces)
+#pragma omp parallel for default(none) shared(faces, renderable)
+            for (const auto& f : faces)
             {
-                makeClipSpace(f, projectedPoints, processedFaces);
-            }
-            createScreenSpace(projectedPoints, screenPoints);
-
-#pragma omp parallel for default(none) shared(processedFaces, screenPoints, renderable, projectedPoints, normals)
-            for (const auto& t : processedFaces)
-            {
-                const auto& p1 = screenPoints[t.v1];
-                const auto& p2 = screenPoints[t.v2];
-                const auto& p3 = screenPoints[t.v3];
+                if (f.skip) continue;
+                const auto& p1 = f.v1.screenPoint;
+                const auto& p2 = f.v2.screenPoint;
+                const auto& p3 = f.v3.screenPoint;
 
                 const float area = (p3.x - p1.x) * (p2.y - p1.y) -
                                    (p3.y - p1.y) * (p2.x - p1.x); // area of the triangle multiplied by 2
                 if (area < 0) continue;                           // Backface culling
-                Rasterizer rasterizer(
-                    zBuffer.get(),
-                    *renderable,
-                    screenPoints,
-                    projectedPoints,
-                    normals,
-                    t,
-                    sdlSurface,
-                    fragmentShader,
-                    textureFilter);
+                Rasterizer rasterizer(zBuffer, *renderable, f, sdlSurface, fragmentShader, textureFilter);
                 rasterizer.rasterizeTriangle(area);
             }
         }
@@ -193,40 +172,24 @@ namespace soft3d
 
     void Renderer::setShader(FragmentShader shader)
     {
-        if (shader == GOURAUD)
-        {
-            for (auto& renderable : renderables)
-            {
-                if (renderable->mesh.normals.empty())
-                {
-                    std::cout << "Warning: renderable does not have vertex normals. Falling back to flat shading.";
-                    fragmentShader = FLAT;
-                    return;
-                }
-            }
-        }
+        //    if (shader == GOURAUD)
+        //    {
+        //        for (auto& renderable : renderables)
+        //        {
+        //            if (renderable->mesh.normals.empty())
+        //            {
+        //                std::cout << "Warning: renderable does not have vertex
+        //                normals. Falling back to flat shading."; fragmentShader =
+        //                FLAT; return;
+        //            }
+        //        }
+        //    }
         fragmentShader = shader;
     }
 
-    void Renderer::setTextureFilter(TextureFilter filter)
+    void Renderer::setTextureFilter(sage::TextureFilter filter)
     {
         textureFilter = filter;
     }
 
-    Renderer::~Renderer()
-    {
-        SDL_FreeSurface(sdlSurface);
-    }
-
-    Renderer::Renderer(SDL_Renderer* _sdlRenderer)
-        : zBuffer(std::make_unique<ZBuffer>()),
-          sdlRenderer(_sdlRenderer),
-          perspectiveMat(smath::perspective(zFar, zNear, aspect, fov)),
-          viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
-          sdlSurface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0)),
-          camera(soft3d::Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
-    {
-        SDL_SetSurfaceBlendMode(sdlSurface, SDL_BLENDMODE_BLEND);
-    }
-
-} // namespace soft3d
+} // namespace sage

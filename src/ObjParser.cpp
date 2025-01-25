@@ -3,16 +3,19 @@
 //
 
 #include "ObjParser.hpp"
+
 #include "constants.hpp"
+#include "slib.hpp"
+
 #include "lodepng.h"
-#include "smath.hpp"
+
 #include <algorithm>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <sstream>
 #include <string>
-#include <utility>
 
 slib::texture DecodePng(const char* filename)
 {
@@ -52,7 +55,7 @@ std::string trim(const std::string& input)
     return output;
 }
 
-struct tri_tmp
+struct tri_obj
 {
     const int v1, v2, v3;
     const int vt1, vt2, vt3;
@@ -195,7 +198,7 @@ slib::vec2 getTextureVector(const std::string& line)
     return {arr.at(0), arr.at(1)};
 }
 
-tri_tmp getFace(const std::string& line, std::string material)
+tri_obj getFace(const std::string& line, std::string material)
 {
     enum VertexFormat
     {
@@ -285,7 +288,7 @@ tri_tmp getFace(const std::string& line, std::string material)
 
 namespace ObjParser
 {
-    soft3d::Mesh ParseObj(const char* objPath)
+    sage::Mesh ParseObj(const char* objPath)
     {
         std::ifstream obj(objPath);
         if (!obj.is_open())
@@ -297,11 +300,10 @@ namespace ObjParser
         std::map<std::string, slib::material> materials;
         std::string currentTextureName;
         std::vector<slib::vec3> vertices;
-        std::vector<slib::vec3> normals; // Normals stored at same index as the corresponding vertex
+        std::vector<slib::vec3> normals; // The normals as listed in the obj file
         std::vector<slib::vec2> textureCoords;
-        std::vector<slib::vec3> raw_normals; // The normals as listed in the obj file
-        std::vector<tri_tmp> raw_faces;      // faces with normal data
-        std::vector<slib::tri> faces;        // faces stripped of normal data
+        std::vector<tri_obj> rawfaces; // faces in obj data (indices to arrays: v/vt/vn)
+        std::vector<slib::tri> faces;  // faces with data written directly (no separate arrays needed)
         std::string line;
 
         while (getline(obj, line))
@@ -316,7 +318,7 @@ namespace ObjParser
             }
             else if (line.substr(0, 2) == "f ")
             {
-                raw_faces.push_back(getFace(line, currentTextureName));
+                rawfaces.push_back(getFace(line, currentTextureName));
             }
             else if (line.substr(0, 2) == "vt")
             {
@@ -324,7 +326,7 @@ namespace ObjParser
             }
             else if (line.substr(0, 2) == "vn")
             {
-                raw_normals.push_back(getVector(line.erase(0, 3)));
+                normals.push_back(getVector(line.erase(0, 3)));
             }
             else if (line.find("usemtl") != std::string::npos)
             {
@@ -338,32 +340,37 @@ namespace ObjParser
             }
         }
 
-        // Get the vertex normals of each triangle and store them in the 'normals' vector at the same index as in
-        // the 'vertices' vector.
-        normals.resize(vertices.size());
-        faces.reserve(raw_faces.size());
+        assert(!vertices.empty());
+        assert(!normals.empty());
+        assert(!textureCoords.empty());
+        assert(!rawfaces.empty());
 
-#pragma omp parallel for default(none) shared(raw_faces, normals, raw_normals, faces)
-        for (const tri_tmp& tri : raw_faces)
+        faces.reserve(rawfaces.size());
+        // #pragma omp parallel for default(none) shared(vertices, normals, textureCoords, rawfaces, faces)
+        for (const tri_obj& tri : rawfaces)
         {
-            auto n1 = raw_normals[tri.vn1];
-            auto n2 = raw_normals[tri.vn2];
-            auto n3 = raw_normals[tri.vn3];
-            normals[tri.v1] = n1;
-            normals[tri.v2] = n2;
-            normals[tri.v3] = n3;
+            slib::tri tri_n{};
+            slib::vertex vx1{};
+            slib::vertex vx2{};
+            slib::vertex vx3{};
+            vx1.position = vertices[tri.v1];
+            vx2.position = vertices[tri.v2];
+            vx3.position = vertices[tri.v3];
+            vx1.normal = normals[tri.vn1];
+            vx2.normal = normals[tri.vn2];
+            vx3.normal = normals[tri.vn3];
+            vx1.textureCoords = textureCoords[tri.vt1];
+            vx2.textureCoords = textureCoords[tri.vt2];
+            vx3.textureCoords = textureCoords[tri.vt3];
+            tri_n.material = tri.material;
+            tri_n.v1 = vx1;
+            tri_n.v2 = vx2;
+            tri_n.v3 = vx3;
+            faces.push_back(tri_n);
         }
-#pragma omp barrier
-
-        // Strip normal indices from faces (should now be accessed using the 'v1' (etc.) index with the normals
-        // vector)
-        for (const tri_tmp& t : raw_faces)
-        {
-            slib::tri toPush = {t.v1, t.v2, t.v3, t.vt1, t.vt2, t.vt3, t.material};
-            faces.push_back(toPush);
-        }
+        // #pragma omp barrier
 
         obj.close();
-        return {vertices, faces, textureCoords, normals, materials};
+        return {faces, materials};
     }
 } // namespace ObjParser

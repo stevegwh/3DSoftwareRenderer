@@ -6,7 +6,7 @@
 #include "constants.hpp"
 #include <array>
 
-namespace soft3d
+namespace sage
 {
 struct ZBuffer
 {

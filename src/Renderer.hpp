@@ -14,24 +14,23 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
-namespace soft3d
+namespace sage
 {
 
     class Renderer
     {
-
         static constexpr float zFar = 1000;
         static constexpr float zNear = 0.1;
         static constexpr float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
         static constexpr float fov = 90;
         static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
 
-        std::unique_ptr<ZBuffer> zBuffer;
+        ZBuffer* const zBuffer;
         void updateViewMatrix();
-        void clearBuffer();
+        void clearBuffer() const;
         SDL_Renderer* sdlRenderer;
-        slib::mat perspectiveMat;
-        slib::mat viewMatrix;
+        slib::mat4 perspectiveMat;
+        slib::mat4 viewMatrix;
         SDL_Surface* sdlSurface;
         std::vector<const Renderable*> renderables;
         FragmentShader fragmentShader = FLAT;
@@ -40,14 +39,28 @@ namespace soft3d
       public:
         bool wireFrame = false;
         Camera camera;
-        void RenderBuffer();
+        explicit Renderer(SDL_Renderer* _sdlRenderer)
+            : zBuffer(new ZBuffer()),
+              sdlRenderer(_sdlRenderer),
+              perspectiveMat(smath::perspective(fov * RAD, zNear, aspect, zFar)),
+              viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
+              sdlSurface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0)),
+              camera(Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
+        {
+            SDL_SetSurfaceBlendMode(sdlSurface, SDL_BLENDMODE_BLEND);
+        }
+
+        ~Renderer()
+        {
+            SDL_FreeSurface(sdlSurface);
+            delete zBuffer;
+        }
+
+        void RenderBuffer() const;
         void Render();
         void AddRenderable(const Renderable* renderable);
         void ClearRenderables();
         void setShader(FragmentShader shader);
         void setTextureFilter(TextureFilter filter);
-
-        ~Renderer();
-        explicit Renderer(SDL_Renderer* _sdlRenderer);
     };
-} // namespace soft3d
+} // namespace sage

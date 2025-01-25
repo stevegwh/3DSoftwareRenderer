@@ -10,7 +10,7 @@
 
 #include "EventCallback.hpp"
 
-namespace soft3d
+namespace sage
 {
 class Event
 {

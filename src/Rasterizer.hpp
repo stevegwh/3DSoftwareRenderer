@@ -6,9 +6,12 @@
 
 #include "Renderable.hpp"
 #include "ZBuffer.hpp"
+
+#include "slib.hpp"
+#include "smath.hpp"
 #include <SDL2/SDL.h>
 
-namespace soft3d
+namespace sage
 {
 
     enum FragmentShader
@@ -32,14 +35,13 @@ namespace soft3d
         const slib::tri& t;
         const Renderable& renderable;
 
-        // slib::vec3 coords{}; // Barycentric/Edge-finding coordinates
         const slib::vec3 lightingDirection{1, 1, 1.5};
         slib::vec3 normal{};
 
         // Screen points of each vertex
-        const slib::zvec2& p1;
-        const slib::zvec2& p2;
-        const slib::zvec2& p3;
+        const slib::vec3& p1;
+        const slib::vec3& p2;
+        const slib::vec3& p3;
 
         // Texture coordinates of each vertex
         const slib::vec2& tx1;
@@ -61,7 +63,7 @@ namespace soft3d
         const FragmentShader fragmentShader;
         const TextureFilter textureFilter;
 
-        void drawPixel(float x, float y, const slib::vec3& coords, float lum);
+        void drawPixel(float x, float y, const slib::vec3& coords, float lum) const;
 
       public:
         void rasterizeTriangle(float area);
@@ -69,12 +71,28 @@ namespace soft3d
         Rasterizer(
             ZBuffer* const _zBuffer,
             const Renderable& _renderable,
-            const std::vector<slib::zvec2>& screenPoints,
-            const std::vector<slib::vec4>& projectedPoints,
-            const std::vector<slib::vec3>& normals,
             const slib::tri& _t,
             SDL_Surface* const _surface,
             FragmentShader _fragmentShader,
-            TextureFilter _textureFilter);
+            TextureFilter _textureFilter)
+            : surface(_surface),
+              zBuffer(_zBuffer),
+              t(_t),
+              renderable(_renderable),
+              p1(t.v1.screenPoint),
+              p2(t.v2.screenPoint),
+              p3(t.v3.screenPoint),
+              tx1(t.v1.textureCoords),
+              tx2(t.v2.textureCoords),
+              tx3(t.v3.textureCoords),
+              material(renderable.mesh.materials.at(t.material)),
+              viewW1(t.v1.projectedPoint.w),
+              viewW2(t.v2.projectedPoint.w),
+              viewW3(t.v3.projectedPoint.w),
+              n1(t.v1.normal),
+              n2(t.v2.normal),
+              n3(t.v3.normal),
+              fragmentShader(_fragmentShader),
+              textureFilter(_textureFilter){};
     };
-} // namespace soft3d
+} // namespace sage

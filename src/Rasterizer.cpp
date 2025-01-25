@@ -9,12 +9,12 @@
 #include <cmath>
 #include <iostream>
 
-namespace soft3d
+namespace sage
 {
 
     inline void bufferPixels(SDL_Surface* surface, int x, int y, unsigned char r, unsigned char g, unsigned char b)
     {
-        auto* pixels = (unsigned char*)surface->pixels;
+        auto* pixels = static_cast<unsigned char*>(surface->pixels);
         pixels[4 * (y * surface->w + x) + 0] = b;
         pixels[4 * (y * surface->w + x) + 1] = g;
         pixels[4 * (y * surface->w + x) + 2] = r;
@@ -104,10 +104,10 @@ namespace soft3d
         b = std::max(0, std::min(static_cast<int>(blue * lum), 255));
     }
 
-    inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, float lum)
+    inline void Rasterizer::drawPixel(float x, float y, const slib::vec3& coords, float lum) const
     {
         // zBuffer.
-        float interpolated_z = coords.x * p1.w + coords.y * p2.w + coords.z * p3.w;
+        float interpolated_z = coords.x * p1.z + coords.y * p2.z + coords.z * p3.z;
         int zIndex = y * static_cast<int>(SCREEN_WIDTH) + x;
         if (!(interpolated_z < zBuffer->buffer[zIndex] || zBuffer->buffer[zIndex] == 0)) return;
         zBuffer->buffer[zIndex] = interpolated_z;
@@ -196,13 +196,13 @@ namespace soft3d
         // Precalculate lighting (flat shading)
         if (fragmentShader == FLAT)
         {
-            if (!renderable.mesh.normals.empty())
-                normal = smath::normalize((n1 + n2 + n3) / 3);
-            else
-            {
-                normal = smath::facenormal(
-                    t, renderable.mesh.vertices); // Dynamic face normal if no vertex normal data present
-            }
+            // if (!renderable.mesh.normals.empty())
+            normal = smath::normalize((n1 + n2 + n3) / 3.0f);
+            // else
+            //{
+            // normal = smath::facenormal(t,renderable.mesh.vertices); // Dynamic face normal if no vertex normal
+            // data present
+            //}
 
             lum = smath::dot(normal, lightingDirection);
         }
@@ -239,34 +239,4 @@ namespace soft3d
             }
         }
     }
-
-    Rasterizer::Rasterizer(
-        ZBuffer* _zBuffer,
-        const Renderable& _renderable,
-        const std::vector<slib::zvec2>& screenPoints,
-        const std::vector<slib::vec4>& projectedPoints,
-        const std::vector<slib::vec3>& normals,
-        const slib::tri& _t,
-        SDL_Surface* const _surface,
-        FragmentShader _fragmentShader,
-        TextureFilter _textureFilter)
-        : surface(_surface),
-          zBuffer(_zBuffer),
-          t(_t),
-          renderable(_renderable),
-          p1(screenPoints[t.v1]),
-          p2(screenPoints[t.v2]),
-          p3(screenPoints[t.v3]),
-          tx1(_renderable.mesh.textureCoords[t.vt1]),
-          tx2(_renderable.mesh.textureCoords[t.vt2]),
-          tx3(_renderable.mesh.textureCoords[t.vt3]),
-          material(renderable.mesh.materials.at(t.material)),
-          viewW1(projectedPoints[t.v1].w),
-          viewW2(projectedPoints[t.v2].w),
-          viewW3(projectedPoints[t.v3].w),
-          n1(normals[t.v1]),
-          n2(normals[t.v2]),
-          n3(normals[t.v3]),
-          fragmentShader(_fragmentShader),
-          textureFilter(_textureFilter){};
-} // namespace soft3d
+} // namespace sage

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Scene.hpp"
 
-namespace soft3d
+namespace sage
 {
 
 void Scene::LoadScene()

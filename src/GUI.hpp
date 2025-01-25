@@ -11,7 +11,7 @@
 #include "Event.hpp"
 #include <memory>
 
-namespace soft3d
+namespace sage
 {
     class GUI
     {

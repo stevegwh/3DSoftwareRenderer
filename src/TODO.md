@@ -1,0 +1,2 @@
+-[ ] Assimp model loading.
+-[ ] Make a `Model` class with multiple meshes.
