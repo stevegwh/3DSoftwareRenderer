@@ -15,56 +15,25 @@ namespace sage
 #pragma omp parallel for default(none) shared(faces, SCREEN_WIDTH, SCREEN_HEIGHT)
         for (auto& f : faces)
         {
-            auto& v1 = f.v1.projectedPoint;
-            // NDC Space
-            if (v1.w != 0)
-            {
-                // Perspective divide
-                v1.x /= v1.w;
-                v1.y /= v1.w;
-                v1.z /= v1.w;
-            }
-            //-----------------------------
+            auto ndc = [](auto& v, auto& screen) {
+                // NDC Space
+                if (v.w != 0)
+                {
+                    // Perspective divide
+                    v.x /= v.w;
+                    v.y /= v.w;
+                    v.z /= v.w;
+                }
+                //-----------------------------
 
-            // Screen space
-            const auto x1 = static_cast<float>(SCREEN_WIDTH / 2 + v1.x * SCREEN_WIDTH / 2);
-            const auto y1 = static_cast<float>(SCREEN_HEIGHT / 2 - v1.y * SCREEN_HEIGHT / 2);
-            f.v1.screenPoint = {x1, y1, v1.z};
-            //-----------------------------
-
-            auto& v2 = f.v2.projectedPoint;
-            // NDC Space
-            if (v2.w != 0)
-            {
-                // Perspective divide
-                v2.x /= v2.w;
-                v2.y /= v2.w;
-                v2.z /= v2.w;
-            }
-            //-----------------------------
-
-            // Screen space
-            const auto x2 = static_cast<float>(SCREEN_WIDTH / 2 + v2.x * SCREEN_WIDTH / 2);
-            const auto y2 = static_cast<float>(SCREEN_HEIGHT / 2 - v2.y * SCREEN_HEIGHT / 2);
-            f.v2.screenPoint = {x2, y2, v2.z};
-            //-----------------------------
-
-            auto& v3 = f.v3.projectedPoint;
-            // NDC Space
-            if (v3.w != 0)
-            {
-                // Perspective divide
-                v3.x /= v3.w;
-                v3.y /= v3.w;
-                v3.z /= v3.w;
-            }
-            //-----------------------------
-
-            // Screen space
-            const auto x3 = static_cast<float>(SCREEN_WIDTH / 2 + v3.x * SCREEN_WIDTH / 2);
-            const auto y3 = static_cast<float>(SCREEN_HEIGHT / 2 - v3.y * SCREEN_HEIGHT / 2);
-            f.v3.screenPoint = {x3, y3, v3.z};
-            //-----------------------------
+                // Screen space
+                const auto x1 = static_cast<float>(SCREEN_WIDTH / 2 + v.x * SCREEN_WIDTH / 2);
+                const auto y1 = static_cast<float>(SCREEN_HEIGHT / 2 - v.y * SCREEN_HEIGHT / 2);
+                screen = {x1, y1, v.z};
+            };
+            ndc(f.v1.projectedPoint, f.v1.screenPoint);
+            ndc(f.v2.projectedPoint, f.v2.screenPoint);
+            ndc(f.v3.projectedPoint, f.v3.screenPoint);
         }
 #pragma omp barrier
     }
@@ -105,7 +74,7 @@ namespace sage
 #pragma omp barrier
     }
 
-    void Renderer::RenderBuffer()
+    void Renderer::RenderBuffer() const
     {
         SDL_RenderPresent(sdlRenderer);
         clearBuffer();
@@ -162,7 +131,7 @@ namespace sage
     {
         zBuffer->clear();
         updateViewMatrix();
-        for (auto& renderable : renderables)
+        for (const auto& renderable : renderables)
         {
             std::vector<slib::tri> faces = renderable->mesh.faces;
             std::vector<slib::tri> processedFaces;

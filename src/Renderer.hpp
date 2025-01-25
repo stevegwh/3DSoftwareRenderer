@@ -68,7 +68,7 @@ namespace sage
             delete zBuffer;
         }
 
-        void RenderBuffer();
+        void RenderBuffer() const;
         void Render();
         void AddRenderable(const Renderable* renderable);
         void ClearRenderables();
