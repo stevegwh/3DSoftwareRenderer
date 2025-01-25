@@ -4,7 +4,10 @@
 
 #include "Renderer.hpp"
 #include "constants.hpp"
+#include "Mesh.hpp"
 #include "Rasterizer.hpp"
+#include "Renderable.hpp"
+#include "ZBuffer.hpp"
 
 namespace sage
 {
@@ -105,8 +108,7 @@ namespace sage
         const slib::mat4& perspectiveMat,
         std::vector<slib::tri>& faces)
     {
-        const slib::mat4 scaleMatrix =
-            smath::scale({renderable.scale.x, renderable.scale.y, renderable.scale.z});
+        const slib::mat4 scaleMatrix = smath::scale({renderable.scale.x, renderable.scale.y, renderable.scale.z});
         const slib::mat4 rotationMatrix = smath::rotation(renderable.eulerAngles);
         const slib::mat4 translationMatrix =
             smath::translation({renderable.position.x, renderable.position.y, renderable.position.z});
@@ -152,7 +154,7 @@ namespace sage
                 const float area = (p3.x - p1.x) * (p2.y - p1.y) -
                                    (p3.y - p1.y) * (p2.x - p1.x); // area of the triangle multiplied by 2
                 if (area < 0) continue;                           // Backface culling
-                Rasterizer rasterizer(zBuffer, *renderable, f, sdlSurface, fragmentShader, textureFilter);
+                Rasterizer rasterizer(zBuffer.get(), *renderable, f, sdlSurface, fragmentShader, textureFilter);
                 rasterizer.rasterizeTriangle(area);
             }
         }
@@ -187,9 +189,25 @@ namespace sage
         fragmentShader = shader;
     }
 
-    void Renderer::setTextureFilter(sage::TextureFilter filter)
+    void Renderer::setTextureFilter(TextureFilter filter)
     {
         textureFilter = filter;
+    }
+
+    Renderer::~Renderer()
+    {
+        SDL_FreeSurface(sdlSurface);
+    }
+
+    Renderer::Renderer(SDL_Renderer* _sdlRenderer)
+        : zBuffer(std::make_unique<ZBuffer>()),
+          sdlRenderer(_sdlRenderer),
+          perspectiveMat(smath::perspective(fov * RAD, zNear, aspect, zFar)),
+          viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
+          sdlSurface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0)),
+          camera(Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
+    {
+        SDL_SetSurfaceBlendMode(sdlSurface, SDL_BLENDMODE_BLEND);
     }
 
 } // namespace sage

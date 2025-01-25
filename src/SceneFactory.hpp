@@ -4,14 +4,15 @@
 
 #pragma once
 
-#include "Renderer.hpp"
-#include "Scene.hpp"
 #include <memory>
 
-namespace soft3d
+namespace sage
 {
-    std::unique_ptr<Scene> spyroSceneInit(Renderer& renderer);
-    std::unique_ptr<Scene> isometricGameLevel(Renderer& renderer);
-    std::unique_ptr<Scene> concreteCatInit(Renderer& renderer);
-    std::unique_ptr<Scene> vikingRoomSceneInit(Renderer& renderer);
-} // namespace soft3d
+    class Scene;
+    class Renderer;
+
+    std::unique_ptr<Scene> spyroSceneInit(Renderer* renderer);
+    std::unique_ptr<Scene> isometricGameLevel(Renderer* renderer);
+    std::unique_ptr<Scene> concreteCatInit(Renderer* renderer);
+    std::unique_ptr<Scene> vikingRoomSceneInit(Renderer* renderer);
+} // namespace sage

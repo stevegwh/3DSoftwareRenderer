@@ -3,19 +3,22 @@
 //
 
 #pragma once
+
 #include "Camera.hpp"
 #include "constants.hpp"
-#include "Mesh.hpp"
 #include "Rasterizer.hpp"
-#include "Renderable.hpp"
 #include "slib.hpp"
-#include "smath.hpp"
-#include "ZBuffer.hpp"
+
 #include <SDL2/SDL.h>
+
+#include <memory>
 #include <vector>
 
 namespace sage
 {
+    struct ZBuffer;
+    struct Renderable;
+    struct Mesh;
 
     class Renderer
     {
@@ -25,7 +28,7 @@ namespace sage
         static constexpr float fov = 90;
         static constexpr unsigned long screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
 
-        ZBuffer* const zBuffer;
+        std::unique_ptr<ZBuffer> zBuffer;
         void updateViewMatrix();
         void clearBuffer() const;
         SDL_Renderer* sdlRenderer;
@@ -39,22 +42,9 @@ namespace sage
       public:
         bool wireFrame = false;
         Camera camera;
-        explicit Renderer(SDL_Renderer* _sdlRenderer)
-            : zBuffer(new ZBuffer()),
-              sdlRenderer(_sdlRenderer),
-              perspectiveMat(smath::perspective(fov * RAD, zNear, aspect, zFar)),
-              viewMatrix(smath::fpsview({0, 0, 0}, 0, 0)),
-              sdlSurface(SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0)),
-              camera(Camera({0, 0, 5}, {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, zFar, zNear))
-        {
-            SDL_SetSurfaceBlendMode(sdlSurface, SDL_BLENDMODE_BLEND);
-        }
+        explicit Renderer(SDL_Renderer* _sdlRenderer);
 
-        ~Renderer()
-        {
-            SDL_FreeSurface(sdlSurface);
-            delete zBuffer;
-        }
+        ~Renderer();
 
         void RenderBuffer() const;
         void Render();
